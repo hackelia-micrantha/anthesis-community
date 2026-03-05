@@ -202,7 +202,7 @@ Anthesis applies defense-in-depth security controls with governance-first enforc
 ### Compliance Posture
 
 - **Audit/compliance evidence:** Execution logs, approval records, configuration changes, and state transitions are treated as compliance artifacts.
-- **Framework alignment:** SOC 2 Type II is in progress, ISO 27001 is planned, and NIST SSDF is used as a reference framework.
+- **Framework alignment:** SOC 2 Type II is in progress, ISO 27001 is planned, and NIST SSDF and SAFE-MCP is used as a reference framework.
 - **Third-party/supply-chain controls:** Dependency scanning, CVE review, and license/compliance checks are part of the security baseline.
 
 ## Contributing
