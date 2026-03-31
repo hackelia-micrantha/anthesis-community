@@ -9,95 +9,132 @@
 
 > *Anthesis* — the phase in which a flower is fully open and capable of function.
 
-Anthesis is a governed, Git-native, agentic SDLC platform that enables automation without surrendering human authority, auditability, or safety.
+---
 
-Autonomous actions occur **only when context is complete, risk is understood, and authority is explicit**.
+## Overview
 
-Anthesis treats AI execution as a *governed state transition*, not a default behavior.
+Anthesis is a **governed, Git-native agent orchestration platform for software delivery (SDLC)**.
+
+It enables teams to integrate AI/LLM agents into development workflows while maintaining:
+
+* explicit approval control
+* full auditability
+* deterministic, reproducible execution
+
+Unlike typical agent systems, Anthesis does **not permit implicit autonomy**.
+
+All execution is modeled as a **controlled state transition**:
+
+→ context is assembled
+→ risk is evaluated
+→ approval is required
+→ execution is recorded
+
+This allows AI-assisted workflows to operate safely in **production and regulated environments**.
+
+---
 
 ## Why Anthesis
 
-Anthesis treats autonomous execution as a governed state transition, not a default behavior.
+Most AI-assisted development tools prioritize autonomy over control, introducing risks:
 
-- Human authority remains final.
-- Agent actions require explicit policy and approvals.
-- Execution is traceable, reproducible, and reviewable.
-- Drift is detected and reconciled against canonical intent.
+* non-deterministic execution
+* lack of auditability
+* implicit or opaque decision-making
+* difficulty operating under compliance constraints
 
-Anthesis treats AI execution as a *governed state transition*, not a default behavior.
+Anthesis enforces a different model:
 
-***
+* execution is **explicitly governed**
+* agents operate within **policy-defined boundaries**
+* all actions are **traceable and reproducible**
+* system behavior is anchored to **version-controlled artifacts (Git)**
+
+---
+
+## Example Workflow
+
+A typical execution flow:
+
+1. A developer updates a requirement, task, or code artifact
+2. Anthesis assembles context (code, RFCs, prior decisions)
+3. Calyx evaluates risk and determines approval requirements
+4. Approval is granted (human or automated)
+5. Xylem executes the task via LLM or worker runtime
+6. Results are validated, committed, and recorded
+
+**Result:**
+
+* no uncontrolled AI execution
+* full audit trail
+* reproducible workflows
+
+---
 
 ## Core Principles
 
-1. **Governed Autonomy**  
-   Agents may act independently, but never without policy, context, and traceability.
+1. **Governed Autonomy**
+   Agents act only within policy, context, and traceable boundaries.
 
-2. **Human Authority First**  
-   Humans remain the final arbiters through approvals, overrides, and ownership.
+2. **Human Authority First**
+   Humans remain final arbiters via approvals and overrides.
 
-3. **Deterministic Execution**  
-   Every agent run is reproducible: same inputs, same context, same outcome.
+3. **Deterministic Execution**
+   Identical inputs and context produce consistent outcomes.
 
-4. **Auditability by Design**  
-   All actions, approvals, and artifacts are recorded with immutable metadata.
+4. **Auditability by Design**
+   All actions, approvals, and state transitions are recorded.
 
-5. **Living Architecture**  
-   Specifications, prompts, and policies evolve continuously as first-class artifacts.
+5. **Living Architecture**
+   RFCs, prompts, and policies evolve as first-class, versioned artifacts.
 
-***
+---
 
-## The Anthesis Lifecycle
+## Execution Lifecycle
 
-Every autonomous action follows a controlled lifecycle:
+Every action follows a controlled lifecycle:
 
-1. **Pre-Bloom** — Artifact change or event detected
-2. **Context Assembly** — Relevant artifacts retrieved via embeddings
-3. **Calyx Gate** — Policy and risk evaluation
+1. **Pre-Bloom** — Change or event detected
+2. **Context Assembly** — Relevant artifacts retrieved (embeddings + repo state)
+3. **Calyx Gate** — Policy evaluation and risk classification
 4. **Approval** — Human or automated authorization
-5. **Anthesis** — Agent executes with full context
+5. **Anthesis** — Execution with full context
 6. **Dormancy** — Completion, rollback, or safe halt
 
-This lifecycle ensures that autonomy is *earned*, not assumed.
+Autonomy is **conditional**, not default.
 
-***
+---
 
 ## System Overview
 
-Project Anthesis coordinates a team of specialized agents across the full *Software Development Lifecycle (SDLC)*:
+Anthesis is composed of three primary layers:
 
-- Requirements
-- Analysis & Design
-- Implementation
-- Testing
-- Maintenance
+* **Control Plane** — orchestration, state management, and policy enforcement
+* **Execution Layer** — worker runtime and LLM interaction
+* **Governance Layer** — approvals, risk evaluation, and audit
 
-### Primary Pillars
+### Primary Components
 
-1. **Git Repository** — Source of truth for all artifacts, branch control, PRs
-2. **Phloem (MCP API + Orchestration)** — Central control plane for execution and policy-bound flow control.
-3. **Xylem (Worker)** — Executes tasks, consumes queues, and interacts with LLMs
-4. **Inflorescence** — Graph-based multi-agent coordination and workflow management
-5. **Calyx** — Policy engine for risk evaluation and approval gating
+* **Git Repository**
+  Canonical source for RFCs, prompts, policies, and tasks
 
-### Control Surfaces
+* **Phloem (MCP API + Orchestration)**
+  Control plane responsible for execution flow, state transitions, and coordination
 
-1. **Human Operators (CLI/UI/API)** — Submit commands, approvals, and governance decisions.
-2. **Git** — Canonical source for RFCs, prompts, policies, and task artifacts.
-3. **Workflows** — Externalized approval/automation callbacks (n8n).
-4. **Notifications** — Slack, Email, Phone, etc.
+* **Calyx (Policy Engine)**
+  Evaluates risk, enforces policy, and determines approval requirements
 
-### Data Surfaces
+* **Xylem (Workers)**
+  Executes tasks, interacts with LLMs, and returns results
 
-1. **DB State + Audit** — Durable execution state and evidence trail with embedding vectors and encryption.
-2. **LLM Runtime** — Model execution target for embedded or worker-dispatched runs.
+* **Inflorescence**
+  Graph-based coordination layer for multi-agent workflows
 
-### Runtime Components
+---
 
-1. **Queue Backend** — RabbitMQ (default) or Redis/Kafka/SQS for worker topology.
-2. **Xylem Workers** — Consume dispatch messages, claim executions, and return results.
+## Architecture
 
-## Architecture At A Glance
+The diagram below shows how Anthesis coordinates human input, policy evaluation, and agent execution:
 
 ```mermaid
 flowchart TD
@@ -115,62 +152,88 @@ flowchart TD
 
   subgraph WT["Worker Topology (optional)"]
     direction TB
-    Q["Queue Backend<br/>RabbitMQ (default) / Redis / Kafka / SQS"]
+    Q["Queue Backend<br/>RabbitMQ / Redis / Kafka / SQS"]
     X["Xylem Workers"]
   end
 
   H -->|commands + approvals| P
   H -->|commits + PRs| G
-  G -->|governance/runtime artifacts| P
+  G -->|artifacts| P
 
   P -->|policy evaluation| C
-  C -->|allow/deny + requirements| P
-  P -->|execution + evidence records| D
+  C -->|allow/deny| P
+  P -->|state + audit| D
 
-  P -->|embedded topology| L
-  P -.->|worker topology dispatch| Q
+  P -->|direct execution| L
+  P -.->|dispatch| Q
   Q -->|consume| X
-  X -->|claim + results| P
+  X -->|results| P
   X -->|model calls| L
 
-  P -.->|approval requests/events| N
-  N -.->|approve/reject callbacks| P
+  P -.->|approval events| N
+  N -.->|callbacks| P
 ```
 
-## Governance And Core RFCs
+---
 
-Anthesis governance is charter-first and RFC-driven.
+## Governance & RFC Model
 
-Foundational RFCs:
+Anthesis is **charter-first and RFC-driven**.
 
-- **RFC-0002 — MCP Orchestration API:** Defines MCP as the authoritative execution orchestrator and contract boundary.
-- **RFC-0003 — Calyx Approval Policy Engine:** Defines policy evaluation, approval requirements, and audit-grade decision outputs.
-- **RFC-0009 — Agent Execution Semantics:** Defines execution modes, queue/worker dispatch, retries, and claim/lock behavior.
-- **RFC-0020 — Anthesis State Machine:** Defines canonical workflow-phase law and lifecycle gates.
-- **RFC-0021 — Anthesis CLI UX & Command Semantics:** Defines stable CLI behavior and command semantics.
-- **RFC-0023 — Audit, Compliance & Evidence Export:** Defines evidence guarantees, exportability, and audit packaging.
-- **RFC-0027 — Configuration Model:** Defines configuration precedence, security constraints, and mode/topology contract.
+Core governance defines:
 
-Operational RFCs:
+* orchestration and execution contracts
+* policy and approval semantics
+* agent execution modes and retry behavior
+* CLI behavior and workflow guarantees
+* audit and evidence requirements
+* configuration and operating modes
 
-- **RFC-0038 — Unified Governance Control Doctrine:** Binds pre-decision (QART) and post-decision (drift reconciliation) governance into one control loop.
-- **RFC-0034 — Sessions & Prompt Context Governance:** Defines session declarations, prompt context assembly, and context-governance boundaries.
-- **RFC-0035 — Operating Modes (Offline / Local / Remote):** Defines mode constraints, allowed integrations, and posture transitions.
-- **RFC-0026 — Plugin & Extension Model:** Defines extension contracts, capability boundaries, and lifecycle for plugins.
+Extended governance includes:
 
-Related governance RFCs:
+* decision frameworks (QART)
+* drift detection and reconciliation
+* prompt and context lifecycle management
+* plugin and extension boundaries
 
-- **RFC-0036 — QART Engineering**
-- **RFC-0037 — Drift Loop Engineering**
+---
+
+## Security & Compliance
+
+Anthesis is designed for environments requiring **strong control, traceability, and auditability**.
+
+### Security Controls
+
+* **Governed execution** — no action without policy and approval
+* **Centralized enforcement** — Phloem + Calyx enforce all execution gates
+* **Least privilege** — RBAC, scoped APIs, and isolation boundaries
+* **Audit-first design** — all critical actions produce evidence
+* **Fail-safe behavior** — safe halt, rollback, and replay
+
+### Security Lifecycle
+
+* Threat modeling for high-risk changes (auth, data, integrations)
+* Pre-deploy validation (input validation, secrets, dependencies, logging)
+* Tiered controls based on risk classification
+* Defined incident response and recovery procedures
+
+### Compliance Alignment
+
+* Audit-ready artifacts (logs, approvals, state transitions)
+* Alignment with SOC 2 (in progress), ISO 27001 (planned), NIST SSDF
+* Supply chain controls (dependency scanning, CVE review)
+
+---
 
 ## Quick Start
 
 ```bash
-# From repo root
 make deps
 docker compose --profile worker up
 anthesis --help
 ```
+
+---
 
 ## Testing
 
@@ -180,41 +243,13 @@ make test-units
 make test-integration
 ```
 
-## Security And Compliance Posture
-
-Anthesis applies defense-in-depth security controls with governance-first enforcement across policy, runtime, and operations.
-
-### Security Controls
-
-- **Human authority + governed autonomy:** Security-critical decisions remain human-controlled (auth/authz, policy changes, incident response, risk acceptance).
-- **Policy enforcement at control plane:** Phloem + Calyx enforce approval and policy gates before execution.
-- **Least privilege defaults:** RBAC/Casbin, scoped API access, and container/network boundary controls.
-- **Auditability by default:** Security-relevant events (auth, authorization, config, approvals, state transitions) are evidence-bearing and reviewable.
-- **Fail-safe posture:** Dormancy and recovery controls prioritize safe halt, evidence preservation, and deterministic replay where possible.
-
-### Security Assurance Lifecycle
-
-- **Threat modeling required** for trust-boundary and high-risk changes (auth, data handling, external integrations, agent execution paths).
-- **Pre-deploy verification:** Bloom Class 2+ changes require checklist-based controls (input validation, secrets handling, dependency scanning, logging/monitoring, security tests).
-- **Tiered rigor:** Higher Bloom tiers add manual security review, architecture/attack-surface review, and stronger approval requirements.
-- **Incident readiness:** Documented severity levels and response timelines support operational security response.
-
-### Compliance Posture
-
-- **Audit/compliance evidence:** Execution logs, approval records, configuration changes, and state transitions are treated as compliance artifacts.
-- **Framework alignment:** SOC 2 Type II is in progress, ISO 27001 is planned, and NIST SSDF and SAFE-MCP is used as a reference framework.
-- **Third-party/supply-chain controls:** Dependency scanning, CVE review, and license/compliance checks are part of the security baseline.
-
-## Contributing
-
-1. Start from governing sources: `CHARTER.md`, then `meristem/` RFCs.
-2. Keep changes scoped and auditable.
-3. Run relevant tests before proposing integration.
-4. Use conventional commits (for example: `feat(cli): ...`, `fix(meristem): ...`).
+---
 
 ## Status
 
 Active development with RFC-driven governance and iterative delivery.
+
+---
 
 ## License
 
