@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const webRoot = path.resolve(__dirname, '../../web');
+const webRoot = path.resolve(__dirname, '../../../web');
 let server, port;
 
 function contentTypeFor(file) {
