@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anthesis | Security Policy</title>
+  <meta name="description" content="Anthesis security policy, scope, principles, and reporting guidance." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Micrantha" />
+  <meta property="og:title" content="Anthesis | Security Policy" />
+  <meta property="og:description" content="Security requirements, responsibilities, and reporting guidance for Anthesis." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Anthesis" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Anthesis | Security Policy" />
+  <meta name="twitter:description" content="Security requirements, responsibilities, and reporting guidance for Anthesis." />
+  <link rel="canonical" href="https://anthesis.micrantha.com/security-policy.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <nav class="nav" aria-label="Primary">
+      <div class="brand">Anthesis</div>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href=".well-known/security.txt">Security.txt</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Security Policy</p>
+          <h1>Security requirements for Anthesis.</h1>
+          <p class="lede">
+            This policy establishes security requirements, responsibilities, and expectations for protecting
+            Anthesis data and systems.
+          </p>
+        </div>
+        <div class="hero-card">
+          <div class="card-title">Policy status</div>
+          <ol class="timeline">
+            <li>Version: 1.0</li>
+            <li>Effective: 2026-01-18</li>
+            <li>Status: Active</li>
+            <li>Classification: Public</li>
+            <li>Owner: Security Team</li>
+          </ol>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Scope</h2>
+          <p>This policy applies across Anthesis services, environments, and integrations.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Services</h3>
+            <span class="separator"></span>
+            <p class="blurb">Phloem, Xylem, CLI, plugins, and related tooling.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Environments</h3>
+            <span class="separator"></span>
+            <p class="blurb">Development, staging, and production environments.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">People</h3>
+            <span class="separator"></span>
+            <p class="blurb">All personnel with access to Anthesis systems.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Third parties</h3>
+            <span class="separator"></span>
+            <p class="blurb">External integrations and dependencies are admitted explicitly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Security principles</h2>
+          <p>Anthesis is designed around governance, traceability, and safe failure.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Human sovereignty</h3>
+            <span class="separator"></span>
+            <p class="blurb">Humans retain final authority over security decisions.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Defense in depth</h3>
+            <span class="separator"></span>
+            <p class="blurb">Multiple layers of safeguards across the stack.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Least privilege</h3>
+            <span class="separator"></span>
+            <p class="blurb">Access is minimized for users, services, and agents.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Traceability</h3>
+            <span class="separator"></span>
+            <p class="blurb">Security-relevant events are logged immutably.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Security by design</h3>
+            <span class="separator"></span>
+            <p class="blurb">Threat modeling and security gates are part of the SDLC.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Fail securely</h3>
+            <span class="separator"></span>
+            <p class="blurb">Default to safe states when uncertainty exists.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Core requirements</h2>
+          <p>Baseline controls required across Anthesis systems.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Authentication</h3>
+            <span class="separator"></span>
+            <p class="blurb">All API access is authenticated.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Authorization</h3>
+            <span class="separator"></span>
+            <p class="blurb">Requests are authorized via policy controls.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Input validation</h3>
+            <span class="separator"></span>
+            <p class="blurb">Inputs are validated and sanitized.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Secrets management</h3>
+            <span class="separator"></span>
+            <p class="blurb">No secrets in Git or logs; rotation required.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Data protection</h3>
+            <span class="separator"></span>
+            <p class="blurb">Sensitive data is protected at rest and in transit.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Monitoring</h3>
+            <span class="separator"></span>
+            <p class="blurb">Security events are detected and alerted.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Secure SDLC</h3>
+            <span class="separator"></span>
+            <p class="blurb">Security testing and reviews are mandatory.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Incident response</h3>
+            <span class="separator"></span>
+            <p class="blurb">Follow the incident response playbook for all events.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Third-party risk</h3>
+            <span class="separator"></span>
+            <p class="blurb">External tools are admitted and scoped explicitly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Roles and responsibilities</h2>
+          <p>Clear ownership ensures accountability across security activities.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Security team</h3>
+            <span class="separator"></span>
+            <p class="blurb">Owns policy, leads incident response, audits compliance.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Engineering</h3>
+            <span class="separator"></span>
+            <p class="blurb">Implements controls and follows secure coding guidance.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">DevOps</h3>
+            <span class="separator"></span>
+            <p class="blurb">Maintains secure infrastructure and monitoring.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Management</h3>
+            <span class="separator"></span>
+            <p class="blurb">Approves policy changes and resources.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Compliance and review</h2>
+          <p>Reviewed annually or after P0/P1 incidents.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Alignment</h3>
+            <span class="separator"></span>
+            <p class="blurb">CSSLP, OWASP Top 10, and applicable controls.</p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Review cadence</h3>
+            <span class="separator"></span>
+            <p class="blurb">Annual review or post-incident update.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Report a security issue</h2>
+          <p>We welcome responsible disclosure from security researchers.</p>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">Contact</h3>
+            <span class="separator"></span>
+            <p class="blurb">Email: <a href="mailto:anthesis.security@micrantha.com">anthesis.security@micrantha.com</a></p>
+          </div>
+          <div class="topic">
+            <h3 class="term">Security.txt</h3>
+            <span class="separator"></span>
+            <p class="blurb">See <a href=".well-known/security.txt">/.well-known/security.txt</a> for disclosure details.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
