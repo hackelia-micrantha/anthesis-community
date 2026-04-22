@@ -1,0 +1,5 @@
+Contact: mailto:security.anthesis@micrantha.com
+Expires: 2027-03-29T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://anthesis.micrantha.com/.well-known/security.txt
+Policy: https://anthesis.micrantha.com/security-policy.html
