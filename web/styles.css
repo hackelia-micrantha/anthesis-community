@@ -73,7 +73,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 6vw;
+  padding: 24px 6vw 24px 4vw; /* reduced left padding to align brand with page content */
   position: sticky;
   top: 0;
   backdrop-filter: blur(10px);
