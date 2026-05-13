@@ -75,7 +75,7 @@
           </p>
           <p class="lede"><strong>Was the system allowed to do this—and can it prove it?</strong></p>
           <div class="hero-actions">
-            <a class="btn" href="project-brief.pdf">Read project brief</a>
+            <a class="btn" href="project-brief.html">Read project brief</a>
             <a class="btn ghost" href="anthesis.pdf">Read whitepaper</a>
           </div>
         </div>
@@ -100,6 +100,13 @@
         </div>
         <div class="panel">
           <p>In real engineering environments, especially where security, reliability, or compliance matter, teams need more than fast output. They need to know what policy allowed an action, who or what initiated it, what approvals occurred, what evidence exists, and whether the result can be reconstructed later. Anthesis addresses that problem by treating agent activity as governed execution rather than informal automation.</p>
+        </div>
+        <div class="diagram diagram-wide">
+          <div class="diagram-caption">
+            <h3>Controlled state transition</h3>
+            <p>Every consequential action passes through authority, context, and evidence.</p>
+          </div>
+          <img src="authority_gate.svg" alt="Authority gate diagram showing intent, context, policy, approval, execution, and replay evidence" />
         </div>
       </section>
 
@@ -173,8 +180,23 @@
             </div>
           </div>
           <div class="diagram diagram-compact">
+            <p class="small-caption">Example Software Development Lifecycle</p>
             <img src="sdlc_diagram.svg" alt="Lifecycle overview diagram showing governed control surfaces, loops, and coordinated human and agent participation" />
           </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Example control path</h2>
+          <p>A concrete Anthesis run should be understandable as a small sequence of governed steps, not a hidden autonomous session.</p>
+        </div>
+        <div class="split">
+          <div class="panel"><p><strong>1. Intent</strong><br />A human or agent proposes a bounded action with the context needed to judge it.</p></div>
+          <div class="panel"><p><strong>2. Policy check</strong><br />Anthesis evaluates scope, risk, authority, required approvals, and evidence requirements before execution.</p></div>
+          <div class="panel"><p><strong>3. Review or grant</strong><br />Low-risk work may proceed under policy. Higher-risk work routes to explicit human review.</p></div>
+          <div class="panel"><p><strong>4. Execution</strong><br />The action runs inside the approved boundary and records material inputs, outputs, and validation results.</p></div>
+          <div class="panel"><p><strong>5. Evidence</strong><br />The result is linked to authority, approvals, context, and replay-aware records for later audit.</p></div>
         </div>
       </section>
 
@@ -234,7 +256,7 @@
             <div class="topic">
               <h3 class="term">Project brief</h3>
               <p class="blurb">A concise explanation of the problem, model, and intended use cases.</p>
-              <p><a href="project-brief.pdf">Open the project brief</a></p>
+              <p><a href="project-brief.html">Open the project brief</a></p>
             </div>
           </div>
           <div class="panel">
@@ -253,7 +275,7 @@
       <div class="split">
         <div>
           <p>Anthesis. Governed AI collaboration for the SDLC.</p>
-          <p class="mono"><a href="project-brief.pdf">Project brief</a> · <a href="anthesis.pdf">Whitepaper</a></p>
+          <p class="mono"><a href="project-brief.html">Project brief</a> · <a href="anthesis.pdf">Whitepaper</a></p>
           <p class="footer-meta">All rights reserved © <a href="https://micrantha.com">Micrantha.com</a></p>
         </div>
         <div>
@@ -268,7 +290,7 @@
           <ul class="footer-links">
             <li><a href="#audience">Who it is for</a></li>
             <li><a href="#read-deeper">Read deeper</a></li>
-            <li><a href="project-brief.pdf">Project brief</a></li>
+            <li><a href="project-brief.html">Project brief</a></li>
             <li><a href="anthesis.pdf">Whitepaper</a></li>
           </ul>
         </div>

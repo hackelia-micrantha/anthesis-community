@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
+<body class="project-brief">
   <div class="page">
     <header class="hero">
       <nav class="nav" aria-label="Primary">
@@ -89,6 +89,13 @@
             <p class="blurb"><strong>“the system executed a bounded action under policy, with recorded authority, linked approvals, evidence, and a replay-aware record.”</strong></p>
           </div>
         </div>
+        <div class="diagram diagram-wide">
+          <div class="diagram-caption">
+            <h3>Evidence envelope</h3>
+            <p>Each run becomes a durable record, not an invisible side effect.</p>
+          </div>
+          <img src="evidence_envelope.svg" alt="Evidence envelope diagram showing intent, actor, policy, approval, context, output, validation, audit, replay, and promotion records" />
+        </div>
       </section>
 
       <section id="capabilities" class="section reveal">
@@ -130,6 +137,30 @@
       </section>
 
       <section class="section reveal">
+        <div class="section-head">
+          <h2>Current posture</h2>
+        </div>
+        <div class="panel">
+          <p>Anthesis is presented here as a governance architecture and implementation direction for AI-assisted software delivery. The public materials describe the intended control model, vocabulary, and operating constraints rather than claiming a finished compliance product.</p>
+          <p>The near-term focus is a narrow, inspectable path for policy-bound execution, approval routing, evidence capture, and replay-aware records. Broader integrations should be added only where they preserve those control surfaces.</p>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Non-goals</h2>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>Replacing human accountability with model autonomy</li>
+            <li>Treating generated output as trusted without validation</li>
+            <li>Bypassing existing review, promotion, or incident processes</li>
+            <li>Hiding approvals, evidence, or execution context inside informal logs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal" id="why-this-matters">
         <div class="section-head">
           <h2>Why this matters</h2>
         </div>
