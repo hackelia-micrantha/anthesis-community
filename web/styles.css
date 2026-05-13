@@ -305,7 +305,6 @@ section:nth-child(odd) .panel {
 
 .how-it-works-layout {
   grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-  align-items: start;
 }
 
 .diagram-compact {
