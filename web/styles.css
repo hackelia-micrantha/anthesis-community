@@ -306,17 +306,13 @@ section:nth-child(odd) .panel {
 .diagram-wide {
   margin-top: 20px;
   padding: 18px;
-  background: var(--card-2);
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius);
-  box-shadow: 0 16px 44px rgba(20, 16, 10, 0.08);
 }
 
 .diagram-wide img {
   display: block;
-  width: 100%;
   border-radius: 0;
   box-shadow: none;
+  max-width: 720px;
 }
 
 .diagram-caption {
