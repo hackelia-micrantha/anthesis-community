@@ -1,0 +1,38 @@
+<svg viewBox="0 94 760 218" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Risk-based approval routing</title>
+  <desc id="desc">Low, medium, high, and denied work route through progressively stronger control paths.</desc>
+  <g transform="translate(54 112)" font-family="Space Grotesk, Segoe UI, sans-serif">
+    <g>
+      <rect x="0" y="0" width="150" height="174" rx="16" fill="#eef7f5" stroke="#1b8a7a"/>
+      <circle cx="75" cy="48" r="23" fill="#1b8a7a"/>
+      <text x="75" y="53" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">L</text>
+      <text x="75" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#1c1b19">Low risk</text>
+      <text x="75" y="118" text-anchor="middle" font-size="12" fill="#4f4a42">policy grant</text>
+      <text x="75" y="138" text-anchor="middle" font-size="12" fill="#4f4a42">record evidence</text>
+    </g>
+    <g transform="translate(166)">
+      <rect x="0" y="0" width="150" height="174" rx="16" fill="#fff" stroke="#e3dbcf"/>
+      <circle cx="75" cy="48" r="23" fill="#f0b25c"/>
+      <text x="75" y="53" text-anchor="middle" font-size="18" font-weight="700" fill="#1c1b19">M</text>
+      <text x="75" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#1c1b19">Medium risk</text>
+      <text x="75" y="118" text-anchor="middle" font-size="12" fill="#4f4a42">review queue</text>
+      <text x="75" y="138" text-anchor="middle" font-size="12" fill="#4f4a42">bounded run</text>
+    </g>
+    <g transform="translate(332)">
+      <rect x="0" y="0" width="150" height="174" rx="16" fill="#fff4e6" stroke="#ff7a00"/>
+      <circle cx="75" cy="48" r="23" fill="#ff7a00"/>
+      <text x="75" y="53" text-anchor="middle" font-size="18" font-weight="700" fill="#1b1209">H</text>
+      <text x="75" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#1c1b19">High risk</text>
+      <text x="75" y="118" text-anchor="middle" font-size="12" fill="#4f4a42">explicit approval</text>
+      <text x="75" y="138" text-anchor="middle" font-size="12" fill="#4f4a42">audit required</text>
+    </g>
+    <g transform="translate(498)">
+      <rect x="0" y="0" width="150" height="174" rx="16" fill="#f4efe6" stroke="#1c1b19" stroke-opacity=".3"/>
+      <circle cx="75" cy="48" r="23" fill="#1c1b19"/>
+      <text x="75" y="54" text-anchor="middle" font-size="20" font-weight="700" fill="#fbf6ee">X</text>
+      <text x="75" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#1c1b19">Denied</text>
+      <text x="75" y="118" text-anchor="middle" font-size="12" fill="#4f4a42">safe halt</text>
+      <text x="75" y="138" text-anchor="middle" font-size="12" fill="#4f4a42">reason logged</text>
+    </g>
+  </g>
+</svg>
