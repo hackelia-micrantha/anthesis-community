@@ -59,8 +59,7 @@
           <a href="#how-it-works">How it works</a>
           <a href="#fits">Where it fits</a>
           <a href="#audience">Who it is for</a>
-          <a href="#principles">Principles</a>
-          <a href="project-brief.pdf">Project brief</a>
+          <a href="#read-deeper">Read deeper</a>
         </div>
       </nav>
 
@@ -76,7 +75,7 @@
           </p>
           <p class="lede"><strong>Was the system allowed to do this—and can it prove it?</strong></p>
           <div class="hero-actions">
-            <a class="btn" href="project-brief.pdf">Read overview</a>
+            <a class="btn" href="project-brief.pdf">Read project brief</a>
             <a class="btn ghost" href="anthesis.pdf">Read whitepaper</a>
           </div>
         </div>
@@ -100,16 +99,7 @@
           <p>AI-assisted delivery can accelerate software work. It can also weaken control.</p>
         </div>
         <div class="panel">
-          <div class="topic">
-            <h3 class="term">The real problem is control</h3>
-            <span class="separator"></span>
-            <p class="blurb">In real engineering environments, especially where security, reliability, or compliance matter, teams need more than fast output. They need to know what policy allowed an action, who or what initiated it, what approvals occurred, what evidence exists, and whether the result can be reconstructed later.</p>
-          </div>
-          <div class="topic">
-            <h3 class="term">Governed execution instead of informal automation</h3>
-            <span class="separator"></span>
-            <p class="blurb">Anthesis forces meaningful intervention into explicit paths tied to policy, approvals, evidence, and replay-aware records. It treats agent activity as governed execution rather than opaque autonomy.</p>
-          </div>
+          <p>In real engineering environments, especially where security, reliability, or compliance matter, teams need more than fast output. They need to know what policy allowed an action, who or what initiated it, what approvals occurred, what evidence exists, and whether the result can be reconstructed later. Anthesis addresses that problem by treating agent activity as governed execution rather than informal automation.</p>
         </div>
       </section>
 
@@ -160,24 +150,19 @@
       <section id="how-it-works" class="section reveal">
         <div class="section-head">
           <h2>How it works</h2>
-          <p>The SDLC diagram stays below the fold as supporting context: Anthesis coordinates governed handoffs, control surfaces, and review points across software delivery rather than replacing engineering process with opaque autonomy.</p>
+          <p>Anthesis coordinates governed handoffs, control surfaces, and review points across software delivery rather than replacing engineering process with opaque autonomy.</p>
         </div>
-        <div class="split">
+        <div class="split how-it-works-layout">
           <div>
             <div class="panel">
               <div class="topic">
                 <h3 class="term">A governed path through the SDLC</h3>
                 <span class="separator"></span>
-                <p class="blurb">The model assumes multiple actors, artifacts, and control surfaces can participate in delivery work, but consequential transitions still need policy, authority, and traceable evidence.</p>
-              </div>
-              <div class="topic">
-                <h3 class="term">Supporting detail, not the opening pitch</h3>
-                <span class="separator"></span>
-                <p class="blurb">The diagram is useful once the reader understands the thesis: Git-native, governance-first AI collaboration with bounded execution paths and meaningful human control.</p>
+                <p class="blurb">Multiple actors, artifacts, and control surfaces can participate in delivery work, but consequential transitions still need policy, authority, and traceable evidence.</p>
               </div>
             </div>
           </div>
-          <div class="diagram">
+          <div class="diagram diagram-compact">
             <img src="sdlc_diagram.svg" alt="SDLC overview diagram showing governed control surfaces, SDLC phases, and coordinated human and agent participation" />
           </div>
         </div>
@@ -229,69 +214,13 @@
           <div class="panel"><p>Security engineering teams</p></div>
           <div class="panel"><p>Regulated or audit-sensitive software organizations</p></div>
           <div class="panel"><p>Teams adopting agentic SDLC workflows</p></div>
-          <div class="panel"><p>Projects that need human and agent collaboration without surrendering traceability</p></div>
         </div>
       </section>
 
-      <section id="principles" class="section reveal">
-        <div class="section-head">
-          <h2>Core principles</h2>
-          <p>A simpler public expression of the system’s design goals.</p>
-        </div>
-        <div class="split">
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Git remains the source of truth</h3>
-              <p class="blurb">Repository state, governance artifacts, and promotable changes stay anchored to version-controlled inputs and outputs.</p>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Governance is part of execution</h3>
-              <p class="blurb">Policy, approvals, and evidence are not optional afterthoughts. They are part of how the system works.</p>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Human control remains explicit</h3>
-              <p class="blurb">Agents participate as bounded operators, not final authorities.</p>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Reviewability matters as much as generation</h3>
-              <p class="blurb">A useful system does not just produce output. It produces output that can be meaningfully inspected.</p>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Replay and audit are first-class</h3>
-              <p class="blurb">Teams need enough normalized evidence to understand material decisions and outcomes after the fact.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section reveal">
-        <div class="section-head">
-          <h2>Why this matters beyond one project</h2>
-          <p>Anthesis explores governance patterns for AI-assisted software delivery that may be useful across ecosystems.</p>
-        </div>
-        <div class="panel">
-          <ul class="bullets">
-            <li>Policy-governed execution</li>
-            <li>Approval routing at hardened SDLC boundaries</li>
-            <li>Replay-aware evidence models</li>
-            <li>Human and agent actors with distinct authority models</li>
-            <li>Auditable intervention rather than opaque automation</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="section reveal">
+      <section id="read-deeper" class="section reveal">
         <div class="section-head">
           <h2>Read deeper</h2>
-          <p>The public materials are the concise overview and the whitepaper. The whitepaper currently carries the deeper architectural and RFC-overview material.</p>
+          <p>The public materials are the concise project brief and the whitepaper. The whitepaper carries the deeper architectural and RFC-overview material.</p>
         </div>
         <div class="split">
           <div class="panel">
@@ -306,13 +235,6 @@
               <h3 class="term">Whitepaper</h3>
               <p class="blurb">Longer-form technical material, including public overviews of the underlying RFC model and architecture.</p>
               <p><a href="anthesis.pdf">Read the whitepaper</a></p>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="topic">
-              <h3 class="term">Public source</h3>
-              <p class="blurb">This repository contains the public site and project-facing material, not the private governance RFC corpus.</p>
-              <p><a href="https://github.com/hackelia-micrantha/anthesis-community">View the public site repository</a></p>
             </div>
           </div>
         </div>
@@ -338,10 +260,9 @@
         <div>
           <ul class="footer-links">
             <li><a href="#audience">Who it is for</a></li>
-            <li><a href="#principles">Principles</a></li>
+            <li><a href="#read-deeper">Read deeper</a></li>
             <li><a href="project-brief.pdf">Project brief</a></li>
             <li><a href="anthesis.pdf">Whitepaper</a></li>
-            <li><a href="https://github.com/hackelia-micrantha/anthesis-community">Public site repository</a></li>
           </ul>
         </div>
         <div class="corporate">
