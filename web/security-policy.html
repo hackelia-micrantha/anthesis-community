@@ -35,7 +35,7 @@
           <p class="eyebrow">Security Policy</p>
           <h1>Security requirements for Anthesis.</h1>
           <p class="lede">
-            This policy establishes security requirements, responsibilities, and expectations for protecting
+            This policy establishes security requirements, responsibilities, and expectations for production
             Anthesis data and systems.
           </p>
         </div>
@@ -44,7 +44,7 @@
           <ol class="timeline">
             <li>Version: 1.0</li>
             <li>Effective: 2026-01-18</li>
-            <li>Status: Active</li>
+            <li>Status: Active requirements baseline</li>
             <li>Classification: Public</li>
             <li>Owner: Security Team</li>
           </ol>
@@ -119,6 +119,13 @@
             <p class="blurb">Default to safe states when uncertainty exists.</p>
           </div>
         </div>
+        <div class="diagram diagram-wide">
+          <div class="diagram-caption">
+            <h3>Risk routing</h3>
+            <p>Autonomy is conditional. Authority increases with consequence. Risk classification is evaluated before execution and recorded with the outcome.</p>
+          </div>
+          <img src="risk_routing.svg" alt="Risk routing diagram showing low risk policy grants, medium risk review queues, high risk explicit approvals, and denied safe halts" />
+        </div>
       </section>
 
       <section class="section reveal">
@@ -130,7 +137,7 @@
           <div class="topic">
             <h3 class="term">Authentication</h3>
             <span class="separator"></span>
-            <p class="blurb">All API access is authenticated.</p>
+            <p class="blurb">Production API access must be authenticated.</p>
           </div>
           <div class="topic">
             <h3 class="term">Authorization</h3>
@@ -150,12 +157,12 @@
           <div class="topic">
             <h3 class="term">Data protection</h3>
             <span class="separator"></span>
-            <p class="blurb">Sensitive data is protected at rest and in transit.</p>
+            <p class="blurb">Production systems must protect sensitive data at rest and in transit.</p>
           </div>
           <div class="topic">
             <h3 class="term">Monitoring</h3>
             <span class="separator"></span>
-            <p class="blurb">Security events are detected and alerted.</p>
+            <p class="blurb">Production security events must be detected and alerted.</p>
           </div>
           <div class="topic">
             <h3 class="term">Secure SDLC</h3>
@@ -213,7 +220,7 @@
           <div class="topic">
             <h3 class="term">Alignment</h3>
             <span class="separator"></span>
-            <p class="blurb">CSSLP, OWASP Top 10, and applicable controls.</p>
+            <p class="blurb">Security work should align with CSSLP practices, OWASP Top 10, and applicable controls.</p>
           </div>
           <div class="topic">
             <h3 class="term">Review cadence</h3>

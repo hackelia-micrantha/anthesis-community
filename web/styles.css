@@ -257,28 +257,11 @@ section:nth-child(odd) .panel {
   font-size: clamp(28px, 3vw, 40px);
 }
 
-.subhead {
-  margin: 0 0 15px 8px;
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--ink);
-  font-weight: 700;
-  border-left: 3px solid var(--accent);
-  padding-left: 10px;
-}
-
 .section-head p {
   margin: 0;
   color: var(--muted);
   max-width: 680px;
   line-height: 1.6;
-}
-
-.grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .split {
@@ -288,30 +271,13 @@ section:nth-child(odd) .panel {
   align-items: stretch;
 }
 
-.split>* {
+.split > * {
   display: flex;
   flex-direction: column;
 }
 
-.split>*>.panel {
+.split > * > .panel {
   flex: 1;
-}
-
-.usage-blurb {
-  margin: 6px 0 12px 10px;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
-.usage-steps {
-  margin: 0;
-  padding-left: 18px;
-  color: #2b2925;
-  line-height: 1.6;
-}
-
-.usage-steps li+li {
-  margin-top: 8px;
 }
 
 .bullets {
@@ -327,22 +293,63 @@ section:nth-child(odd) .panel {
   color: #2b2925;
 }
 
-.compact-list {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0 0;
-  display: grid;
-  gap: 6px;
-}
-
-.compact-list li {
-  line-height: 1.5;
-  color: #2b2925;
-}
-
 .diagram {
   padding-top: 40px;
   text-align: center;
+}
+
+.diagram img {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram-wide {
+  margin-top: 20px;
+  padding: 18px;
+}
+
+.diagram-wide img {
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 720px;
+}
+
+.diagram-caption {
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.diagram-caption h3,
+.diagram-caption p {
+  margin: 0;
+}
+
+.diagram-caption h3 {
+  font-size: 1.1rem;
+}
+
+.diagram-caption p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.how-it-works-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+}
+
+.diagram-compact {
+  padding-top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.diagram-compact img {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
 }
 
 .topic {
@@ -350,15 +357,13 @@ section:nth-child(odd) .panel {
   margin-bottom: 16px;
 }
 
-.topic:last-child, .panel .split > .topic  {
+.topic:last-child,
+.panel .split > .topic {
   margin-bottom: 0;
 }
 
-.split + .split {
-  margin-top: 24px;
-}
-
-.topic .term, .topic .blurb {
+.topic .term,
+.topic .blurb {
   margin: 0;
 }
 
@@ -380,19 +385,6 @@ section:nth-child(odd) .panel {
   line-height: 1.6;
 }
 
-#lifecycle .topic {
-  display: grid;
-  grid-template-columns: 1fr auto 5fr;
-  align-items: center;
-  margin-bottom: 0;
-}
-
-#lifecycle .topic .separator {
-  display: inline;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
 .panel {
   background: var(--card-2);
   border-radius: var(--radius);
@@ -400,14 +392,6 @@ section:nth-child(odd) .panel {
   border: 1px solid var(--stroke);
   box-shadow: none;
   align-content: center;
-}
-
-.panel + .section-head {
-  margin-top: 48px;
-}
-
-.panel h3 {
-  margin-top: 0;
 }
 
 .panel p {
@@ -424,20 +408,9 @@ section:nth-child(odd) .panel {
   padding: 40px 6vw 60px;
 }
 
-.footer-content>div {
+.footer-content > div {
   padding: 18px 20px;
   border-radius: 14px;
-}
-
-.footer-status h3 {
-  margin: 0 0 10px;
-  font-size: 1.125rem;
-  color: var(--ink);
-}
-
-.footer-status p {
-  margin: 0 0 10px;
-  line-height: 1.6;
 }
 
 .footer-meta {
@@ -474,12 +447,18 @@ section:nth-child(odd) .panel {
   padding: 0;
 }
 
-.footer li+li {
+.footer li + li {
   margin-top: 6px;
 }
 
 .mono {
   font-family: monospace, monospace;
+}
+
+.diagram .small-caption {
+  font-size: 0.5rem;
+  margin-left: 100pt;
+  color: var(--muted);
 }
 
 @media (max-width: 900px) {
@@ -513,14 +492,6 @@ section:nth-child(odd) .panel {
     padding-top: 0;
   }
 
-  .subhead {
-    margin-top: 24px;
-  }
-
-  .panel + .section-head > .subhead {
-    margin-top: 0;
-  }
-
   .nav-toggle {
     display: inline-flex;
     order: 2;
@@ -540,7 +511,8 @@ section:nth-child(odd) .panel {
     display: flex;
   }
 
-  .split {
+  .split,
+  .how-it-works-layout {
     grid-template-columns: 1fr;
   }
 
@@ -548,25 +520,127 @@ section:nth-child(odd) .panel {
     grid-template-columns: 1fr;
   }
 
-  .topic {
-    display: block;
+  .diagram-compact {
+    justify-content: flex-start;
   }
 
-  .topic .term {
-    display: block;
+  .diagram-compact img {
+    max-width: 360px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 0.65in;
   }
 
-  .topic .separator {
+  body.project-brief,
+  .project-brief .page {
+    background: #fff;
+    color: #111;
+  }
+
+  .project-brief .page {
+    min-height: auto;
+    background-image: none;
+  }
+
+  .project-brief .nav,
+  body.project-brief > .footer {
     display: none;
   }
 
-  #lifecycle .topic {
-    grid-template-columns: 1fr;
-    margin-bottom: 16px;
+  .project-brief .hero {
+    padding: 0 0 16pt;
   }
 
-  #lifecycle .topic .separator {
-    display: none;
+  .project-brief .hero-content,
+  .project-brief .split,
+  .project-brief .split > * {
+    display: block;
+  }
+
+  .project-brief .hero-card {
+    width: auto;
+    max-width: none;
+    margin: 12pt 0 0;
+    padding: 10pt;
+  }
+
+  .project-brief main {
+    padding: 0;
+  }
+
+  .project-brief .section {
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+  }
+
+  .project-brief .panel,
+  .project-brief .hero-card,
+  .project-brief .diagram-wide img {
+    box-shadow: none;
+  }
+
+  .project-brief .panel,
+  .project-brief .hero-card {
+    padding: 10pt;
+  }
+
+  .project-brief .section,
+  .project-brief .panel,
+  .project-brief .hero-card,
+  .project-brief .diagram-wide {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .project-brief .diagram-wide {
+    padding-top: 8pt;
+  }
+
+  .project-brief .diagram-wide img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 2.8in;
+    object-fit: contain;
+  }
+
+  .project-brief .section-head {
+    margin-bottom: 15pt;
+    margin-top: 0;
+  }
+
+  .project-brief .section-head + .panel {
+    border: none;
+    padding: 0;
+  }
+
+  .project-brief .split .panel {
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
+
+  .project-brief h1 {
+    font-size: 30pt;
+  }
+
+  .project-brief .section-head h2 {
+    font-size: 20pt;
+  }
+
+  .project-brief .lede,
+  .project-brief .panel p,
+  .project-brief .bullets li {
+    line-height: 1.4;
+    gap: 0;
+  }
+
+  .project-brief .reveal {
+    opacity: 1;
+    transform: none;
   }
 
 }

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anthesis Project Brief</title>
+  <meta name="description"
+    content="Anthesis is a governance-first, Git-native system for using AI in software delivery through policy-bound, reviewable, replayable, and auditable execution." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Micrantha" />
+  <link rel="canonical" href="https://anthesis.micrantha.com/project-brief.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="project-brief">
+  <div class="page">
+    <header class="hero">
+      <nav class="nav" aria-label="Primary">
+        <div class="brand">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 800 800" class="brand-icon" role="img" aria-label="Anthesis" width="40" height="40" aria-hidden="false">
+            <path d="M320 24c6 0 11.8 1.3 17.2 3.7l214.3 90.9c28.1 11.9 49.1 39.6 48.9 73.1-.7 126.8-52.8 358.8-272.9 464.2-21.3 10.2-46.1 10.2-67.4 0C40 550.5-12.1 318.5-12.7 191.7c-.2-33.5 20.8-61.2 48.9-73.1l214.3-90.9c5.4-2.4 11.2-3.7 17.2-3.7H320Z" fill="none" stroke="currentColor" stroke-width="48" stroke-linejoin="round" opacity=".22"/>
+            <path d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z" fill="currentColor" transform="translate(144 176) scale(.55)"/>
+          </svg>
+          Anthesis
+        </div>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+          Menu
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="index.html">Home</a>
+          <a href="#problem">Problem</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#relevance">Ecosystem relevance</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Project brief</p>
+          <h1>Anthesis</h1>
+          <p class="lede"><strong>Governed AI collaboration for the software development lifecycle</strong></p>
+          <p class="lede">Anthesis is a governance-first, Git-native system for using AI in software delivery without giving up human control, reviewability, or auditability.</p>
+        </div>
+        <div class="hero-card">
+          <div class="card-title">In one question</div>
+          <p class="lede"><strong>Was the system allowed to do this—and can it prove it?</strong></p>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>What Anthesis is</h2>
+        </div>
+        <div class="panel">
+          <p>As AI becomes part of planning, coding, documentation, validation, and workflow execution, teams face a new operational problem: work can happen faster than it can be meaningfully reviewed, approved, or reconstructed. That creates risk around authority, trust, compliance, and accountability.</p>
+          <p>Anthesis addresses that problem by treating agent activity as governed execution rather than informal automation. Instead of asking teams to trust opaque model behavior, it forces consequential intervention into explicit, reviewable paths tied to policy, approvals, evidence, and replay-aware records.</p>
+        </div>
+      </section>
+
+      <section id="problem" class="section reveal">
+        <div class="section-head">
+          <h2>The problem</h2>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>Agent changes that are weakly reviewed or not meaningfully attributable</li>
+            <li>Unclear authority over who or what approved a consequential step</li>
+            <li>Difficulty reconstructing how an outcome was produced</li>
+            <li>Poor auditability in regulated or security-sensitive environments</li>
+            <li>Drift between policy, intent, execution, and repository state</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>What Anthesis changes</h2>
+        </div>
+        <div class="panel">
+          <div class="topic">
+            <h3 class="term">From</h3>
+            <p class="blurb"><strong>“the agent made a change”</strong></p>
+          </div>
+          <div class="topic">
+            <h3 class="term">To</h3>
+            <p class="blurb"><strong>“the system executed a bounded action under policy, with recorded authority, linked approvals, evidence, and a replay-aware record.”</strong></p>
+          </div>
+        </div>
+        <div class="diagram diagram-wide">
+          <div class="diagram-caption">
+            <h3>Evidence envelope</h3>
+            <p>Each run becomes a durable record, not an invisible side effect.</p>
+          </div>
+          <img src="evidence_envelope.svg" alt="Evidence envelope diagram showing intent, actor, policy, approval, context, output, validation, audit, replay, and promotion records" />
+        </div>
+      </section>
+
+      <section id="capabilities" class="section reveal">
+        <div class="section-head">
+          <h2>Core capabilities</h2>
+        </div>
+        <div class="split">
+          <div class="panel"><p><strong>Policy-bound execution</strong><br />Actions operate within explicit rules, scopes, and approval requirements.</p></div>
+          <div class="panel"><p><strong>Reviewable intervention</strong><br />Consequential outputs can be shaped into forms that humans can inspect and approve.</p></div>
+          <div class="panel"><p><strong>Replay-aware evidence</strong><br />Executions can be reconstructed well enough to understand the decision surface, context, and material outcome.</p></div>
+          <div class="panel"><p><strong>Auditable records</strong><br />Approvals, actors, evidence, and outcomes are retained as governance artifacts.</p></div>
+          <div class="panel"><p><strong>Human authority with bounded agent participation</strong><br />Humans remain governance anchors for promotion, exceptions, and high-consequence decisions, while agents participate as bounded operators.</p></div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Where it applies</h2>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>Code generation and repository modification</li>
+            <li>Documentation and specification workflows</li>
+            <li>CI/CD and workflow execution</li>
+            <li>Validation, policy checks, and approval routing</li>
+            <li>Audit, replay, and post-hoc reconstruction of meaningful interventions</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Architectural posture</h2>
+        </div>
+        <div class="panel">
+          <p>Anthesis is Git-native and governance-first.</p>
+          <p>Git remains the source of truth for promotable artifacts and change history. Anthesis adds governed control surfaces around how work is proposed, approved, executed, and promoted. The implementation may contain multiple layers for policy, orchestration, and execution, but the primary external point is simpler: AI participation should occur through explicit, bounded, reviewable mechanisms rather than opaque autonomy.</p>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Current posture</h2>
+        </div>
+        <div class="panel">
+          <p>Anthesis is presented here as a governance architecture and implementation direction for AI-assisted software delivery. The public materials describe the intended control model, vocabulary, and operating constraints rather than claiming a finished compliance product.</p>
+          <p>The near-term focus is a narrow, inspectable path for policy-bound execution, approval routing, evidence capture, and replay-aware records. Broader integrations should be added only where they preserve those control surfaces.</p>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Non-goals</h2>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>Replacing human accountability with model autonomy</li>
+            <li>Treating generated output as trusted without validation</li>
+            <li>Bypassing existing review, promotion, or incident processes</li>
+            <li>Hiding approvals, evidence, or execution context inside informal logs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal" id="why-this-matters">
+        <div class="section-head">
+          <h2>Why this matters</h2>
+        </div>
+        <div class="split">
+          <div class="panel"><p><strong>Safer automation</strong><br />Anthesis does not require disabling agents. It narrows their blast radius.</p></div>
+          <div class="panel"><p><strong>Better review</strong><br />Review can include not just the resulting diff, but also intent, policy, authority, and supporting evidence.</p></div>
+          <div class="panel"><p><strong>Stronger incident analysis</strong><br />Replay-aware records make it easier to understand how a material outcome was reached.</p></div>
+          <div class="panel"><p><strong>More defensible AI adoption</strong><br />Organizations can adopt AI assistance without discarding core governance expectations.</p></div>
+          <div class="panel"><p><strong>Better fit for regulated and security-sensitive work</strong><br />Anthesis treats auditability and accountability as design constraints, not optional add-ons.</p></div>
+        </div>
+      </section>
+
+      <section id="relevance" class="section reveal">
+        <div class="section-head">
+          <h2>Ecosystem relevance</h2>
+        </div>
+        <div class="panel">
+          <p>Anthesis is not only a product thesis. It is also an exploration of governance patterns for AI-era software delivery.</p>
+          <ul class="bullets">
+            <li>Policy-governed intervention</li>
+            <li>Human and agent actors with distinct authority models</li>
+            <li>Evidence and replay requirements for consequential AI use</li>
+            <li>Hardened control surfaces in the SDLC</li>
+            <li>Reviewable and auditable automation</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>In one sentence</h2>
+        </div>
+        <div class="panel">
+          <p><strong>Anthesis enables human and AI collaboration in the SDLC through policy-bound, reviewable, replayable, and auditable execution, so teams can gain automation without losing control.</strong></p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="split">
+        <div>
+          <p>Anthesis project brief.</p>
+          <p class="mono"><a href="index.html">Homepage</a> · <a href="anthesis.pdf">Whitepaper</a></p>
+          <p class="footer-meta">All rights reserved © <a href="https://micrantha.com">Micrantha.com</a></p>
+        </div>
+        <div class="corporate">
+          <h3>Micrantha</h3>
+          <ul class="footer-links">
+            <li><a href="https://micrantha.com">Home</a></li>
+            <li><a href="https://micrantha.com/privacy">Privacy Policy</a></li>
+            <li><a href="https://micrantha.com/terms">Terms of Service</a></li>
+            <li><a href="https://micrantha.com/support">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+
+</html>

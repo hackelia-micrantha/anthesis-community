@@ -1,0 +1,47 @@
+<svg viewBox="0 84 760 264" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Replay-aware evidence envelope</title>
+  <desc id="desc">A governed run records intent, authority, context, approval, activity, validation, outcome, and replay data.</desc>
+  <g transform="translate(92 106)" font-family="Space Grotesk, Segoe UI, sans-serif">
+    <rect x="0" y="0" width="576" height="178" rx="18" fill="#fff" stroke="#e3dbcf"/>
+    <rect x="28" y="28" width="520" height="128" rx="14" fill="#f7f0e3" stroke="#e3dbcf"/>
+    <rect x="52" y="56" width="472" height="76" rx="12" fill="#fbf6ee" stroke="#e3dbcf"/>
+    <g fill="#1c1b19" font-size="12" font-weight="700">
+      <text x="28" y="18" text-anchor="start">run record</text>
+      <text x="524" y="47" text-anchor="end">governance layer</text>
+      <text x="288" y="76" text-anchor="middle">execution layer</text>
+    </g>
+    <g font-size="12" fill="#4f4a42">
+      <text x="70" y="100">intent</text>
+      <text x="138" y="100">actor</text>
+      <text x="206" y="100">policy</text>
+      <text x="284" y="100">approval</text>
+      <text x="378" y="100">context</text>
+      <text x="470" y="100">output</text>
+    </g>
+    <g fill="#1b8a7a">
+      <circle cx="82" cy="110" r="6"/>
+      <circle cx="150" cy="110" r="6"/>
+      <circle cx="218" cy="110" r="6"/>
+      <circle cx="304" cy="110" r="6"/>
+      <circle cx="396" cy="110" r="6"/>
+      <circle cx="488" cy="110" r="6"/>
+    </g>
+    <g stroke="#1c1b19" stroke-width="1" opacity=".22">
+      <line x1="89" y1="110" x2="143" y2="110"/>
+      <line x1="157" y1="110" x2="211" y2="110"/>
+      <line x1="225" y1="110" x2="297" y2="110"/>
+      <line x1="311" y1="110" x2="389" y2="110"/>
+      <line x1="403" y1="110" x2="481" y2="110"/>
+    </g>
+  </g>
+  <g transform="translate(92 318)" font-family="Space Grotesk, Segoe UI, sans-serif" font-size="12" text-anchor="middle">
+    <rect x="0" y="-18" width="120" height="36" rx="18" fill="#1c1b19"/>
+    <text x="60" y="4" fill="#fbf6ee" font-weight="700">validation</text>
+    <rect x="152" y="-18" width="120" height="36" rx="18" fill="#fff4e6" stroke="#ff7a00"/>
+    <text x="212" y="4" fill="#1c1b19" font-weight="700">audit</text>
+    <rect x="304" y="-18" width="120" height="36" rx="18" fill="#f4efe6" stroke="#e3dbcf"/>
+    <text x="364" y="4" fill="#1c1b19" font-weight="700">replay</text>
+    <rect x="456" y="-18" width="120" height="36" rx="18" fill="#eef7f5" stroke="#1b8a7a"/>
+    <text x="516" y="4" fill="#1c1b19" font-weight="700">promotion</text>
+  </g>
+</svg>
