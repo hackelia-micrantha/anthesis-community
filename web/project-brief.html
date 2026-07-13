@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Anthesis Project Brief</title>
   <meta name="description"
-    content="Anthesis is a governance-first, Git-native system for using AI in software delivery through policy-bound, reviewable, replayable, and auditable execution." />
+    content="Anthesis is a deterministic governance gate for agentic architectures and lifecycle loops, using policy-bound, reviewable, replayable, and auditable execution." />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Micrantha" />
   <link rel="canonical" href="https://anthesis.micrantha.com/project-brief.html" />
@@ -39,8 +39,8 @@
         <div class="hero-text">
           <p class="eyebrow">Project brief</p>
           <h1>Anthesis</h1>
-          <p class="lede"><strong>Governed AI collaboration for the software development lifecycle</strong></p>
-          <p class="lede">Anthesis is a governance-first, Git-native system for using AI in software delivery without giving up human control, reviewability, or auditability.</p>
+          <p class="lede"><strong>A deterministic gate for agentic architectures and loops</strong></p>
+          <p class="lede">Anthesis is a governance-first, Git-native control layer for agentic architectures, lifecycle loops, and AI-assisted delivery without giving up human control, reviewability, or auditability.</p>
         </div>
         <div class="hero-card">
           <div class="card-title">In one question</div>
@@ -55,8 +55,8 @@
           <h2>What Anthesis is</h2>
         </div>
         <div class="panel">
-          <p>As AI becomes part of planning, coding, documentation, validation, and workflow execution, teams face a new operational problem: work can happen faster than it can be meaningfully reviewed, approved, or reconstructed. That creates risk around authority, trust, compliance, and accountability.</p>
-          <p>Anthesis addresses that problem by treating agent activity as governed execution rather than informal automation. Instead of asking teams to trust opaque model behavior, it forces consequential intervention into explicit, reviewable paths tied to policy, approvals, evidence, and replay-aware records.</p>
+          <p>As agents become part of planning, coding, documentation, validation, release, and operational workflows, teams face a new operational problem: loops can continue faster than they can be meaningfully reviewed, approved, or reconstructed. That creates risk around authority, trust, compliance, and accountability.</p>
+          <p>Anthesis addresses that problem by treating agent activity as a governed state transition rather than informal automation. Instead of asking teams to trust opaque model behavior, it forces consequential intervention through deterministic gates tied to policy, approvals, evidence, and replay-aware records.</p>
         </div>
       </section>
 
@@ -66,11 +66,11 @@
         </div>
         <div class="panel">
           <ul class="bullets">
-            <li>Agent changes that are weakly reviewed or not meaningfully attributable</li>
+            <li>Agentic loops that continue without explicit authority or meaningful attribution</li>
             <li>Unclear authority over who or what approved a consequential step</li>
             <li>Difficulty reconstructing how an outcome was produced</li>
             <li>Poor auditability in regulated or security-sensitive environments</li>
-            <li>Drift between policy, intent, execution, and repository state</li>
+            <li>Drift between policy, intent, gate decisions, execution, and repository state</li>
           </ul>
         </div>
       </section>
@@ -86,7 +86,7 @@
           </div>
           <div class="topic">
             <h3 class="term">To</h3>
-            <p class="blurb"><strong>“the system executed a bounded action under policy, with recorded authority, linked approvals, evidence, and a replay-aware record.”</strong></p>
+            <p class="blurb"><strong>“the system passed a deterministic gate and executed a bounded action under policy, with recorded authority, linked approvals, evidence, and a replay-aware record.”</strong></p>
           </div>
         </div>
         <div class="diagram diagram-wide">
@@ -103,11 +103,11 @@
           <h2>Core capabilities</h2>
         </div>
         <div class="split">
-          <div class="panel"><p><strong>Policy-bound execution</strong><br />Actions operate within explicit rules, scopes, and approval requirements.</p></div>
-          <div class="panel"><p><strong>Reviewable intervention</strong><br />Consequential outputs can be shaped into forms that humans can inspect and approve.</p></div>
-          <div class="panel"><p><strong>Replay-aware evidence</strong><br />Executions can be reconstructed well enough to understand the decision surface, context, and material outcome.</p></div>
-          <div class="panel"><p><strong>Auditable records</strong><br />Approvals, actors, evidence, and outcomes are retained as governance artifacts.</p></div>
-          <div class="panel"><p><strong>Human authority with bounded agent participation</strong><br />Humans remain governance anchors for promotion, exceptions, and high-consequence decisions, while agents participate as bounded operators.</p></div>
+          <div class="panel"><p><strong>Deterministic gate evaluation</strong><br />Actions operate within explicit rules, scopes, risk classifications, and approval requirements.</p></div>
+          <div class="panel"><p><strong>Reviewable state transitions</strong><br />Consequential outputs can be shaped into forms that humans can inspect, approve, deny, or safely halt.</p></div>
+          <div class="panel"><p><strong>Replay-aware evidence</strong><br />Executions can be reconstructed well enough to understand the gate decision, context, and material outcome.</p></div>
+          <div class="panel"><p><strong>Auditable records</strong><br />Approvals, actors, gate decisions, evidence, and outcomes are retained as governance artifacts.</p></div>
+          <div class="panel"><p><strong>Human authority with bounded agentic execution</strong><br />Humans remain governance anchors for promotion, exceptions, and high-consequence decisions, while agents participate as bounded operators.</p></div>
         </div>
       </section>
 
@@ -117,11 +117,28 @@
         </div>
         <div class="panel">
           <ul class="bullets">
-            <li>Code generation and repository modification</li>
+            <li>Code generation and repository modification loops</li>
             <li>Documentation and specification workflows</li>
-            <li>CI/CD and workflow execution</li>
+            <li>CI/CD and operational execution loops</li>
             <li>Validation, policy checks, and approval routing</li>
             <li>Audit, replay, and post-hoc reconstruction of meaningful interventions</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <h2>Integration modes</h2>
+        </div>
+        <div class="panel">
+          <p>Anthesis integration strength depends on whether an agent can perform externally observable effects without crossing Anthesis. Prompts and conventions are not guarantees. Guarantees come from runtime control surfaces: registry restriction, network isolation, capability validation, gateway enforcement, credential isolation, and sandboxing.</p>
+          <ul class="bullets">
+            <li>Tool wrapper / invoke: expose only <code>anthesis.invoke</code> or Anthesis-scoped wrappers.</li>
+            <li>MCP mediation: expose Anthesis as the agent-facing MCP surface.</li>
+            <li>Gateway / sidecar: block downstream network or API access except through Anthesis.</li>
+            <li>Capability tokens: require downstream tools to reject calls without Anthesis-issued grants.</li>
+            <li>SDK wrapper: pair developer ergonomics with credential isolation or guardrails.</li>
+            <li>Sandboxed runtime: block direct filesystem, network, process, and credential effects except through governed paths.</li>
           </ul>
         </div>
       </section>
@@ -131,8 +148,8 @@
           <h2>Architectural posture</h2>
         </div>
         <div class="panel">
-          <p>Anthesis is Git-native and governance-first.</p>
-          <p>Git remains the source of truth for promotable artifacts and change history. Anthesis adds governed control surfaces around how work is proposed, approved, executed, and promoted. The implementation may contain multiple layers for policy, orchestration, and execution, but the primary external point is simpler: AI participation should occur through explicit, bounded, reviewable mechanisms rather than opaque autonomy.</p>
+          <p>Anthesis is Git-native, governance-first, and gate-oriented.</p>
+          <p>Git remains the source of truth for promotable artifacts and change history. Anthesis adds deterministic control surfaces around how work is proposed, evaluated, approved, executed, and promoted. The implementation may contain multiple layers for policy, orchestration, and execution, but the primary external point is simpler: agentic participation should occur through explicit, bounded, reviewable mechanisms rather than opaque autonomy.</p>
         </div>
       </section>
 
@@ -142,7 +159,7 @@
         </div>
         <div class="panel">
           <p>Anthesis is presented here as a governance architecture and implementation direction for AI-assisted software delivery. The public materials describe the intended control model, vocabulary, and operating constraints rather than claiming a finished compliance product.</p>
-          <p>The near-term focus is a narrow, inspectable path for policy-bound execution, approval routing, evidence capture, and replay-aware records. Broader integrations should be added only where they preserve those control surfaces.</p>
+          <p>The near-term focus is a narrow, inspectable path for deterministic gate evaluation, policy-bound execution, approval routing, evidence capture, and replay-aware records. Broader integrations should be added only where they preserve those control surfaces.</p>
         </div>
       </section>
 
@@ -155,7 +172,7 @@
             <li>Replacing human accountability with model autonomy</li>
             <li>Treating generated output as trusted without validation</li>
             <li>Bypassing existing review, promotion, or incident processes</li>
-            <li>Hiding approvals, evidence, or execution context inside informal logs</li>
+            <li>Hiding approvals, gate decisions, evidence, or execution context inside informal logs</li>
           </ul>
         </div>
       </section>
@@ -165,8 +182,8 @@
           <h2>Why this matters</h2>
         </div>
         <div class="split">
-          <div class="panel"><p><strong>Safer automation</strong><br />Anthesis does not require disabling agents. It narrows their blast radius.</p></div>
-          <div class="panel"><p><strong>Better review</strong><br />Review can include not just the resulting diff, but also intent, policy, authority, and supporting evidence.</p></div>
+          <div class="panel"><p><strong>Safer automation</strong><br />Anthesis does not require disabling agents. It gates their loops and narrows their blast radius.</p></div>
+          <div class="panel"><p><strong>Better review</strong><br />Review can include not just the resulting diff, but also intent, policy, authority, gate decisions, and supporting evidence.</p></div>
           <div class="panel"><p><strong>Stronger incident analysis</strong><br />Replay-aware records make it easier to understand how a material outcome was reached.</p></div>
           <div class="panel"><p><strong>More defensible AI adoption</strong><br />Organizations can adopt AI assistance without discarding core governance expectations.</p></div>
           <div class="panel"><p><strong>Better fit for regulated and security-sensitive work</strong><br />Anthesis treats auditability and accountability as design constraints, not optional add-ons.</p></div>
@@ -180,10 +197,10 @@
         <div class="panel">
           <p>Anthesis is not only a product thesis. It is also an exploration of governance patterns for AI-era software delivery.</p>
           <ul class="bullets">
-            <li>Policy-governed intervention</li>
+            <li>Deterministic gates for policy-governed intervention</li>
             <li>Human and agent actors with distinct authority models</li>
             <li>Evidence and replay requirements for consequential AI use</li>
-            <li>Hardened control surfaces in the SDLC</li>
+            <li>Hardened control surfaces for agentic architectures and lifecycle loops</li>
             <li>Reviewable and auditable automation</li>
           </ul>
         </div>
@@ -194,7 +211,7 @@
           <h2>In one sentence</h2>
         </div>
         <div class="panel">
-          <p><strong>Anthesis enables human and AI collaboration in the SDLC through policy-bound, reviewable, replayable, and auditable execution, so teams can gain automation without losing control.</strong></p>
+          <p><strong>Anthesis acts as a deterministic gate for agentic architectures and loops, so teams can use policy-bound, reviewable, replayable, and auditable execution without losing control.</strong></p>
         </div>
       </section>
     </main>

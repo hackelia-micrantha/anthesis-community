@@ -13,9 +13,13 @@
 
 ## Overview
 
-Anthesis is a **governed, Git-native agent orchestration platform for software delivery (SDLC)**.
+Anthesis is a **deterministic, Git-native governance gate for agentic architectures and lifecycle loops**.
 
-It enables teams to integrate AI/LLM agents into development workflows while maintaining:
+Its core invariant is:
+
+> Every externally observable agentic effect is authorized, constrained, attributable, and auditable through Anthesis.
+
+It enables teams to integrate AI/LLM agents into development and operational workflows while maintaining:
 
 * explicit approval control
 * full auditability
@@ -23,14 +27,18 @@ It enables teams to integrate AI/LLM agents into development workflows while mai
 
 Unlike typical agent systems, Anthesis does **not permit implicit autonomy**.
 
-All execution is modeled as a **controlled state transition**:
+Reasoning can remain internal. Effects must cross a governance boundary.
+
+All execution is modeled as a **controlled state transition through deterministic gates**:
 
 → context is assembled
 → risk is evaluated
 → approval is required
 → execution is recorded
 
-This allows AI-assisted workflows to operate safely in **production and regulated environments**.
+This allows agentic workflows to operate more safely in **production and regulated environments**.
+
+Externally observable effects include tool invocation, specialist delegation, memory/context access, filesystem mutation, shell/process execution, network/API calls, repository writes, external communication, approval-gated actions, artifact publication, and long-term state mutation.
 
 ---
 
@@ -38,17 +46,48 @@ This allows AI-assisted workflows to operate safely in **production and regulate
 
 Most AI-assisted development tools prioritize autonomy over control, introducing risks:
 
-* non-deterministic execution
+* non-deterministic authority paths
 * lack of auditability
 * implicit or opaque decision-making
 * difficulty operating under compliance constraints
 
 Anthesis enforces a different model:
 
-* execution is **explicitly governed**
+* loop continuation is **explicitly governed**
 * agents operate within **policy-defined boundaries**
 * all actions are **traceable and reproducible**
 * system behavior is anchored to **version-controlled artifacts (Git)**
+
+Anthesis is not primarily an agent framework, LLM runtime, memory database, generic orchestrator, scanner, dashboard, or compliance portal. It is the control surface for governed agentic effects.
+
+---
+
+## Integration Model
+
+Anthesis sits between supervisor agents and externally observable effects:
+
+```text
+AI control plane
+  -> supervisor agent
+    -> Anthesis governance boundary
+      -> envelope / policy decision / capability / approval
+        -> specialist agents
+          -> governed tools, memory, services, APIs
+            -> evidence / evaluation / audit
+```
+
+Supervisor agents orchestrate. Specialist agents execute bounded work. Anthesis governs delegation, tool use, memory/context access, state mutation, external communication, and artifact publication.
+
+The selected integration mode must state what prevents bypass:
+
+* tool-wrapper mode: expose only `anthesis.invoke` or Anthesis-scoped wrappers
+* MCP mediation: expose only Anthesis in the MCP client registry
+* gateway/sidecar mode: block downstream network/API access except through Anthesis
+* capability-token mode: downstream tools reject calls without Anthesis-issued grants
+* SDK-wrapper mode: pair developer ergonomics with credential isolation or guardrails
+* sandboxed-runtime mode: block filesystem, network, process, and credential effects except through governed paths
+
+See `docs/product/overview.md`, `docs/product/envelope.md`, `docs/product/trial-criteria.md`, and `docs/product/integrations/README.md`.
 
 ---
 
