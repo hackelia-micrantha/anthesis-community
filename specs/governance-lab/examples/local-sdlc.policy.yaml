@@ -3,10 +3,6 @@ name: local-sdlc
 summary: Conservative policy for local governed SDLC evaluation.
 default: deny
 rules:
-  - id: repo-read
-    effect: allow
-    actions: [file.read, git.status, git.diff, rg.search]
-
   - id: secrets-access
     effect: deny
     actions: [file.read, file.write]
@@ -47,16 +43,23 @@ rules:
     commands: [curl, wget, pip install, npm install]
     reason: network_access
 
+  - id: repo-read
+    effect: allow
+    actions: [file.read, git.status, git.diff, rg.search]
+    reason: repository_read
+
   - id: scoped-docs-and-code-write
     effect: allow
     actions: [file.write]
     paths: [docs/**, src/**, tests/**]
+    reason: scoped_write
     evidence_required: true
 
   - id: test-execution
     effect: allow
     actions: [command.run]
     commands: [pytest, python -m pytest]
+    reason: test_execution
     evidence_required: true
 
   - id: release-deploy-deny
