@@ -5,46 +5,26 @@ Issue: #9
 
 ## 1. Purpose
 
-This specification defines the public, implementation-neutral contract for the stripped-down Anthesis governance evaluator used by `ryjen/anthesis-governance-lab`.
+This specification defines the public, implementation-neutral contract for the stripped-down Anthesis governance evaluator consumed by `ryjen/anthesis-governance-lab`.
 
-A conforming implementation may be distributed only as a compiled binary. Conformance depends on externally observable behavior, versioned schemas, deterministic semantics, and evidence—not publication of implementation source.
-
-The evaluator is not a general agent runtime. It evaluates explicitly declared effects against a versioned policy and returns deterministic decisions with auditable evidence.
+A conforming implementation may be distributed only as a compiled binary. Conformance depends on externally observable behavior, schemas, deterministic semantics, conformance vectors, and evidence—not publication of implementation source.
 
 The terms MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are normative.
 
 ## 2. Core invariants
 
-A conforming evaluator MUST uphold:
-
 > No governed externally observable effect is treated as authorized without a deterministic policy decision attributable to a specific policy revision and public rule.
 
-Additional invariants:
+A conforming evaluator MUST also enforce:
 
-- Natural-language goals MUST NOT be interpreted as authority-bearing inputs.
-- Every attempted governed effect MUST be explicitly declared in `attempts[]`.
+- Natural-language goals are descriptive and MUST NOT carry authority.
+- Every attempted effect is explicitly declared.
 - Hidden implementation checks MAY deny but MUST NOT authorize.
-- Invalid, unsupported, unknown, or unverifiable inputs MUST fail closed.
-- Evaluation MUST NOT execute the attempted effect.
+- Invalid, unsupported, unknown, or unverifiable inputs fail closed.
+- Evaluation does not execute the attempted effect.
+- Version 1 policies use `default: deny`.
 
-## 3. Scope
-
-Version 1 covers:
-
-- local scenario evaluation
-- declarative policy bundles
-- deterministic normalization and rule matching
-- `allow`, `deny`, and `approval_required`
-- policy-rule, policy-default, and engine-guard decision sources
-- appendable evidence records
-- batch conformance testing
-- evidence integrity verification
-
-Version 1 does not require LLM execution, MCP, network services, distributed workers, credentials, policy plugins, arbitrary executable policy, or automatic execution of approved effects.
-
-## 4. CLI surface
-
-A conforming binary MUST expose:
+## 3. CLI
 
 ```text
 anthesis-lab evaluate --repo <path> --scenario <file> [--format json|yaml]
@@ -53,15 +33,7 @@ anthesis-lab verify --evidence <file> [--format json|yaml]
 anthesis-lab version [--format json|yaml]
 ```
 
-### Output discipline
-
-- Machine-readable results go to stdout.
-- Diagnostics go to stderr.
-- `evaluate`, `verify`, and `version` emit exactly one object.
-- `test` emits one aggregate object containing per-scenario results.
-- Timestamps and random identifiers MUST NOT influence comparable decisions.
-
-### Exit codes
+Machine-readable results go to stdout. Diagnostics go to stderr.
 
 | Code | Meaning |
 |---:|---|
@@ -72,24 +44,12 @@ anthesis-lab version [--format json|yaml]
 | 5 | decision was `approval_required` |
 | 6 | evidence verification failure |
 | 7 | scenario expectation mismatch |
-| 8 | unsupported contract version or feature |
-| 10 | internal evaluator failure; fail closed |
+| 8 | unsupported version or feature |
+| 10 | internal failure; fail closed |
 
-For `evaluate`, `allow` returns 0, `deny` returns 4, and `approval_required` returns 5.
+## 4. Scenario contract
 
-## 5. Scenario contract
-
-A scenario contains:
-
-- version and stable ID
-- descriptive title and non-authoritative goal
-- policy bundle name
-- actor role
-- runtime identity
-- one or more explicit attempted effects
-- expected decision source, outcome, reason, optional rule ID, and evidence fields
-
-Example:
+Version 1 scenarios contain exactly one attempted effect. This avoids ambiguous aggregation, evidence, and exit-code semantics.
 
 ```yaml
 version: anthesis.scenario/v1
@@ -117,13 +77,39 @@ expected:
     - policy_digest
 ```
 
-The evaluator MUST NOT infer `action`, `path`, `command`, actor, runtime, or policy scope from `goal`.
+The evaluator MUST NOT infer the action, path, command, actor, runtime, or policy scope from `goal`.
 
-Version 1 scenarios SHOULD contain one attempt. Multiple attempts are evaluated independently in array order; a scenario result MUST NOT merge attempts into an implicit composite authorization.
+Attempt shapes are closed:
 
-## 6. Effect normalization
+- `file.read`, `file.write`, and `file.delete` require `path` and forbid `command`.
+- `command.run` and `network.request` require `command` and forbid `path`.
+- action-only operations accept neither path nor command.
+- unknown shapes fail schema validation or an engine guard.
 
-Each attempt is normalized to:
+## 5. Runtime profile
+
+Runtime authority is declared by `anthesis.lab-profile/v1` rather than hidden implementation configuration.
+
+```yaml
+version: anthesis.lab-profile/v1
+name: local
+allowed_runtimes:
+  - ollama-qwen3-14b
+```
+
+A runtime absent from `allowed_runtimes` produces:
+
+```yaml
+decision: deny
+decision_source: engine_guard
+reason: unknown_runtime
+```
+
+A runtime profile is public conformance input. Implementations MUST NOT silently add runtimes that can authorize effects.
+
+## 6. Normalization
+
+A file attempt normalizes to:
 
 ```yaml
 action: file.write
@@ -136,212 +122,103 @@ runtime:
   id: ollama-qwen3-14b
 ```
 
-Paths MUST:
+Paths MUST be repository-relative, use `/`, remove redundant `.` segments, reject absolute paths and repository escape, reject NUL bytes and invalid encodings, and match policy against the normalized logical path. Implementations SHOULD reject symlink escapes.
 
-- be repository-relative
-- use `/` separators
-- remove redundant `.` segments
-- reject absolute paths unless a future version defines them
-- reject traversal outside the repository root
-- reject NUL bytes and invalid encodings
-- match policy against the normalized logical path
-
-Implementations SHOULD reject symlink escapes. `evaluate` never follows a path to perform an effect.
-
-Commands are complete attempted command strings. Version 1 performs no shell parsing or execution.
+Commands are complete attempted strings. Version 1 performs no shell parsing or execution.
 
 ## 7. Engine guards
 
-Engine guards validate whether evaluation can safely proceed. They are not policy rules.
-
-Engine guards include, at minimum:
-
-- supported contract version
-- valid schema
-- safely normalized path or command
-- known and permitted runtime identity for the lab profile
-- loadable and valid policy
-- supported action and feature
-- internally consistent evaluator state
+Engine guards validate supported versions, schema validity, safe normalization, runtime registration, policy loading, supported effects, and evaluator integrity.
 
 An engine guard:
 
-- MUST only produce `deny` or a command error
-- MUST use `decision_source: engine_guard` when represented as a decision
-- MUST include a stable public reason such as `unknown_runtime`, `invalid_input`, `unsupported_effect`, or `repository_escape`
+- can only produce `deny` or a command error
+- uses `decision_source: engine_guard`
+- uses a stable public reason such as `unknown_runtime`, `invalid_input`, `unsupported_effect`, or `repository_escape`
+- MUST NOT include `policy_rule_id`
 - MUST NOT produce `allow` or `approval_required`
-- does not require `policy_rule_id`
-
-The policy digest remains present when a policy was successfully loaded before the guard denied evaluation.
 
 ## 8. Policy evaluation
 
-### Ordered first-match semantics
+Version 1 policy bundles MUST declare `default: deny` and every rule MUST declare a stable `reason`.
 
-Rules are evaluated in document order. The first rule matching the normalized action and every predicate determines the decision. If no rule matches, the policy default determines it.
+Rules are evaluated in document order. The first rule matching the action and every declared predicate determines the decision. If no rule matches, the policy default produces `deny`, `decision_source: policy_default`, `policy_rule_id: default`, and reason `policy_default`.
 
-Decision sources:
+Decision sources are:
 
-- `policy_rule`: a named rule matched; `policy_rule_id` is required
-- `policy_default`: no rule matched; `policy_rule_id` is `default`
-- `engine_guard`: evaluation failed closed before authorization; no rule ID is required
+- `policy_rule`: named public rule matched
+- `policy_default`: no rule matched
+- `engine_guard`: evaluation failed closed before authorization
 
-A conforming evaluator MUST NOT use hidden allow rules. Hidden defensive checks may only convert a prospective result to an engine-guard denial.
+Hidden allow rules are forbidden.
 
-### Action matching
+### Matching
 
-The normalized action exactly equals an entry in `actions`.
+Action matching is exact.
 
-### Path matching
-
-Patterns use this constrained dialect:
+Path patterns use a constrained dialect:
 
 - `*` matches zero or more non-`/` characters
 - `**` matches zero or more characters including `/`
 - `?` matches one non-`/` character
-- matching is case-sensitive and anchored to the complete repository-relative path
+- matching is case-sensitive and anchored to the complete path
 - brace expansion, extglob, regex, environment expansion, and home expansion are forbidden
 
-When a rule declares `paths`, at least one pattern must match.
+A command matches when it equals the declared command or begins with that command followed by one ASCII space. Thus `pytest` matches `pytest -q` but not `pytestx`.
 
-### Command matching
+Narrow deny and approval rules MUST precede broader allow rules. The canonical policy places secret and evidence protection before repository reads and writes.
 
-A command predicate matches when the normalized command:
-
-- exactly equals the declared command; or
-- begins with the declared command followed by one ASCII space
-
-Thus `pytest` matches `pytest -q` but not `pytestx`. No shell parsing occurs.
-
-### Ordering and shadowing
-
-Policy authors MUST place narrow security rules before broader allow rules. Validators SHOULD report unreachable or shadowed rules.
-
-The canonical `local-sdlc` fixture intentionally places secret and evidence protection before broad repository reads and writes. This avoids first-match authorization of `.env` reads or evidence mutation.
-
-## 9. Decisions
-
-Every evaluation returns `anthesis.decision/v1` with:
-
-- scenario ID
-- outcome
-- decision source
-- policy name and digest
-- public rule ID when applicable
-- stable reason
-- normalized effect
-- engine name and version
-- canonicalization identifier
-
-Only these outcomes exist in v1:
-
-```text
-allow
-deny
-approval_required
-```
-
-An engine guard can only return `deny`.
-
-## 10. Canonicalization and policy digest
+## 9. Canonicalization and digests
 
 Version 1 uses `rfc8785-json`:
 
-1. Parse YAML using the YAML 1.2 JSON-compatible data model.
-2. Reject duplicate mapping keys, aliases that produce cycles, non-string mapping keys, non-finite numbers, timestamps, binary values, and other non-JSON YAML types.
-3. Convert the validated policy to its JSON data model without adding defaults.
+1. Parse YAML using a JSON-compatible model.
+2. Reject duplicate keys, non-string mapping keys, cyclic aliases, timestamps, binary values, non-finite numbers, and other non-JSON YAML values.
+3. Validate the object without injecting schema defaults.
 4. Serialize using RFC 8785 JSON Canonicalization Scheme.
-5. Compute SHA-256 over the canonical UTF-8 bytes.
-6. Represent the digest as `sha256:<lowercase hex>`.
+5. Compute SHA-256 over canonical UTF-8 bytes.
+6. Encode as `sha256:<lowercase hex>`.
 
-Formatting, comments, key order, and YAML scalar style do not alter the digest. Semantically different arrays, including rule order, do alter it.
+The canonical policy fixture digest is pinned in `conformance-vectors.yaml`. Formatting and mapping order do not affect it; rule array order does.
 
-## 11. Evidence
+## 10. Decisions and evidence
 
-Each evaluation produces or appends one `anthesis.evidence/v1` record containing:
+Decisions conform to `anthesis.decision/v1` and include scenario, outcome, decision source, policy and digest, canonicalization, reason, normalized effect, engine identity, and the public rule ID when applicable.
 
-- scenario ID
-- decision and decision source
-- policy name and digest
-- policy rule ID when applicable
-- reason
-- normalized effect
-- engine identity and version
-- contract and evidence versions
-- previous-record digest when chained
-- record digest
+Evidence conforms to `anthesis.evidence/v1`. It contains the same authorization facts plus previous-record and record digests. JSON Lines evidence SHOULD be hash-chained. `record_digest` is computed over the canonical record with `record_digest` omitted.
 
-Evidence may contain timestamps, run IDs, host platform, binary digest, and signature metadata. Non-deterministic metadata MUST NOT influence authorization.
+Engine-guard evidence MAY include `configured_runtime`, but MUST omit `policy_rule_id`.
 
-For JSON Lines chains, `record_digest` is SHA-256 over the RFC 8785 canonical record with `record_digest` omitted. The first record uses a null previous digest.
+## 11. Conformance
 
-## 12. Conformance behavior
+`anthesis-lab test` discovers scenarios in lexical path order, validates each input, evaluates it independently, compares decision/source/rule/reason, verifies expected evidence fields, and returns 7 on any mismatch.
 
-`anthesis-lab test` MUST:
+The community validation workflow MUST check more than schema shape. It validates:
 
-1. discover scenarios in lexical path order
-2. validate each scenario
-3. normalize each explicit attempt
-4. apply engine guards
-5. evaluate policy when guards pass
-6. compare source, decision, rule ID, and reason to expectations
-7. verify required evidence fields
-8. return 7 for any mismatch
+- strict YAML restrictions
+- policy, runtime-profile, scenario, decision, and evidence schemas
+- exact policy digest
+- all seven canonical policy outcomes
+- decision sources, rule IDs, and reasons
+- required evidence availability
 
-Reports distinguish passed, decision mismatch, source mismatch, rule mismatch, reason mismatch, missing evidence, invalid scenario, invalid policy, and evaluator failure.
+The canonical vectors are normative interoperability tests.
 
-Canonical vectors are in `conformance-vectors.yaml`; the canonical policy is `examples/local-sdlc.policy.yaml`.
+## 12. Compatibility and IP boundary
 
-## 13. Compatibility
-
-Contract identifiers:
+Contract identifiers are:
 
 ```text
 anthesis.scenario/v1
 anthesis.policy/v1
+anthesis.lab-profile/v1
 anthesis.decision/v1
 anthesis.evidence/v1
 anthesis.conformance/v1
 ```
 
-Within a major version, optional fields may be added, required fields may not be removed, existing meanings may not change, and new enum values may not weaken fail-closed behavior. Unsupported major versions are rejected.
+Within a major version, optional fields may be added, required fields may not be removed, and meanings or authorization-relevant enum values may not change. Unsupported major versions are rejected.
 
-## 14. Security and IP boundary
+The public repository exposes contracts, schemas, semantics, examples, and conformance vectors. It does not require publication of evaluator source, parser internals, optimization, binary hardening, obfuscation, signing keys, or deny-only defensive implementation details.
 
-Public:
-
-- contract and schemas
-- deterministic semantics
-- policy fixtures and conformance vectors
-- externally observable reasons and evidence requirements
-
-Private implementation may retain:
-
-- evaluator source
-- parser structure and hardening
-- optimization strategies
-- binary hardening and obfuscation
-- hidden checks that only deny
-- build infrastructure and signing keys
-
-Every authorization remains attributable to the public policy bundle and rule. Obfuscation raises reverse-engineering cost but is not a security boundary.
-
-## 15. Initial lab mapping
-
-| Scenario | Decision source | Expected outcome | Rule/reason |
-|---|---|---|---|
-| `01-allowed-docs-edit` | `policy_rule` | `allow` | `scoped-docs-and-code-write` |
-| `02-block-ci-change` | `policy_rule` | `approval_required` | `ci-workflow-change` |
-| `03-require-network-approval` | `policy_rule` | `approval_required` | `network-access` |
-| `04-block-secret-access` | `policy_rule` | `deny` | `secrets-access` |
-| `05-require-dependency-approval` | `policy_rule` | `approval_required` | `dependency-change` |
-| `06-fail-unknown-runtime` | `engine_guard` | `deny` | `unknown_runtime` |
-| `07-block-evidence-tamper` | `policy_rule` | `deny` | `evidence-protection` |
-
-## 16. Deferred from v1
-
-- approval continuation and scoped approval tokens
-- actual execution of allowed effects
-- signed evidence requirements
-- production-grade sandboxing
-- remote policy distribution
+Every authorization must remain attributable to a public rule. Obfuscation increases reverse-engineering cost but is not a security boundary.
