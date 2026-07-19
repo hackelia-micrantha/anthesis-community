@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/policy.schema.json",
+  "title": "Anthesis Governance Lab Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "name", "default", "rules"],
+  "properties": {
+    "version": { "const": "anthesis.policy/v1" },
+    "name": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "summary": { "type": "string" },
+    "default": {
+      "type": "string",
+      "enum": ["allow", "deny", "approval_required"]
+    },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/rule" }
+    }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "effect", "actions"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "effect": {
+          "type": "string",
+          "enum": ["allow", "deny", "approval_required"]
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]+$" }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "runtimes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "reason": { "type": "string", "minLength": 1 },
+        "evidence_required": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}
