@@ -8,9 +8,10 @@
     "version",
     "scenario_id",
     "decision",
+    "decision_source",
     "policy",
     "policy_digest",
-    "policy_rule_id",
+    "canonicalization",
     "reason",
     "effect",
     "engine",
@@ -24,8 +25,13 @@
       "type": "string",
       "enum": ["allow", "deny", "approval_required"]
     },
+    "decision_source": {
+      "type": "string",
+      "enum": ["policy_rule", "policy_default", "engine_guard"]
+    },
     "policy": { "type": "string", "minLength": 1 },
     "policy_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "canonicalization": { "const": "rfc8785-json" },
     "policy_rule_id": { "type": "string", "minLength": 1 },
     "reason": { "type": "string", "minLength": 1 },
     "effect": { "$ref": "decision.schema.json#/$defs/effect" },
@@ -39,6 +45,7 @@
         "binary_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
       }
     },
+    "configured_runtime": { "type": "string", "minLength": 1 },
     "timestamp": { "type": "string", "format": "date-time" },
     "run_id": { "type": "string", "minLength": 1 },
     "previous_record_digest": {
@@ -58,5 +65,33 @@
         "value": { "type": "string", "minLength": 1 }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "decision_source": { "const": "policy_rule" } },
+        "required": ["decision_source"]
+      },
+      "then": { "required": ["policy_rule_id"] }
+    },
+    {
+      "if": {
+        "properties": { "decision_source": { "const": "policy_default" } },
+        "required": ["decision_source"]
+      },
+      "then": {
+        "properties": { "policy_rule_id": { "const": "default" } },
+        "required": ["policy_rule_id"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "decision_source": { "const": "engine_guard" } },
+        "required": ["decision_source"]
+      },
+      "then": {
+        "properties": { "decision": { "const": "deny" } }
+      }
+    }
+  ]
 }
