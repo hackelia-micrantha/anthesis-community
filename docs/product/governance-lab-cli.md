@@ -1,19 +1,19 @@
 # Governance Lab CLI
 
-The Anthesis Governance Lab CLI is a deliberately small evaluator for testing deterministic governance behavior without requiring the full Anthesis runtime.
+The Anthesis Governance Lab CLI is a deliberately small deterministic evaluator for testing governance behavior without requiring the full Anthesis runtime.
 
 It is intended to be distributed as a compiled, stripped binary and consumed by `ryjen/anthesis-governance-lab`.
 
 ## What it proves
 
-The CLI gives an evaluator a concrete way to test whether Anthesis can:
+The CLI provides a concrete way to test whether Anthesis can:
 
 - allow explicitly safe work
 - deny explicitly unsafe work
 - stop approval-gated work before execution
-- identify the exact policy rule and reason
-- fail closed on malformed or unsupported input
-- emit evidence that can be checked after the run
+- identify the exact public policy rule and reason
+- fail closed on malformed, unsupported, or unregistered inputs
+- emit verifiable evidence
 
 It does not prove production-grade sandboxing, credential isolation, distributed enforcement, or resistance to a hostile administrator.
 
@@ -26,37 +26,43 @@ anthesis-lab verify --evidence .anthesis/evidence/run.jsonl
 anthesis-lab version
 ```
 
-## Distribution boundary
+## Public contract
 
-The public community repository contains:
+The community repository publishes:
 
-- the CLI contract
-- versioned schemas
-- deterministic matching semantics
-- conformance requirements
-- sample inputs and outputs
+- versioned scenario, policy, runtime-profile, decision, and evidence schemas
+- deterministic normalization and matching semantics
+- default-deny and fail-closed requirements
+- canonical policy and runtime fixtures
+- seven semantic conformance vectors
+- an exact policy digest vector
+- a validator that checks schema shape and expected decisions
 
-The private Anthesis repository may contain:
+Version 1 scenarios declare exactly one attempted effect. Natural-language goals are descriptive only and never grant authority.
 
-- source implementation
+The canonical runtime profile explicitly lists permitted runtime identities. Unregistered runtimes are denied by an engine guard rather than silently accepted.
+
+## Private implementation boundary
+
+The private Anthesis repository may retain:
+
+- evaluator source
+- parser and canonicalization hardening
+- optimization and defensive implementation details
 - binary hardening and obfuscation
-- release workflows
-- parser hardening
-- additional deny-only defensive checks
+- release signing infrastructure and keys
 
-The implementation may remain closed while still conforming to the public contract. Every authorization must nevertheless identify the public policy rule that produced it.
+Hidden implementation checks may only deny. Every authorization must identify the public rule or default that produced it.
 
 ## Trust model
 
-The CLI is a reference evaluator for a controlled local lab.
+The CLI is a reference evaluator for a controlled local lab:
 
-For the first version:
-
-- policy is local and declarative
-- scenarios describe attempted effects
-- evaluation does not execute commands or network requests
-- filesystem effects may be simulated or constrained to a temporary worktree
-- invalid or unknown inputs fail closed
-- binary obfuscation is treated as IP friction, not a security boundary
+- evaluation never executes the attempted command, network request, or file effect
+- policy defaults to deny
+- deny and approval rules precede broad allow rules
+- invalid YAML, duplicate keys, unsupported values, unsafe paths, and unknown runtimes fail closed
+- evidence may be hash-chained and independently verified
+- obfuscation is IP friction, not a security boundary
 
 The normative specification is in `specs/governance-lab/README.md`.
