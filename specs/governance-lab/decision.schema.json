@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/decision.schema.json",
+  "title": "Anthesis Governance Lab Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "scenario_id",
+    "decision",
+    "policy",
+    "policy_digest",
+    "canonicalization",
+    "policy_rule_id",
+    "reason",
+    "effect",
+    "engine"
+  ],
+  "properties": {
+    "version": { "const": "anthesis.decision/v1" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "decision": {
+      "type": "string",
+      "enum": ["allow", "deny", "approval_required"]
+    },
+    "policy": { "type": "string", "minLength": 1 },
+    "policy_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "canonicalization": { "type": "string", "minLength": 1 },
+    "policy_rule_id": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string", "minLength": 1 },
+    "effect": { "$ref": "#/$defs/effect" },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "anthesis-lab" },
+        "version": { "type": "string", "minLength": 1 },
+        "binary_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "actor", "runtime"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "resource": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "path": { "type": "string" }
+          }
+        },
+        "command": { "type": ["string", "null"] },
+        "actor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role"],
+          "properties": {
+            "role": { "type": "string", "minLength": 1 }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}
