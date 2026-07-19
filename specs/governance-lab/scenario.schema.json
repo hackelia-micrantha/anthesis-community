@@ -8,21 +8,19 @@
     "version",
     "id",
     "title",
-    "expected_outcome",
     "goal",
-    "role",
-    "agent_runtime",
     "policy",
-    "expected_evidence"
+    "actor",
+    "runtime",
+    "attempts",
+    "expected"
   ],
   "properties": {
     "version": { "const": "anthesis.scenario/v1" },
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,127}$" },
     "title": { "type": "string", "minLength": 1, "maxLength": 200 },
-    "expected_outcome": {
-      "type": "string",
-      "enum": ["allow", "deny", "approval_required"]
-    },
+    "goal": { "type": "string", "minLength": 1 },
+    "policy": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
     "source": {
       "type": "object",
       "additionalProperties": false,
@@ -31,67 +29,102 @@
         "type": { "type": "string", "enum": ["local_scenario"] }
       }
     },
-    "goal": { "type": "string", "minLength": 1 },
-    "role": { "type": "string", "minLength": 1 },
-    "agent_runtime": { "type": "string", "minLength": 1 },
-    "policy": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
-    "allowed_paths": {
-      "type": "array",
-      "items": { "type": "string", "minLength": 1 },
-      "uniqueItems": true
-    },
-    "fault_injection": {
+    "actor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type"],
+      "required": ["role"],
       "properties": {
-        "type": {
+        "role": { "type": "string", "minLength": 1 }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "attempts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/attempt" }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "source", "reason", "evidence"],
+      "properties": {
+        "decision": {
           "type": "string",
-          "enum": [
-            "unauthorized_path_write",
-            "network_access",
-            "secret_access",
-            "dependency_change",
-            "unknown_runtime",
-            "evidence_tamper"
-          ]
+          "enum": ["allow", "deny", "approval_required"]
         },
-        "attempted_path": { "type": "string", "minLength": 1 },
-        "attempted_command": { "type": "string", "minLength": 1 },
-        "attempted_runtime": { "type": "string", "minLength": 1 },
-        "expected_reason": { "type": "string", "minLength": 1 }
+        "source": {
+          "type": "string",
+          "enum": ["policy_rule", "policy_default", "engine_guard"]
+        },
+        "rule_id": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
       },
       "allOf": [
         {
           "if": {
             "properties": {
-              "type": {
-                "enum": [
-                  "unauthorized_path_write",
-                  "secret_access",
-                  "dependency_change",
-                  "evidence_tamper"
-                ]
-              }
-            }
+              "source": { "const": "policy_rule" }
+            },
+            "required": ["source"]
           },
-          "then": { "required": ["attempted_path"] }
+          "then": { "required": ["rule_id"] }
         },
         {
-          "if": { "properties": { "type": { "const": "network_access" } } },
-          "then": { "required": ["attempted_command"] }
-        },
-        {
-          "if": { "properties": { "type": { "const": "unknown_runtime" } } },
-          "then": { "required": ["attempted_runtime"] }
+          "if": {
+            "properties": {
+              "source": { "const": "policy_default" }
+            },
+            "required": ["source"]
+          },
+          "then": {
+            "properties": { "rule_id": { "const": "default" } },
+            "required": ["rule_id"]
+          }
         }
       ]
-    },
-    "expected_evidence": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": { "enum": ["file.read", "file.write", "file.delete"] }
+            },
+            "required": ["action"]
+          },
+          "then": { "required": ["path"] }
+        },
+        {
+          "if": {
+            "properties": { "action": { "const": "command.run" } },
+            "required": ["action"]
+          },
+          "then": { "required": ["command"] }
+        }
+      ]
     }
   }
 }
