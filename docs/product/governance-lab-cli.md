@@ -35,7 +35,7 @@ The community repository publishes:
 - default-deny and fail-closed requirements
 - canonical policy and runtime fixtures
 - seven semantic conformance vectors
-- an exact policy digest vector
+- exact policy and evidence digest fixtures
 - a validator that checks schema shape and expected decisions
 
 Version 1 scenarios declare exactly one attempted effect. Natural-language goals are descriptive only and never grant authority.
@@ -44,13 +44,7 @@ The canonical runtime profile explicitly lists permitted runtime identities. Unr
 
 ## Private implementation boundary
 
-The private Anthesis repository may retain:
-
-- evaluator source
-- parser and canonicalization hardening
-- optimization and defensive implementation details
-- binary hardening and obfuscation
-- release signing infrastructure and keys
+The private Anthesis repository may retain evaluator source, parser and canonicalization hardening, optimization, defensive implementation details, binary hardening and obfuscation, and release signing infrastructure.
 
 Hidden implementation checks may only deny. Every authorization must identify the public rule or default that produced it.
 
