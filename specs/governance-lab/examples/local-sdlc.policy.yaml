@@ -6,7 +6,7 @@ rules:
   - id: secrets-access
     effect: deny
     actions: [file.read, file.write]
-    paths: [.env, .env.*, secrets/**, ~/.ssh/**, ~/.aws/**]
+    paths: [.env, .env.*, secrets/**]
     reason: secrets_access
 
   - id: evidence-protection
