@@ -1,0 +1,21 @@
+{
+  "version": "anthesis.evidence/v1",
+  "scenario_id": "01-allowed-docs-edit",
+  "decision": "allow",
+  "decision_source": "policy_rule",
+  "policy": "local-sdlc",
+  "policy_digest": "sha256:086c51212c9ce167fb1008b5faf7ffafcde26dac4066a370f2fde8b91f5149ea",
+  "canonicalization": "rfc8785-json",
+  "policy_rule_id": "scoped-docs-and-code-write",
+  "reason": "scoped_write",
+  "effect": {
+    "action": "file.write",
+    "resource": {"path": "docs/onboarding.md"},
+    "command": null,
+    "actor": {"role": "implementation"},
+    "runtime": {"id": "ollama-qwen3-14b"}
+  },
+  "engine": {"name": "anthesis-lab", "version": "0.1.0"},
+  "previous_record_digest": null,
+  "record_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}
