@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/scenario.schema.json",
+  "title": "Anthesis Governance Lab Scenario v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "title", "goal", "policy", "actor", "runtime", "attempts", "expected"],
+  "properties": {
+    "version": { "const": "anthesis.scenario/v1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,127}$" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "goal": { "type": "string", "minLength": 1 },
+    "policy": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": { "type": { "const": "local_scenario" } }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": { "role": { "type": "string", "minLength": 1 } }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": { "id": { "type": "string", "minLength": 1 } }
+    },
+    "attempts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "#/$defs/attempt" }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "source", "reason", "evidence"],
+      "properties": {
+        "decision": { "enum": ["allow", "deny", "approval_required"] },
+        "source": { "enum": ["policy_rule", "policy_default", "engine_guard"] },
+        "rule_id": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "policy_rule" } }, "required": ["source"] },
+          "then": { "required": ["rule_id"] }
+        },
+        {
+          "if": { "properties": { "source": { "const": "policy_default" } }, "required": ["source"] },
+          "then": { "properties": { "rule_id": { "const": "default" } }, "required": ["rule_id"] }
+        },
+        {
+          "if": { "properties": { "source": { "const": "engine_guard" } }, "required": ["source"] },
+          "then": {
+            "properties": { "decision": { "const": "deny" } },
+            "not": { "required": ["rule_id"] }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "attempt": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "path"],
+          "properties": {
+            "action": { "enum": ["file.read", "file.write", "file.delete"] },
+            "path": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "command"],
+          "properties": {
+            "action": { "enum": ["command.run", "network.request"] },
+            "command": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {
+            "action": { "enum": ["git.status", "git.diff", "rg.search", "release.tag", "deploy.run", "git.merge"] }
+          }
+        }
+      ]
+    }
+  }
+}

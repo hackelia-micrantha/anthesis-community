@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/decision.schema.json",
+  "title": "Anthesis Governance Lab Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "scenario_id", "decision", "decision_source", "policy", "policy_digest", "canonicalization", "reason", "effect", "engine"],
+  "properties": {
+    "version": { "const": "anthesis.decision/v1" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "decision": { "enum": ["allow", "deny", "approval_required"] },
+    "decision_source": { "enum": ["policy_rule", "policy_default", "engine_guard"] },
+    "policy": { "type": "string", "minLength": 1 },
+    "policy_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "canonicalization": { "const": "rfc8785-json" },
+    "policy_rule_id": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string", "minLength": 1 },
+    "effect": { "$ref": "#/$defs/effect" },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "anthesis-lab" },
+        "version": { "type": "string", "minLength": 1 },
+        "binary_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "decision_source": { "const": "policy_rule" } }, "required": ["decision_source"] }, "then": { "required": ["policy_rule_id"] } },
+    { "if": { "properties": { "decision_source": { "const": "policy_default" } }, "required": ["decision_source"] }, "then": { "properties": { "policy_rule_id": { "const": "default" } }, "required": ["policy_rule_id"] } },
+    { "if": { "properties": { "decision_source": { "const": "engine_guard" } }, "required": ["decision_source"] }, "then": { "properties": { "decision": { "const": "deny" } }, "not": { "required": ["policy_rule_id"] } } }
+  ],
+  "$defs": {
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "resource", "command", "actor", "runtime"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "resource": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["path"],
+          "properties": { "path": { "type": "string" } }
+        },
+        "command": { "type": ["string", "null"] },
+        "actor": { "type": "object", "additionalProperties": false, "required": ["role"], "properties": { "role": { "type": "string", "minLength": 1 } } },
+        "runtime": { "type": "object", "additionalProperties": false, "required": ["id"], "properties": { "id": { "type": "string", "minLength": 1 } } }
+      }
+    }
+  }
+}

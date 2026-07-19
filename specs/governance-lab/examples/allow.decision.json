@@ -1,0 +1,19 @@
+{
+  "version": "anthesis.decision/v1",
+  "scenario_id": "01-allowed-docs-edit",
+  "decision": "allow",
+  "decision_source": "policy_rule",
+  "policy": "local-sdlc",
+  "policy_digest": "sha256:f9d0762fa3ac6396a38fa9cfc7e4e31ea2eeea3141a90e67c47f7c1a8e6e2c86",
+  "canonicalization": "rfc8785-json",
+  "policy_rule_id": "scoped-docs-and-code-write",
+  "reason": "scoped_write",
+  "effect": {
+    "action": "file.write",
+    "resource": {"path": "docs/onboarding.md"},
+    "command": null,
+    "actor": {"role": "implementation"},
+    "runtime": {"id": "ollama-qwen3-14b"}
+  },
+  "engine": {"name": "anthesis-lab", "version": "0.1.0"}
+}
