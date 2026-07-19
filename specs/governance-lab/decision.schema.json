@@ -4,29 +4,12 @@
   "title": "Anthesis Governance Lab Decision v1",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "version",
-    "scenario_id",
-    "decision",
-    "decision_source",
-    "policy",
-    "policy_digest",
-    "canonicalization",
-    "reason",
-    "effect",
-    "engine"
-  ],
+  "required": ["version", "scenario_id", "decision", "decision_source", "policy", "policy_digest", "canonicalization", "reason", "effect", "engine"],
   "properties": {
     "version": { "const": "anthesis.decision/v1" },
     "scenario_id": { "type": "string", "minLength": 1 },
-    "decision": {
-      "type": "string",
-      "enum": ["allow", "deny", "approval_required"]
-    },
-    "decision_source": {
-      "type": "string",
-      "enum": ["policy_rule", "policy_default", "engine_guard"]
-    },
+    "decision": { "enum": ["allow", "deny", "approval_required"] },
+    "decision_source": { "enum": ["policy_rule", "policy_default", "engine_guard"] },
     "policy": { "type": "string", "minLength": 1 },
     "policy_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
     "canonicalization": { "const": "rfc8785-json" },
@@ -45,64 +28,26 @@
     }
   },
   "allOf": [
-    {
-      "if": {
-        "properties": { "decision_source": { "const": "policy_rule" } },
-        "required": ["decision_source"]
-      },
-      "then": { "required": ["policy_rule_id"] }
-    },
-    {
-      "if": {
-        "properties": { "decision_source": { "const": "policy_default" } },
-        "required": ["decision_source"]
-      },
-      "then": {
-        "properties": { "policy_rule_id": { "const": "default" } },
-        "required": ["policy_rule_id"]
-      }
-    },
-    {
-      "if": {
-        "properties": { "decision_source": { "const": "engine_guard" } },
-        "required": ["decision_source"]
-      },
-      "then": {
-        "properties": { "decision": { "const": "deny" } }
-      }
-    }
+    { "if": { "properties": { "decision_source": { "const": "policy_rule" } }, "required": ["decision_source"] }, "then": { "required": ["policy_rule_id"] } },
+    { "if": { "properties": { "decision_source": { "const": "policy_default" } }, "required": ["decision_source"] }, "then": { "properties": { "policy_rule_id": { "const": "default" } }, "required": ["policy_rule_id"] } },
+    { "if": { "properties": { "decision_source": { "const": "engine_guard" } }, "required": ["decision_source"] }, "then": { "properties": { "decision": { "const": "deny" } }, "not": { "required": ["policy_rule_id"] } } }
   ],
   "$defs": {
     "effect": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["action", "actor", "runtime"],
+      "required": ["action", "resource", "command", "actor", "runtime"],
       "properties": {
         "action": { "type": "string", "minLength": 1 },
         "resource": {
           "type": ["object", "null"],
           "additionalProperties": false,
-          "properties": {
-            "path": { "type": "string" }
-          }
+          "required": ["path"],
+          "properties": { "path": { "type": "string" } }
         },
         "command": { "type": ["string", "null"] },
-        "actor": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["role"],
-          "properties": {
-            "role": { "type": "string", "minLength": 1 }
-          }
-        },
-        "runtime": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["id"],
-          "properties": {
-            "id": { "type": "string", "minLength": 1 }
-          }
-        }
+        "actor": { "type": "object", "additionalProperties": false, "required": ["role"], "properties": { "role": { "type": "string", "minLength": 1 } } },
+        "runtime": { "type": "object", "additionalProperties": false, "required": ["id"], "properties": { "id": { "type": "string", "minLength": 1 } } }
       }
     }
   }
