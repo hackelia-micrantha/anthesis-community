@@ -1,7 +1,7 @@
 version: anthesis.conformance/v1
 policy_fixture: examples/local-sdlc.policy.yaml
 runtime_profile_fixture: examples/local.runtime-profile.yaml
-expected_policy_digest: sha256:086c51212c9ce167fb1008b5faf7ffafcde26dac4066a370f2fde8b91f5149ea
+expected_policy_digest: sha256:f9d0762fa3ac6396a38fa9cfc7e4e31ea2eeea3141a90e67c47f7c1a8e6e2c86
 scenarios:
   - version: anthesis.scenario/v1
     id: 01-allowed-docs-edit
