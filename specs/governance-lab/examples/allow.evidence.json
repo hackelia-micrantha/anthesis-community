@@ -4,7 +4,7 @@
   "decision": "allow",
   "decision_source": "policy_rule",
   "policy": "local-sdlc",
-  "policy_digest": "sha256:086c51212c9ce167fb1008b5faf7ffafcde26dac4066a370f2fde8b91f5149ea",
+  "policy_digest": "sha256:f9d0762fa3ac6396a38fa9cfc7e4e31ea2eeea3141a90e67c47f7c1a8e6e2c86",
   "canonicalization": "rfc8785-json",
   "policy_rule_id": "scoped-docs-and-code-write",
   "reason": "scoped_write",
@@ -17,5 +17,5 @@
   },
   "engine": {"name": "anthesis-lab", "version": "0.1.0"},
   "previous_record_digest": null,
-  "record_digest": "sha256:7d5ad53a0955cf444faee194b5ed6c8c736150f36b262e6e4b9b92a98b3aa86b"
+  "record_digest": "sha256:699df23c422c3ed6f186a9d0963e4448f27a1f18457f0d1dde16b667e9943318"
 }
