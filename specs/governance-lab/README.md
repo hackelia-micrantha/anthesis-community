@@ -1,6 +1,6 @@
 # Anthesis Governance Lab CLI Contract
 
-Status: Draft  
+Status: Accepted  
 Issue: #9
 
 ## 1. Purpose
@@ -181,6 +181,8 @@ Version 1 uses `rfc8785-json`:
 
 The canonical policy fixture digest is pinned in `conformance-vectors.yaml`. Formatting and mapping order do not affect it; rule array order does.
 
+The community validator uses deterministic JSON serialization that is byte-equivalent to RFC 8785 for the current non-numeric fixtures. Production implementations MUST use complete RFC 8785 canonicalization for the full accepted input model.
+
 ## 10. Decisions and evidence
 
 Decisions conform to `anthesis.decision/v1` and include scenario, outcome, decision source, policy and digest, canonicalization, reason, normalized effect, engine identity, and the public rule ID when applicable.
@@ -198,6 +200,9 @@ The community validation workflow MUST check more than schema shape. It validate
 - strict YAML restrictions
 - policy, runtime-profile, scenario, decision, and evidence schemas
 - exact policy digest
+- exact evidence-record digest
+- first-record chain initialization with `previous_record_digest: null`
+- decision and evidence fixture consistency with canonical scenario 01
 - all seven canonical policy outcomes
 - decision sources, rule IDs, and reasons
 - required evidence availability
