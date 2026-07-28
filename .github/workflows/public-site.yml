@@ -41,13 +41,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          needed=true
-          if [[ -f web/anthesis.pdf.manifest.json ]]; then
-            current_commit="$(python -c 'import json; print(json.load(open("web/anthesis.pdf.manifest.json"))["source_commit"])')"
-            if [[ "${current_commit}" == "${ANTHESIS_SOURCE_COMMIT}" ]]; then
-              needed=false
-            fi
-          fi
+          needed="$({ python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          pdf = Path("web/anthesis.pdf")
+          manifest_path = Path("web/anthesis.pdf.manifest.json")
+          if not pdf.is_file() or not manifest_path.is_file():
+              print("true")
+              raise SystemExit
+          try:
+              metadata = json.loads(manifest_path.read_text(encoding="utf-8"))
+          except (OSError, json.JSONDecodeError):
+              print("true")
+              raise SystemExit
+          digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+          current = (
+              metadata.get("source_commit") == os.environ["ANTHESIS_SOURCE_COMMIT"]
+              and metadata.get("artifact_sha256") == digest
+          )
+          print("false" if current else "true")
+          PY
+          } 2>/dev/null)"
           echo "needed=${needed}" >> "${GITHUB_OUTPUT}"
 
       - name: Checkout pinned Anthesis source
