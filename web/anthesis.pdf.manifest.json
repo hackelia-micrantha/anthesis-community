@@ -1,0 +1,14 @@
+{
+  "artifact": "anthesis.pdf",
+  "artifact_sha256": "64e8b8e1da22446841c1d9b61ce4371a93a43a6e0211c099e9b90867e8139864",
+  "manifest": "docs/anthesis/overview/whitepaper-manifest.json",
+  "manifest_sha256": "6ba7684c7697cec1ce66206d777eae1d63e6cd6e7b6e0f99fa15b3fe988e82df",
+  "schema_version": 1,
+  "source_commit": "8d02162fa9a4ab027592fd1da81a8ebfb05e7a5d",
+  "sources": [
+    {
+      "path": "docs/anthesis/overview/anthesis-whitepaper.md",
+      "sha256": "483918a6dbc1eef0b7199ab3af26f30984c818fd5bd08973f834d21bd65b6fe0"
+    }
+  ]
+}
