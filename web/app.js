@@ -1,8 +1,3 @@
-const proofStylesheet = document.createElement('link');
-proofStylesheet.rel = 'stylesheet';
-proofStylesheet.href = 'proof.css';
-document.head.appendChild(proofStylesheet);
-
 const reveals = document.querySelectorAll('.reveal');
 
 // Use IntersectionObserver when available; otherwise fall back to making all
