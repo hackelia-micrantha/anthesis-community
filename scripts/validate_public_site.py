@@ -3,6 +3,9 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -14,6 +17,8 @@ INDEX_PATH = WEB_ROOT / "index.html"
 BRIEF_PATH = WEB_ROOT / "project-brief.html"
 APP_PATH = WEB_ROOT / "app.js"
 PROOF_CSS_PATH = WEB_ROOT / "proof.css"
+WHITEPAPER_PATH = WEB_ROOT / "anthesis.pdf"
+WHITEPAPER_MANIFEST_PATH = WEB_ROOT / "anthesis.pdf.manifest.json"
 
 INTEGRATION_MODES = (
     "Tool wrapper / invoke",
@@ -29,6 +34,9 @@ MATURITY_LABELS = (
     "Reference integration",
     "In development",
 )
+
+SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+COMMIT_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 
 
 class DocumentParser(HTMLParser):
@@ -84,6 +92,14 @@ def parse_document(path: Path) -> DocumentParser:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def validate_local_references(path: Path, parser: DocumentParser) -> None:
@@ -177,8 +193,56 @@ def validate_supporting_assets(
     require("@media print" in css_text, "project brief print rules missing")
 
 
+def validate_whitepaper_artifact() -> None:
+    require(WHITEPAPER_PATH.read_bytes().startswith(b"%PDF-"), "whitepaper is not a PDF")
+    require(WHITEPAPER_PATH.stat().st_size > 10_000, "whitepaper is unexpectedly small")
+
+    metadata = json.loads(WHITEPAPER_MANIFEST_PATH.read_text(encoding="utf-8"))
+    require(metadata.get("schema_version") == 1, "whitepaper manifest schema must be 1")
+    require(metadata.get("artifact") == WHITEPAPER_PATH.name, "whitepaper artifact name mismatch")
+    require(
+        metadata.get("artifact_sha256") == sha256(WHITEPAPER_PATH),
+        "whitepaper artifact digest mismatch",
+    )
+    require(
+        isinstance(metadata.get("source_commit"), str)
+        and COMMIT_PATTERN.fullmatch(metadata["source_commit"]) is not None,
+        "whitepaper source commit must be a full lowercase Git SHA",
+    )
+    require(
+        metadata.get("manifest") == "docs/anthesis/overview/whitepaper-manifest.json",
+        "whitepaper source manifest path mismatch",
+    )
+    require(
+        isinstance(metadata.get("manifest_sha256"), str)
+        and SHA256_PATTERN.fullmatch(metadata["manifest_sha256"]) is not None,
+        "whitepaper source manifest digest is malformed",
+    )
+
+    sources = metadata.get("sources")
+    require(isinstance(sources, list) and len(sources) == 1, "whitepaper must declare one curated source")
+    source = sources[0]
+    require(
+        isinstance(source, dict)
+        and source.get("path") == "docs/anthesis/overview/anthesis-whitepaper.md",
+        "whitepaper curated source path mismatch",
+    )
+    require(
+        isinstance(source.get("sha256"), str)
+        and SHA256_PATTERN.fullmatch(source["sha256"]) is not None,
+        "whitepaper curated source digest is malformed",
+    )
+
+
 def main() -> int:
-    for path in (INDEX_PATH, BRIEF_PATH, APP_PATH, PROOF_CSS_PATH):
+    for path in (
+        INDEX_PATH,
+        BRIEF_PATH,
+        APP_PATH,
+        PROOF_CSS_PATH,
+        WHITEPAPER_PATH,
+        WHITEPAPER_MANIFEST_PATH,
+    ):
         require(path.exists(), f"required public-site file missing: {path}")
 
     index_parser = parse_document(INDEX_PATH)
@@ -189,6 +253,7 @@ def main() -> int:
     validate_local_references(INDEX_PATH, index_parser)
     validate_local_references(BRIEF_PATH, brief_parser)
     validate_supporting_assets(index_parser, brief_parser)
+    validate_whitepaper_artifact()
 
     print("public site content contract validated")
     return 0
