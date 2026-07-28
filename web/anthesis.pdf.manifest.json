@@ -1,0 +1,76 @@
+{
+  "artifact": "anthesis.pdf",
+  "artifact_sha256": "e32c13e016286d189f70ab43c43bf4d8116df90122a469a53a4987f09f66ab6d",
+  "build_inputs": [
+    {
+      "path": "Makefile",
+      "sha256": "04b077c017c215b7bfdedeea5ab973670f3579889968fa1e4dc36914c5c9b289"
+    },
+    {
+      "path": ".github/workflows/whitepaper-publication.yml",
+      "sha256": "34084e399ca04d2c7acd0c8e89efa11d48e96e126970e74dac92c246d4e43072"
+    },
+    {
+      "path": "plugins/docs/config/defaults.yaml",
+      "sha256": "66e9f412daa21015630c6517d0aa11b8f609a9ed739b5f0b0879ad5d4bd40be9"
+    },
+    {
+      "path": "plugins/docs/src/anthesis_docs/build_whitepaper.py",
+      "sha256": "121448228b15bf60c0d32fd2db60868be405acbbcb70a044063a8516e63c1803"
+    },
+    {
+      "path": "plugins/docs/src/anthesis_docs/build_pdfs.py",
+      "sha256": "7de4cc01c3bf454b82951bd5f5d79b8f66c2c7c506cb13bbb9bf7b7b21a17751"
+    },
+    {
+      "path": "plugins/docs/scripts/publish_whitepaper.sh",
+      "sha256": "5e792ee3d6fa860172e060dab2a9ebd4cdf60770b9ac7627f4fc7c4100cd3679"
+    },
+    {
+      "path": "plugins/docs/scripts/validate_whitepaper_artifact.py",
+      "sha256": "2349c9466e89f2b6f1a2e36b1809f85243ecae82fad208f9b51bc3e8332f116f"
+    },
+    {
+      "path": "plugins/docs/templates/community-whitepaper-integrity.yml",
+      "sha256": "1a16a7ecbe78ca5b04b73bde2eac62dbd68638455abfe749ca948e10c69dddc6"
+    },
+    {
+      "path": "flake.nix",
+      "sha256": "e1fc5075939c58def48f4c778a8b224e2a1d6df13794b1039c29daf3b3c46186"
+    },
+    {
+      "path": "flake.lock",
+      "sha256": "d15ced6c670a5da8bc2712ff1753406bfb191e7fa540ced9e1cc79900584f629"
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "ef015a8644f36294e59c680549d42b186fb0b5e152b80ca6b896301841145fcc"
+    }
+  ],
+  "config": "plugins/docs/config/defaults.yaml",
+  "config_sha256": "66e9f412daa21015630c6517d0aa11b8f609a9ed739b5f0b0879ad5d4bd40be9",
+  "document": {
+    "author": "Ryan Jennings",
+    "date": "2026-07-27",
+    "footer": "Anthesis Whitepaper 0.3.1 | Micrantha 2026",
+    "keywords": "AI governance, agentic systems, governed execution, Anthesis",
+    "max_pages": 18,
+    "min_pages": 8,
+    "outline_title": "Anthesis Whitepaper",
+    "status": "Published",
+    "subject": "Governance, enforcement, and evidence boundaries for agentic systems",
+    "title": "Anthesis: Governed Execution for Agentic Systems",
+    "version": "0.3.1"
+  },
+  "manifest": "docs/anthesis/overview/whitepaper-manifest.json",
+  "manifest_sha256": "193cec2fbd4ddbd2b6cb636d86641fac13c16c432a2db618acc3269628cea293",
+  "schema_version": 1,
+  "source_commit": "f5543d75be41d8d6e5cc2d86237a9e663e3dfc13",
+  "source_ref": "refs/heads/main",
+  "sources": [
+    {
+      "path": "docs/anthesis/overview/anthesis-whitepaper.md",
+      "sha256": "deebde829a8a2713240861689ebdbde127e94a10de536bb3dbf6036318b5a34c"
+    }
+  ]
+}
