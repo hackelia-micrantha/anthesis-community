@@ -130,6 +130,7 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("not in the runtime critical path" in text, "Governance Lab runtime boundary missing")
     require("does not define policy authority" in text, "Dubnium policy boundary missing")
     require("What prevents the agent" in text, "central bypass question missing")
+    require("27 scenarios" not in text, "unsynchronized scenario count must be omitted")
     for label in MATURITY_LABELS:
         require(label in text, f"homepage maturity label missing: {label}")
 
@@ -145,13 +146,33 @@ def validate_project_brief(parser: DocumentParser) -> None:
     for label in MATURITY_LABELS:
         require(label in text, f"project brief maturity label missing: {label}")
     require("Enforcement location and assurance are separate dimensions." in text, "assurance distinction missing")
+    require("27 scenarios" not in text, "unsynchronized scenario count must be omitted")
 
 
-def validate_supporting_assets() -> None:
+def validate_supporting_assets(
+    index_parser: DocumentParser,
+    brief_parser: DocumentParser,
+) -> None:
     require(PROOF_CSS_PATH.exists(), "governed-agent proof stylesheet missing")
+    index_text = INDEX_PATH.read_text(encoding="utf-8")
+    brief_text = BRIEF_PATH.read_text(encoding="utf-8")
     app_text = APP_PATH.read_text(encoding="utf-8")
     css_text = PROOF_CSS_PATH.read_text(encoding="utf-8")
-    require("proof.css" in app_text, "proof stylesheet is not loaded")
+
+    for path, parser, raw_text in (
+        (INDEX_PATH, index_parser, index_text),
+        (BRIEF_PATH, brief_parser, brief_text),
+    ):
+        require("proof.css" in parser.references, f"proof stylesheet is not linked in {path}")
+        require(
+            "document.documentElement.classList.add('js')" in raw_text,
+            f"JavaScript enhancement marker missing in {path}",
+        )
+
+    require("proofStylesheet" not in app_text, "proof stylesheet must not depend on JavaScript injection")
+    require(".reveal {" in css_text, "no-script reveal fallback missing")
+    require(".js .reveal" in css_text, "JavaScript-only reveal enhancement missing")
+    require("@media (prefers-reduced-motion: reduce)" in css_text, "reduced-motion fallback missing")
     require("@media (max-width: 900px)" in css_text, "mobile proof layout missing")
     require("overflow-x: auto" in css_text, "responsive table overflow missing")
     require("@media print" in css_text, "project brief print rules missing")
@@ -168,7 +189,7 @@ def main() -> int:
     validate_project_brief(brief_parser)
     validate_local_references(INDEX_PATH, index_parser)
     validate_local_references(BRIEF_PATH, brief_parser)
-    validate_supporting_assets()
+    validate_supporting_assets(index_parser, brief_parser)
 
     print("public site content contract validated")
     return 0
