@@ -1,0 +1,32 @@
+name: Public Site
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+      - "scripts/validate_public_site.py"
+      - ".github/workflows/public-site.yml"
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "scripts/validate_public_site.py"
+      - ".github/workflows/public-site.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate public site content contract
+        run: python scripts/validate_public_site.py
