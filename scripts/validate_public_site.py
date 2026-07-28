@@ -154,22 +154,21 @@ def validate_supporting_assets(
     brief_parser: DocumentParser,
 ) -> None:
     require(PROOF_CSS_PATH.exists(), "governed-agent proof stylesheet missing")
-    index_text = INDEX_PATH.read_text(encoding="utf-8")
-    brief_text = BRIEF_PATH.read_text(encoding="utf-8")
     app_text = APP_PATH.read_text(encoding="utf-8")
     css_text = PROOF_CSS_PATH.read_text(encoding="utf-8")
 
-    for path, parser, raw_text in (
-        (INDEX_PATH, index_parser, index_text),
-        (BRIEF_PATH, brief_parser, brief_text),
+    for path, parser in (
+        (INDEX_PATH, index_parser),
+        (BRIEF_PATH, brief_parser),
     ):
         require("proof.css" in parser.references, f"proof stylesheet is not linked in {path}")
-        require(
-            "document.documentElement.classList.add('js')" in raw_text,
-            f"JavaScript enhancement marker missing in {path}",
-        )
+        require("app.js" in parser.references, f"application script is not linked in {path}")
 
     require("proofStylesheet" not in app_text, "proof stylesheet must not depend on JavaScript injection")
+    require(
+        "document.documentElement.classList.add('js')" in app_text,
+        "JavaScript enhancement marker must be set only after app.js loads",
+    )
     require(".reveal {" in css_text, "no-script reveal fallback missing")
     require(".js .reveal" in css_text, "JavaScript-only reveal enhancement missing")
     require("@media (prefers-reduced-motion: reduce)" in css_text, "reduced-motion fallback missing")
