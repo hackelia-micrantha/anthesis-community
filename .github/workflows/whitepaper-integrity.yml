@@ -1,5 +1,6 @@
 name: Whitepaper integrity
 
+# Verify the deployed PDF and its reviewed publication trace together.
 on:
   pull_request:
     paths:
