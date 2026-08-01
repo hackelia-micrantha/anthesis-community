@@ -1,0 +1,53 @@
+name: Materialize whitepaper binary
+
+on:
+  push:
+    branches:
+      - automation/anthesis-whitepaper
+    paths:
+      - 'web/anthesis.pdf.b64/**'
+      - '.github/workflows/materialize-whitepaper.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-anthesis-whitepaper
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: automation/anthesis-whitepaper
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Reconstruct and verify reviewed PDF
+        run: |
+          set -euo pipefail
+          parts=(web/anthesis.pdf.b64/part-*)
+          test "${#parts[@]}" = "8"
+          cat "${parts[@]}" | base64 --decode > web/anthesis.pdf.materialized
+          expected="$(python -c 'import json; print(json.load(open("web/anthesis.pdf.manifest.json"))["artifact_sha256"])')"
+          actual="$(sha256sum web/anthesis.pdf.materialized | awk '{print $1}')"
+          size="$(stat -c '%s' web/anthesis.pdf.materialized)"
+          test "$actual" = "$expected"
+          test "$size" = "59213"
+          mv web/anthesis.pdf.materialized web/anthesis.pdf
+
+      - name: Commit binary-safe publication
+        run: |
+          set -euo pipefail
+          rm -rf web/anthesis.pdf.b64
+          rm .github/workflows/materialize-whitepaper.yml
+          git config user.name "anthesis-publication[bot]"
+          git config user.email "anthesis-publication[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "docs: materialize verified Anthesis whitepaper"
+          git push origin HEAD:automation/anthesis-whitepaper
