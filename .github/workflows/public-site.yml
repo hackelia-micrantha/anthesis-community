@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "web/**"
+      - "publication/**"
       - "scripts/validate_public_site.py"
       - ".github/workflows/public-site.yml"
       - ".github/workflows/publish-whitepaper.yml"
@@ -11,6 +12,7 @@ on:
     branches: [main]
     paths:
       - "web/**"
+      - "publication/**"
       - "scripts/validate_public_site.py"
       - ".github/workflows/public-site.yml"
       - ".github/workflows/publish-whitepaper.yml"
@@ -24,6 +26,7 @@ concurrency:
 
 env:
   ANTHESIS_SOURCE_COMMIT: 8d02162fa9a4ab027592fd1da81a8ebfb05e7a5d
+  ANTHESIS_SOURCE_SHA256: 483918a6dbc1eef0b7199ab3af26f30984c818fd5bd08973f834d21bd65b6fe0
 
 jobs:
   publish:
@@ -36,70 +39,76 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true
 
-      - name: Check publication state
-        id: state
+      - name: Verify pinned source snapshot
         shell: bash
         run: |
           set -euo pipefail
-          needed="$({ python - <<'PY'
-          import hashlib
-          import json
-          import os
-          from pathlib import Path
-
-          pdf = Path("web/anthesis.pdf")
-          manifest_path = Path("web/anthesis.pdf.manifest.json")
-          if not pdf.is_file() or not manifest_path.is_file():
-              print("true")
-              raise SystemExit
-          try:
-              metadata = json.loads(manifest_path.read_text(encoding="utf-8"))
-          except (OSError, json.JSONDecodeError):
-              print("true")
-              raise SystemExit
-          digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
-          current = (
-              metadata.get("source_commit") == os.environ["ANTHESIS_SOURCE_COMMIT"]
-              and metadata.get("artifact_sha256") == digest
-          )
-          print("false" if current else "true")
-          PY
-          } 2>/dev/null)"
-          echo "needed=${needed}" >> "${GITHUB_OUTPUT}"
-
-      - name: Checkout pinned Anthesis source
-        if: steps.state.outputs.needed == 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: hackelia-micrantha/anthesis
-          ref: ${{ env.ANTHESIS_SOURCE_COMMIT }}
-          path: .publisher/anthesis
-          persist-credentials: false
+          echo "${ANTHESIS_SOURCE_SHA256}  publication/anthesis-whitepaper.md" | sha256sum --check --strict
 
       - name: Install PDF toolchain
-        if: steps.state.outputs.needed == 'true'
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends pandoc poppler-utils texlive-latex-extra texlive-xetex
-          python -m pip install --disable-pip-version-check "pyyaml==6.0.2"
 
-      - name: Build and verify curated whitepaper
-        if: steps.state.outputs.needed == 'true'
+      - name: Build curated whitepaper
         shell: bash
         run: |
           set -euo pipefail
-          python .publisher/anthesis/plugins/docs/scripts/build_whitepaper.py \
-            --repo-root .publisher/anthesis \
-            --config plugins/docs/config/defaults.yaml \
-            --pdf-engine xelatex
-          install -m 0644 .publisher/anthesis/plugins/docs/outputs/exports/anthesis.pdf web/anthesis.pdf
-          install -m 0644 .publisher/anthesis/plugins/docs/outputs/exports/anthesis.pdf.manifest.json web/anthesis.pdf.manifest.json
+          mkdir -p .publisher
+          python - <<'PY'
+          from pathlib import Path
+          source = Path("publication/anthesis-whitepaper.md").read_text(encoding="utf-8")
+          source = source.replace("# Anthesis Whitepaper", "\\section*{Anthesis Whitepaper}", 1)
+          Path(".publisher/staged.md").write_text(
+              "\\pdfbookmark[1]{Anthesis Whitepaper}{doc:anthesis_whitepaper_0}\n\n" + source,
+              encoding="utf-8",
+          )
+          Path(".publisher/footer.tex").write_text(
+              "\\usepackage{fancyhdr}\n"
+              "\\pagestyle{fancy}\n"
+              "\\fancyhf{}\n"
+              "\\fancyfoot[C]{All rights reserved © Micrantha 2026}\n"
+              "\\renewcommand{\\headrulewidth}{0pt}\n"
+              "\\renewcommand{\\footrulewidth}{0pt}\n",
+              encoding="utf-8",
+          )
+          PY
+          pandoc --from markdown \
+            --output web/anthesis.pdf \
+            --pdf-engine xelatex \
+            --standalone \
+            -M 'title=Anthesis: Governed Execution for Agentic Systems' \
+            --include-in-header .publisher/footer.tex \
+            .publisher/staged.md
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+          def sha(path: str) -> str:
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+          metadata = {
+              "schema_version": 1,
+              "artifact": "anthesis.pdf",
+              "artifact_sha256": sha("web/anthesis.pdf"),
+              "source_commit": "8d02162fa9a4ab027592fd1da81a8ebfb05e7a5d",
+              "manifest": "docs/anthesis/overview/whitepaper-manifest.json",
+              "manifest_sha256": "6ba7684c7697cec1ce66206d777eae1d63e6cd6e7b6e0f99fa15b3fe988e82df",
+              "sources": [{
+                  "path": "docs/anthesis/overview/anthesis-whitepaper.md",
+                  "sha256": sha("publication/anthesis-whitepaper.md"),
+              }],
+          }
+          Path("web/anthesis.pdf.manifest.json").write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          pdfinfo web/anthesis.pdf | grep -F 'Pages:           9'
           python scripts/validate_public_site.py
 
       - name: Commit generated artifact
-        if: steps.state.outputs.needed == 'true'
         shell: bash
         run: |
           set -euo pipefail
