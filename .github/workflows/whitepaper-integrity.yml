@@ -1,0 +1,72 @@
+name: Whitepaper integrity
+
+# Verify the deployed PDF and its reviewed publication trace together.
+on:
+  pull_request:
+    paths:
+      - 'web/anthesis.pdf'
+      - 'web/anthesis.pdf.manifest.json'
+      - '.github/workflows/whitepaper-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'web/anthesis.pdf'
+      - 'web/anthesis.pdf.manifest.json'
+      - '.github/workflows/whitepaper-integrity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out public site
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Verify PDF and publication trace
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import re
+          from pathlib import Path
+
+          pdf = Path('web/anthesis.pdf')
+          trace_path = Path('web/anthesis.pdf.manifest.json')
+          if not pdf.is_file() or pdf.is_symlink():
+              raise SystemExit('whitepaper PDF must be a regular file')
+          if not trace_path.is_file() or trace_path.is_symlink():
+              raise SystemExit('whitepaper trace must be a regular file')
+          if not pdf.read_bytes().startswith(b'%PDF-'):
+              raise SystemExit('whitepaper asset is not a PDF')
+
+          trace = json.loads(trace_path.read_text(encoding='utf-8'))
+          digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+          if trace.get('schema_version') != 1:
+              raise SystemExit('unsupported whitepaper trace schema')
+          if trace.get('artifact') != 'anthesis.pdf':
+              raise SystemExit('whitepaper trace names the wrong artifact')
+          if trace.get('artifact_sha256') != digest:
+              raise SystemExit('whitepaper PDF digest differs from publication trace')
+          if not re.fullmatch(r'[0-9a-f]{40}', str(trace.get('source_commit', ''))):
+              raise SystemExit('whitepaper trace lacks a full Anthesis source commit')
+          if not isinstance(trace.get('document'), dict):
+              raise SystemExit('whitepaper trace lacks document metadata')
+          for field in ('sources', 'build_inputs'):
+              entries = trace.get(field)
+              if not isinstance(entries, list) or not entries:
+                  raise SystemExit(f'whitepaper trace lacks {field}')
+              for entry in entries:
+                  if not isinstance(entry, dict):
+                      raise SystemExit(f'whitepaper trace {field} entry is malformed')
+                  if not isinstance(entry.get('path'), str):
+                      raise SystemExit(f'whitepaper trace {field} path is malformed')
+                  if not re.fullmatch(r'[0-9a-f]{64}', str(entry.get('sha256', ''))):
+                      raise SystemExit(f'whitepaper trace {field} digest is malformed')
+
+          print(f'Validated anthesis.pdf sha256={digest} source={trace["source_commit"]}')
+          PY
