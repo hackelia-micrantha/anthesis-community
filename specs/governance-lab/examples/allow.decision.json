@@ -15,5 +15,15 @@
     "actor": {"role": "implementation"},
     "runtime": {"id": "ollama-qwen3-14b"}
   },
+  "request_binding": {
+    "version": "anthesis.request-binding/v1",
+    "canonicalization": "rfc8785-json",
+    "algorithm": "sha256",
+    "request_digest": "sha256:2c79aaadd3584473f233c780ddfc6707d8b3654338c931791fd1b89780101c1a",
+    "input_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "plan_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "source_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "dependency_state_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  },
   "engine": {"name": "anthesis-lab", "version": "0.1.0"}
 }
