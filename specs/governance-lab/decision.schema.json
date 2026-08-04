@@ -4,7 +4,7 @@
   "title": "Anthesis Governance Lab Decision v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "scenario_id", "decision", "decision_source", "policy", "policy_digest", "canonicalization", "reason", "effect", "engine"],
+  "required": ["version", "scenario_id", "decision", "decision_source", "policy", "policy_digest", "canonicalization", "reason", "effect", "request_binding", "engine"],
   "properties": {
     "version": { "const": "anthesis.decision/v1" },
     "scenario_id": { "type": "string", "minLength": 1 },
@@ -16,6 +16,7 @@
     "policy_rule_id": { "type": "string", "minLength": 1 },
     "reason": { "type": "string", "minLength": 1 },
     "effect": { "$ref": "#/$defs/effect" },
+    "request_binding": { "$ref": "#/$defs/boundRequestBinding" },
     "engine": {
       "type": "object",
       "additionalProperties": false,
@@ -48,6 +49,30 @@
         "command": { "type": ["string", "null"] },
         "actor": { "type": "object", "additionalProperties": false, "required": ["role"], "properties": { "role": { "type": "string", "minLength": 1 } } },
         "runtime": { "type": "object", "additionalProperties": false, "required": ["id"], "properties": { "id": { "type": "string", "minLength": 1 } } }
+      }
+    },
+    "boundRequestBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "canonicalization",
+        "algorithm",
+        "request_digest",
+        "input_digest",
+        "plan_digest",
+        "source_digest",
+        "dependency_state_digest"
+      ],
+      "properties": {
+        "version": { "const": "anthesis.request-binding/v1" },
+        "canonicalization": { "const": "rfc8785-json" },
+        "algorithm": { "const": "sha256" },
+        "request_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "input_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "plan_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "source_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "dependency_state_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
       }
     }
   }

@@ -10,6 +10,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.write, path: docs/onboarding.md}
     expected:
@@ -26,6 +34,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.write, path: .github/workflows/ci.yml}
     expected:
@@ -42,6 +58,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: command.run, command: curl https://example.com}
     expected:
@@ -58,6 +82,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.read, path: .env}
     expected:
@@ -74,6 +106,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.write, path: pyproject.toml}
     expected:
@@ -90,6 +130,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: unknown-model-runtime}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.write, path: docs/onboarding.md}
     expected:
@@ -105,6 +153,14 @@ scenarios:
     policy: local-sdlc
     actor: {role: implementation}
     runtime: {id: ollama-qwen3-14b}
+    request_binding:
+      version: anthesis.request-binding/v1
+      canonicalization: rfc8785-json
+      algorithm: sha256
+      input_digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      plan_digest: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      source_digest: sha256:2222222222222222222222222222222222222222222222222222222222222222
+      dependency_state_digest: sha256:3333333333333333333333333333333333333333333333333333333333333333
     attempts:
       - {action: file.write, path: .anthesis/evidence/run.jsonl}
     expected:

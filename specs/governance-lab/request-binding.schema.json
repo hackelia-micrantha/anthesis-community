@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/request-binding.schema.json",
+  "title": "Anthesis Exact Request Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "canonicalization",
+    "algorithm",
+    "input_digest",
+    "plan_digest",
+    "source_digest",
+    "dependency_state_digest"
+  ],
+  "properties": {
+    "version": { "const": "anthesis.request-binding/v1" },
+    "canonicalization": { "const": "rfc8785-json" },
+    "algorithm": { "const": "sha256" },
+    "input_digest": { "$ref": "#/$defs/digest" },
+    "plan_digest": { "$ref": "#/$defs/digest" },
+    "source_digest": { "$ref": "#/$defs/digest" },
+    "dependency_state_digest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}
