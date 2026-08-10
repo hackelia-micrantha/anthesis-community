@@ -211,6 +211,8 @@ The canonical vectors are normative interoperability tests.
 
 ## 12. Compatibility and IP boundary
 
+The identifiers below are the **normative contract identifiers defined by this accepted v1 specification**. They are not the same thing as the signed evaluator's complete version-advertised compatibility set. A newer evaluator identifier does not become an implementation-neutral public contract merely because the binary reports it; its public semantics and schema must also be published here.
+
 Contract identifiers are:
 
 ```text
@@ -221,6 +223,8 @@ anthesis.decision/v1
 anthesis.evidence/v1
 anthesis.conformance/v1
 ```
+
+The repository also contains a public `anthesis.request-binding/v1` schema used by current conformance fixtures. Additional evaluator-advertised identifiers used by newer verification surfaces are release/compatibility identity until their normative schemas and semantics are added to this specification.
 
 Within a major version, optional fields may be added, required fields may not be removed, and meanings or authorization-relevant enum values may not change. Unsupported major versions are rejected.
 
