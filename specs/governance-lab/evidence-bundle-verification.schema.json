@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/evidence-bundle-verification.schema.json",
+  "title": "Anthesis Governance Lab Evidence Bundle Verification v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "passed",
+    "bundle_version",
+    "bundle_id",
+    "run_id",
+    "replayability_class",
+    "comparison_strategy",
+    "verified_entries",
+    "verified_links",
+    "findings"
+  ],
+  "properties": {
+    "version": { "const": "anthesis.evidence-bundle-verification/v1" },
+    "passed": { "type": "boolean" },
+    "bundle_version": { "const": "anthesis.evidence-bundle/v1" },
+    "bundle_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "replayability_class": { "enum": ["none", "bounded", "strong"] },
+    "comparison_strategy": {
+      "enum": ["strict", "semantic", "governance", "non_replayable"]
+    },
+    "verified_entries": { "type": "integer", "minimum": 0 },
+    "verified_links": { "type": "integer", "minimum": 0 },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "missing_file",
+            "not_regular_file",
+            "size_mismatch",
+            "digest_mismatch",
+            "substituted_report",
+            "broken_linkage"
+          ]
+        },
+        "path": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
