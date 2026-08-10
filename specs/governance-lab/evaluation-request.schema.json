@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://anthesis.example/specs/governance-lab/evaluation-request.schema.json",
+  "title": "Anthesis Governance Lab Evaluation Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "scenario_id", "policy", "effect", "request_binding"],
+  "properties": {
+    "version": { "const": "anthesis.evaluation-request/v1" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "policy": { "type": "string", "minLength": 1 },
+    "effect": { "$ref": "#/$defs/effect" },
+    "request_binding": { "$ref": "#/$defs/requestBinding" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "requestBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "canonicalization",
+        "algorithm",
+        "input_digest",
+        "plan_digest",
+        "source_digest",
+        "dependency_state_digest"
+      ],
+      "properties": {
+        "version": { "const": "anthesis.request-binding/v1" },
+        "canonicalization": { "const": "rfc8785-json" },
+        "algorithm": { "const": "sha256" },
+        "input_digest": { "$ref": "#/$defs/digest" },
+        "plan_digest": { "$ref": "#/$defs/digest" },
+        "source_digest": { "$ref": "#/$defs/digest" },
+        "dependency_state_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "resource", "command", "actor", "runtime"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "resource": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["path"],
+          "properties": { "path": { "type": "string" } }
+        },
+        "command": { "type": ["string", "null"] },
+        "actor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role"],
+          "properties": { "role": { "type": "string", "minLength": 1 } }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": { "id": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  }
+}
