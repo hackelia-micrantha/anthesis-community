@@ -1,0 +1,21 @@
+{
+  "version": "anthesis.evaluation-request/v1",
+  "scenario_id": "01-allowed-docs-edit",
+  "policy": "local-sdlc",
+  "effect": {
+    "action": "file.write",
+    "resource": { "path": "docs/onboarding.md" },
+    "command": null,
+    "actor": { "role": "implementation" },
+    "runtime": { "id": "ollama-qwen3-14b" }
+  },
+  "request_binding": {
+    "version": "anthesis.request-binding/v1",
+    "canonicalization": "rfc8785-json",
+    "algorithm": "sha256",
+    "input_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "plan_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "source_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "dependency_state_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  }
+}
