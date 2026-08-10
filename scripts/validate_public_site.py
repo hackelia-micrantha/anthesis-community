@@ -30,6 +30,12 @@ MATURITY_LABELS = (
     "In development",
 )
 
+PROOF_MARKERS = (
+    "7 canonical governance scenarios",
+    "9 packs / 27 scenarios",
+    "24 inference-integrity scenarios",
+)
+
 
 class DocumentParser(HTMLParser):
     def __init__(self) -> None:
@@ -116,6 +122,15 @@ def validate_local_references(path: Path, parser: DocumentParser) -> None:
             )
 
 
+def require_public_proof_model(text: str, surface: str) -> None:
+    for marker in PROOF_MARKERS:
+        require(marker in text, f"{surface} proof model missing: {marker}")
+    require(
+        "24 inference-integrity" in text and "27" in text and "separate" in text,
+        f"{surface} does not distinguish the 24-case and 27-case surfaces",
+    )
+
+
 def validate_homepage(parser: DocumentParser) -> None:
     text = parser.text
     require(parser.main_sections == 5, "homepage must contain five main sections plus the hero")
@@ -130,7 +145,9 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("not in the runtime critical path" in text, "Governance Lab runtime boundary missing")
     require("does not define policy authority" in text, "Dubnium policy boundary missing")
     require("What prevents the agent" in text, "central bypass question missing")
-    require("27 scenarios" not in text, "unsynchronized scenario count must be omitted")
+    require("full-verification.md" in " ".join(parser.references), "full verification link missing")
+    require("inference-integrity-demo.md" in " ".join(parser.references), "inference runbook link missing")
+    require_public_proof_model(text, "homepage")
     for label in MATURITY_LABELS:
         require(label in text, f"homepage maturity label missing: {label}")
 
@@ -146,7 +163,8 @@ def validate_project_brief(parser: DocumentParser) -> None:
     for label in MATURITY_LABELS:
         require(label in text, f"project brief maturity label missing: {label}")
     require("Enforcement location and assurance are separate dimensions." in text, "assurance distinction missing")
-    require("27 scenarios" not in text, "unsynchronized scenario count must be omitted")
+    require_public_proof_model(text, "project brief")
+    require("full-verification.md" in " ".join(parser.references), "project brief full verification link missing")
 
 
 def validate_supporting_assets(
