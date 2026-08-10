@@ -1,0 +1,12 @@
+{
+  "version": "anthesis.evidence-bundle-verification/v1",
+  "passed": true,
+  "bundle_version": "anthesis.evidence-bundle/v1",
+  "bundle_id": "governance-lab-example",
+  "run_id": "01-allowed-docs-edit",
+  "replayability_class": "bounded",
+  "comparison_strategy": "governance",
+  "verified_entries": 2,
+  "verified_links": 1,
+  "findings": []
+}
