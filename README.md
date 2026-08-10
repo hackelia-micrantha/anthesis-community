@@ -1,297 +1,134 @@
 # Anthesis
 
 ![Status](https://img.shields.io/badge/status-active%20development-2ea44f)
-![Governance](https://img.shields.io/badge/governance-RFC--driven-1f6feb)
-![Runtime](https://img.shields.io/badge/runtime-phloem%20%2B%20xylem-0a7ea4)
+![Governance](https://img.shields.io/badge/governance-deterministic%20policy-1f6feb)
 ![Execution](https://img.shields.io/badge/execution-governed-6f42c1)
 ![Security](https://img.shields.io/badge/security-docs%20available-8250df)
-![License](https://img.shields.io/badge/license-closed%20source%20%7C%20all%20rights%20reserved-5a5a5a)
+![License](https://img.shields.io/badge/core-closed%20source%20%7C%20public%20contracts-5a5a5a)
 
 > *Anthesis* — the phase in which a flower is fully open and capable of function.
 
----
-
-## Overview
-
-Anthesis is a **deterministic, Git-native governance gate for agentic architectures and lifecycle loops**.
+Anthesis is a **deterministic governance boundary for agentic systems**.
 
 Its core invariant is:
 
 > Every externally observable agentic effect is authorized, constrained, attributable, and auditable through Anthesis.
 
-It enables teams to integrate AI/LLM agents into development and operational workflows while maintaining:
+Reasoning can remain internal. Consequential effects must cross a governance boundary whose decision can be enforced by the surrounding tool surface, gateway, credential boundary, downstream validator, capability system, or runtime.
 
-* explicit approval control
-* full auditability
-* deterministic, reproducible execution
+## What Anthesis governs
 
-Unlike typical agent systems, Anthesis does **not permit implicit autonomy**.
+Externally observable effects can include:
 
-Reasoning can remain internal. Effects must cross a governance boundary.
+- tool invocation and specialist delegation;
+- memory and context access;
+- filesystem and process mutation;
+- network and API calls;
+- repository writes, merges, releases, and deployment actions;
+- external communication;
+- approval-gated operations;
+- artifact publication and long-term state mutation.
 
-All execution is modeled as a **controlled state transition through deterministic gates**:
+Anthesis does **not** attempt to be an agent framework, LLM runtime, memory database, generic orchestrator, scanner, dashboard, or compliance portal. It is the control surface for governed agentic effects.
 
-→ context is assembled
-→ risk is evaluated
-→ approval is required
-→ execution is recorded
+## Supervisor / specialist model
 
-This allows agentic workflows to operate more safely in **production and regulated environments**.
-
-Externally observable effects include tool invocation, specialist delegation, memory/context access, filesystem mutation, shell/process execution, network/API calls, repository writes, external communication, approval-gated actions, artifact publication, and long-term state mutation.
-
----
-
-## Why Anthesis
-
-Most AI-assisted development tools prioritize autonomy over control, introducing risks:
-
-* non-deterministic authority paths
-* lack of auditability
-* implicit or opaque decision-making
-* difficulty operating under compliance constraints
-
-Anthesis enforces a different model:
-
-* loop continuation is **explicitly governed**
-* agents operate within **policy-defined boundaries**
-* all actions are **traceable and reproducible**
-* system behavior is anchored to **version-controlled artifacts (Git)**
-
-Anthesis is not primarily an agent framework, LLM runtime, memory database, generic orchestrator, scanner, dashboard, or compliance portal. It is the control surface for governed agentic effects.
-
----
-
-## Integration Model
-
-Anthesis sits between supervisor agents and externally observable effects:
+A common integration pattern is:
 
 ```text
 AI control plane
   -> supervisor agent
     -> Anthesis governance boundary
-      -> envelope / policy decision / capability / approval
+      -> policy decision / capability / approval
         -> specialist agents
           -> governed tools, memory, services, APIs
-            -> evidence / evaluation / audit
+            -> evidence / outcome
 ```
 
-Supervisor agents orchestrate. Specialist agents execute bounded work. Anthesis governs delegation, tool use, memory/context access, state mutation, external communication, and artifact publication.
+Supervisors orchestrate. Specialists execute bounded work. Anthesis governs the effects and records the authority required to produce them.
 
-The selected integration mode must state what prevents bypass:
+## Public proof surfaces
 
-* tool-wrapper mode: expose only `anthesis.invoke` or Anthesis-scoped wrappers
-* MCP mediation: expose only Anthesis in the MCP client registry
-* gateway/sidecar mode: block downstream network/API access except through Anthesis
-* capability-token mode: downstream tools reject calls without Anthesis-issued grants
-* SDK-wrapper mode: pair developer ergonomics with credential isolation or guardrails
-* sandboxed-runtime mode: block filesystem, network, process, and credential effects except through governed paths
+Anthesis keeps evaluation, demonstration coverage, and runtime enforcement deliberately separate.
 
-See `docs/product/overview.md`, `docs/product/envelope.md`, `docs/product/trial-criteria.md`, and `docs/product/integrations/README.md`.
+| Surface | Current public proof | Purpose |
+|---|---:|---|
+| Canonical Governance Lab contract | **7 scenarios** | Stable deterministic policy outcomes, including allow, approval-required, policy deny, and engine-guard deny. |
+| General Governance Lab catalog | **9 packs / 27 scenarios** | Broader synthetic SDLC and operational declarations across documentation, source, CI/release, dependencies, secrets, tools, runtimes, administration, and adversarial cases. |
+| Inference-integrity contract | **24 scenarios** | Deterministic evaluation of recorded provider-neutral evidence for identity, seed/token integrity, routing, verifier trust, topology, re-verification, operating modes, and recovery. |
 
----
+The **24 inference-integrity cases are separate from the 27 general demo scenarios**.
 
-## Example Workflow
+Run the public lab at [`ryjen/anthesis-governance-lab`](https://github.com/ryjen/anthesis-governance-lab). Start with its operator or full-verification runbook rather than assuming the three counts describe one suite.
 
-A typical execution flow:
+### What Governance Lab proves
 
-1. A developer updates a requirement, task, or code artifact
-2. Anthesis assembles context (code, RFCs, prior decisions)
-3. Calyx evaluates risk and determines approval requirements
-4. Approval is granted (human or automated)
-5. Xylem executes the task via LLM or worker runtime
-6. Results are validated, committed, and recorded
+Governance Lab proves that a pinned public evaluator can reproducibly evaluate declared attempts and recorded evidence against pinned contracts, and that controlled expectation drift is detected.
 
-**Result:**
+It does **not** execute the declared effects, persist production approvals, invoke live model providers, prove universal replay, execute containment, or prove that an external runtime cannot bypass Anthesis.
 
-* no uncontrolled AI execution
-* full audit trail
-* reproducible workflows
+## Enforcement and integration modes
 
----
+Integration strength depends on what prevents the agent from producing an effect without crossing Anthesis.
 
-## Core Principles
+| Mode | Core bypass question | Typical strength |
+|---|---|---|
+| Tool wrapper / `invoke` | Does the agent registry expose only Anthesis-controlled tools? | Moderate to strong |
+| MCP mediation | Are raw downstream MCP servers and credentials unavailable or constrained? | Moderate to strong |
+| Gateway / sidecar | Are downstream effects unreachable except through the gateway? | Strong |
+| Capability tokens | Do downstream tools reject missing, expired, altered, replayed, or out-of-scope grants? | Strong |
+| SDK wrapper | Can code still use direct clients or raw credentials? | Advisory to moderate |
+| Sandboxed runtime | Does the runtime prevent direct filesystem, network, process, credential, and tool effects? | Runtime-enforced when complete |
 
-1. **Governed Autonomy**
-   Agents act only within policy, context, and traceable boundaries.
+Prompts and conventions are not enforcement guarantees. Strong assurance comes from control of registries, credentials, network paths, downstream validation, capabilities, or the runtime itself.
 
-2. **Human Authority First**
-   Humans remain final arbiters via approvals and overrides.
+See [`docs/product/integrations/README.md`](docs/product/integrations/README.md).
 
-3. **Deterministic Execution**
-   Identical inputs and context produce consistent outcomes.
+## Trial criteria
 
-4. **Auditability by Design**
-   All actions, approvals, and state transitions are recorded.
+A useful Anthesis trial should evaluate six practical dimensions:
 
-5. **Living Architecture**
-   RFCs, prompts, and policies evolve as first-class, versioned artifacts.
+1. **Enforceability** — governed effects cannot occur without the selected governance boundary.
+2. **Attribution** — decisions and effects identify the responsible actor, runtime, tool, capability, approval, envelope, and evidence.
+3. **Least privilege** — capabilities are narrowly scoped and deny out-of-scope actions.
+4. **Human approval** — actions requiring approval remain blocked until the exact approved scope is granted.
+5. **Auditability** — decisions, approvals, effects, and evidence can be reconstructed or replayed at the appropriate verification level.
+6. **Bypass resistance** — residual direct paths and trust assumptions are explicit and tested for the selected integration mode.
 
----
+See [`docs/product/trial-criteria.md`](docs/product/trial-criteria.md).
 
-## Execution Lifecycle
+## Public evaluator
 
-Every action follows a controlled lifecycle:
+The public Governance Lab uses a signed, immutable `anthesis-lab` release distributed through this repository. The lab verifies producer identity, Sigstore bundles, provenance, checksums, archive contents, binary identity, version, and supported contracts before execution.
 
-1. **Pre-Bloom** — Change or event detected
-2. **Context Assembly** — Relevant artifacts retrieved (embeddings + repo state)
-3. **Calyx Gate** — Policy evaluation and risk classification
-4. **Approval** — Human or automated authorization
-5. **Anthesis** — Execution with full context
-6. **Dormancy** — Completion, rollback, or safe halt
+The current evaluator exposes separate commands for the canonical governance contract and inference-integrity contract. See [`docs/product/governance-lab-cli.md`](docs/product/governance-lab-cli.md) and the Governance Lab repository for the pinned executable workflow.
 
-Autonomy is **conditional**, not default.
+## Project relationships
 
----
+- **Anthesis** — policy authority, deterministic evaluator semantics, approvals, capabilities, evidence semantics, and provenance.
+- **Anthesis Governance Lab** — independent public conformance and demonstration fixtures; not part of the runtime critical path.
+- **Dubnium** — bounded reference execution environment and live-runtime integration surface; it consumes Anthesis decisions rather than defining policy authority.
+- **Anthesis Community** — public contracts, specifications, release artifacts, product documentation, website, project brief, and whitepaper distribution.
 
-## System Overview
+## Current maturity
 
-Anthesis is composed of three primary layers:
+**Runnable now:** signed public evaluator acquisition, Governance Lab canonical/general/inference fixtures, deterministic reports, evidence bundles, and stakeholder walkthroughs.
 
-* **Control Plane** — orchestration, state management, and policy enforcement
-* **Execution Layer** — worker runtime and LLM interaction
-* **Governance Layer** — approvals, risk evaluation, and audit
+**Reference integration:** bounded governed-agent execution through Dubnium with approval binding and runtime evidence.
 
-### Primary Components
+**In development:** broader production enforcement profiles and stronger live inference-integrity capture, replay, independent verification, containment, and recovery.
 
-* **Git Repository**
-  Canonical source for RFCs, prompts, policies, and tasks
+## Read next
 
-* **Phloem (MCP API + Orchestration)**
-  Control plane responsible for execution flow, state transitions, and coordination
+- [Anthesis website](https://anthesis.micrantha.com/)
+- [Project brief](https://anthesis.micrantha.com/project-brief.html)
+- [Governance Lab](https://github.com/ryjen/anthesis-governance-lab)
+- [`docs/product/overview.md`](docs/product/overview.md)
+- [`docs/product/trial-criteria.md`](docs/product/trial-criteria.md)
+- [`docs/product/integrations/README.md`](docs/product/integrations/README.md)
+- [`docs/product/governance-lab-cli.md`](docs/product/governance-lab-cli.md)
+- [Anthesis whitepaper](https://anthesis.micrantha.com/anthesis.pdf)
 
-* **Calyx (Policy Engine)**
-  Evaluates risk, enforces policy, and determines approval requirements
+## License and implementation boundary
 
-* **Xylem (Workers)**
-  Executes tasks, interacts with LLMs, and returns results
-
-* **Inflorescence**
-  Graph-based coordination layer for multi-agent workflows
-
----
-
-## Architecture
-
-The diagram below shows how Anthesis coordinates human input, policy evaluation, and agent execution:
-
-```mermaid
-flowchart TD
-  H["Human Operators (CLI/UI/API)"]
-  G["Git Repository<br/>(RFCs, prompts, policies, tasks)"]
-  N["n8n Workflows (approvals/automation)"]
-  L["LLM Runtime"]
-
-  subgraph CP["Control Plane"]
-    direction TB
-    P["Phloem (MCP API + Orchestration)"]
-    C["Calyx Policy Engine"]
-    D[("SQLite State + Audit")]
-  end
-
-  subgraph WT["Worker Topology (optional)"]
-    direction TB
-    Q["Queue Backend<br/>RabbitMQ / Redis / Kafka / SQS"]
-    X["Xylem Workers"]
-  end
-
-  H -->|commands + approvals| P
-  H -->|commits + PRs| G
-  G -->|artifacts| P
-
-  P -->|policy evaluation| C
-  C -->|allow/deny| P
-  P -->|state + audit| D
-
-  P -->|direct execution| L
-  P -.->|dispatch| Q
-  Q -->|consume| X
-  X -->|results| P
-  X -->|model calls| L
-
-  P -.->|approval events| N
-  N -.->|callbacks| P
-```
-
----
-
-## Governance & RFC Model
-
-Anthesis is **charter-first and RFC-driven**.
-
-Core governance defines:
-
-* orchestration and execution contracts
-* policy and approval semantics
-* agent execution modes and retry behavior
-* CLI behavior and workflow guarantees
-* audit and evidence requirements
-* configuration and operating modes
-
-Extended governance includes:
-
-* decision frameworks (QART)
-* drift detection and reconciliation
-* prompt and context lifecycle management
-* plugin and extension boundaries
-
----
-
-## Security & Compliance
-
-Anthesis is designed for environments requiring **strong control, traceability, and auditability**.
-
-### Security Controls
-
-* **Governed execution** — no action without policy and approval
-* **Centralized enforcement** — Phloem + Calyx enforce all execution gates
-* **Least privilege** — RBAC, scoped APIs, and isolation boundaries
-* **Audit-first design** — all critical actions produce evidence
-* **Fail-safe behavior** — safe halt, rollback, and replay
-
-### Security Lifecycle
-
-* Threat modeling for high-risk changes (auth, data, integrations)
-* Pre-deploy validation (input validation, secrets, dependencies, logging)
-* Tiered controls based on risk classification
-* Defined incident response and recovery procedures
-
-### Compliance Alignment
-
-* Audit-ready artifacts (logs, approvals, state transitions)
-* Alignment with SOC 2 (in progress), ISO 27001 (planned), NIST SSDF
-* Supply chain controls (dependency scanning, CVE review)
-
----
-
-## Quick Start
-
-```bash
-make deps
-docker compose --profile worker up
-anthesis --help
-```
-
----
-
-## Testing
-
-```bash
-make test
-make test-units
-make test-integration
-```
-
----
-
-## Status
-
-Active development with RFC-driven governance and iterative delivery.
-
----
-
-## License
-
-Closed source. All rights reserved.
-
-The maintainers reserve the right to publish an open-source license for all or part of this project in the future.
+The core Anthesis implementation remains closed source and all rights reserved unless separately licensed. This community repository intentionally publishes selected contracts, specifications, documentation, release artifacts, and validation surfaces so external reviewers can inspect and reproduce the public governance claims without access to private implementation details.
