@@ -26,12 +26,15 @@ A conforming evaluator MUST also enforce:
 
 ## 3. CLI
 
+The original v1 evaluator contract defines:
+
 ```text
 anthesis-lab evaluate --repo <path> --scenario <file> [--format json|yaml]
 anthesis-lab test --repo <path> [--scenarios <path>] [--format json|yaml]
-anthesis-lab verify --evidence <file> [--format json|yaml]
 anthesis-lab version [--format json|yaml]
 ```
+
+Additional promoted verification surfaces, including `anthesis-lab verify --bundle <directory>`, are defined in [`PROMOTED-CONTRACTS.md`](PROMOTED-CONTRACTS.md).
 
 Machine-readable results go to stdout. Diagnostics go to stderr.
 
@@ -42,8 +45,8 @@ Machine-readable results go to stdout. Diagnostics go to stderr.
 | 3 | input or schema validation failure |
 | 4 | decision was `deny` |
 | 5 | decision was `approval_required` |
-| 6 | evidence verification failure |
-| 7 | scenario expectation mismatch |
+| 6 | reserved legacy evidence-verification failure |
+| 7 | scenario expectation mismatch; promoted bundle-integrity verification failure |
 | 8 | unsupported version or feature |
 | 10 | internal failure; fail closed |
 
@@ -211,9 +214,9 @@ The canonical vectors are normative interoperability tests.
 
 ## 12. Compatibility and IP boundary
 
-The identifiers below are the **normative contract identifiers defined by this accepted v1 specification**. They are not the same thing as the signed evaluator's complete version-advertised compatibility set. A newer evaluator identifier does not become an implementation-neutral public contract merely because the binary reports it; its public semantics and schema must also be published here.
+The identifiers below are the **normative contract identifiers defined by this accepted v1 specification**. The signed evaluator's current version-advertised compatibility set extends this original surface and is defined in [`PROMOTED-CONTRACTS.md`](PROMOTED-CONTRACTS.md).
 
-Contract identifiers are:
+Original v1 contract identifiers are:
 
 ```text
 anthesis.scenario/v1
@@ -224,7 +227,7 @@ anthesis.evidence/v1
 anthesis.conformance/v1
 ```
 
-The repository also contains a public `anthesis.request-binding/v1` schema used by current conformance fixtures. Additional evaluator-advertised identifiers used by newer verification surfaces are release/compatibility identity until their normative schemas and semantics are added to this specification.
+The promoted compatibility specification publishes the additional request-binding, evaluation-request, evidence-bundle, and evidence-bundle-verification contracts, with schemas and representative examples. An evaluator identifier is not an implementation-neutral public contract merely because a binary reports it; its externally observable schema and semantics must be published in this repository.
 
 Within a major version, optional fields may be added, required fields may not be removed, and meanings or authorization-relevant enum values may not change. Unsupported major versions are rejected.
 
