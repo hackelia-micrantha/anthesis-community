@@ -1,0 +1,31 @@
+{
+  "version": "anthesis.evidence-bundle/v1",
+  "bundle_id": "governance-lab-example",
+  "run_id": "01-allowed-docs-edit",
+  "replayability_class": "bounded",
+  "comparison_strategy": "governance",
+  "decision_path": "decision.json",
+  "report_path": "report.json",
+  "entries": [
+    {
+      "path": "decision.json",
+      "role": "decision",
+      "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "size": 1
+    },
+    {
+      "path": "report.json",
+      "role": "report",
+      "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "size": 1
+    }
+  ],
+  "links": [
+    {
+      "source_path": "report.json",
+      "relation": "reports_on",
+      "target_path": "decision.json",
+      "target_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}
