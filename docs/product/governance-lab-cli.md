@@ -34,7 +34,7 @@ It does **not** prove production sandboxing, credential isolation, distributed e
 
 ## Current commands
 
-Inspect the evaluator identity and supported contracts:
+Inspect the evaluator identity and advertised contract identifiers:
 
 ```bash
 anthesis-lab version --format json
@@ -83,14 +83,14 @@ The acquisition path verifies:
 5. provenance source and distribution identity;
 6. archive member allowlisting;
 7. CLI name and version;
-8. the exact supported public contract set;
+8. the exact evaluator-advertised contract identifier set;
 9. repository-contained installation.
 
 Any mismatch fails closed before scenario execution.
 
-## Supported public contract set
+## Evaluator-advertised contract identifiers
 
-The promoted evaluator currently identifies these contracts:
+The promoted evaluator currently identifies these contracts as part of its signed runtime identity:
 
 ```text
 anthesis.policy/v1
@@ -103,19 +103,23 @@ anthesis.evidence-bundle/v1
 anthesis.evidence-bundle-verification/v1
 ```
 
+This exact list is an **evaluator identity check**, not a claim that every identifier above is already defined as a normative schema under `specs/governance-lab/` in this repository. The normative community specification remains the source of truth for the implementation-neutral contracts actually published here. Additional evaluator-advertised contracts must not be treated as independently implementable public schemas until their corresponding semantics and schemas are published in this repository.
+
 The exact binary version and release identity remain pinned by Governance Lab rather than duplicated here as a mutable documentation promise.
 
 ## Public contract
 
 The community repository publishes selected versioned schemas, semantics, fixtures, and release artifacts required to inspect the public claims, including:
 
-- policy, runtime-profile, scenario, decision, request-binding, evaluation-request, and evidence contracts;
+- policy, runtime-profile, scenario, decision, evidence, and request-binding schemas currently present under `specs/governance-lab/`;
 - deterministic normalization and matching semantics;
 - default-deny and fail-closed requirements;
 - canonical policy and runtime fixtures;
 - seven canonical governance vectors;
-- inference-integrity fixture contracts and report semantics exposed by the promoted evaluator;
+- inference-integrity fixture and report semantics documented by the Governance Lab proof surface;
 - exact policy/evidence digest fixtures and validators where applicable.
+
+The promoted evaluator also advertises `anthesis.evaluation-request/v1`, `anthesis.evidence-bundle/v1`, and `anthesis.evidence-bundle-verification/v1`. Their inclusion in evaluator version output is useful for release identity and compatibility checks, but this repository does not currently publish corresponding normative schemas under `specs/governance-lab/`. That publication gap should be resolved before describing those identifiers as implementation-neutral public contracts.
 
 Version 1 governance scenarios declare exactly one attempted effect. Natural-language goals are descriptive only and never grant authority.
 
