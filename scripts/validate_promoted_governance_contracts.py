@@ -14,6 +14,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "specs" / "governance-lab"
 EXAMPLES = SPEC / "examples"
+PROMOTED_SPEC = SPEC / "PROMOTED-CONTRACTS.md"
 
 PROMOTED_CONTRACTS = {
     "anthesis.policy/v1": "policy.schema.json",
@@ -29,12 +30,6 @@ PROMOTED_CONTRACTS = {
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-def schema_validator(name: str) -> Draft202012Validator:
-    schema = load_json(SPEC / name)
-    Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
 
 
 def contains_const(value: Any, expected: str) -> bool:
@@ -61,7 +56,7 @@ def main() -> int:
     errors: list[str] = []
     validators: dict[str, Draft202012Validator] = {}
 
-    readme = (SPEC / "README.md").read_text(encoding="utf-8")
+    promoted_spec = PROMOTED_SPEC.read_text(encoding="utf-8")
     for contract_id, schema_name in PROMOTED_CONTRACTS.items():
         schema_path = SPEC / schema_name
         if not schema_path.is_file():
@@ -76,8 +71,10 @@ def main() -> int:
             continue
         if not contains_const(schema, contract_id):
             errors.append(f"{schema_name} does not define promoted identifier {contract_id}")
-        if contract_id not in readme:
-            errors.append(f"README.md does not document promoted identifier {contract_id}")
+        if contract_id not in promoted_spec:
+            errors.append(
+                f"PROMOTED-CONTRACTS.md does not document promoted identifier {contract_id}"
+            )
 
     required = set(PROMOTED_CONTRACTS)
     if set(validators) != required:
@@ -162,7 +159,9 @@ def main() -> int:
         obsolete = copy.deepcopy(evaluation_request["request_binding"])
         obsolete["action_input_digest"] = obsolete.pop("input_digest")
         if validators["anthesis.request-binding/v1"].is_valid(obsolete):
-            errors.append("request-binding schema must reject obsolete action_input_digest spelling")
+            errors.append(
+                "request-binding schema must reject obsolete action_input_digest spelling"
+            )
 
     if errors:
         print("Promoted governance contract validation failed:", file=sys.stderr)
