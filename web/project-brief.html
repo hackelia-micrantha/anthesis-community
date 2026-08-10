@@ -1,37 +1,28 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Anthesis Project Brief | Governed execution for agentic systems</title>
-  <meta name="description"
-    content="A concise project brief for Anthesis: the governance boundary between agent intent and externally observable effects." />
+  <meta name="description" content="A concise Anthesis project brief covering the governance boundary, public 7 / 27 / 24 proof surfaces, integration modes, maturity, and adoption path." />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Micrantha" />
   <link rel="canonical" href="https://anthesis.micrantha.com/project-brief.html" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="proof.css" />
 </head>
-
 <body class="project-brief">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
     <header class="hero">
       <nav class="nav" aria-label="Primary">
-        <a class="brand" href="index.html" aria-label="Anthesis homepage">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 800 800" class="brand-icon" role="img" aria-label="Anthesis" width="40" height="40">
-            <path d="M320 24c6 0 11.8 1.3 17.2 3.7l214.3 90.9c28.1 11.9 49.1 39.6 48.9 73.1-.7 126.8-52.8 358.8-272.9 464.2-21.3 10.2-46.1 10.2-67.4 0C40 550.5-12.1 318.5-12.7 191.7c-.2-33.5 20.8-61.2 48.9-73.1l214.3-90.9c5.4-2.4 11.2-3.7 17.2-3.7H320Z" fill="none" stroke="currentColor" stroke-width="48" stroke-linejoin="round" opacity=".22" />
-            <path d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z" fill="currentColor" transform="translate(144 176) scale(.55)" />
-          </svg>
-          Anthesis
-        </a>
+        <a class="brand" href="index.html" aria-label="Anthesis homepage">Anthesis</a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
         <div class="nav-links" id="nav-links">
           <a href="index.html">Home</a>
           <a href="#proof">Proof</a>
           <a href="#integrations">Integrations</a>
-          <a href="#adoption">Adoption</a>
+          <a href="#trial">Trial</a>
           <a href="anthesis.pdf">Whitepaper</a>
         </div>
       </nav>
@@ -42,7 +33,7 @@
           <h1>Anthesis</h1>
           <p class="lede"><strong>Governed execution for agentic systems</strong></p>
           <p class="lede">Anthesis is the governance boundary between an agent's intent and its externally observable effects.</p>
-          <p class="lede">It evaluates consequential actions against explicit policy, authority, approvals, capabilities, and evidence requirements. A surrounding tool, gateway, credential boundary, downstream validator, or runtime must then enforce the decision.</p>
+          <p class="lede">It evaluates consequential actions against explicit policy, authority, approvals, capabilities, and evidence requirements. A surrounding tool surface, gateway, credential boundary, downstream validator, capability system, or runtime must then make that decision authoritative.</p>
         </div>
         <aside class="hero-card" aria-label="Anthesis governing question">
           <div class="card-title">The governing question</div>
@@ -53,70 +44,51 @@
 
     <main id="main">
       <section class="section reveal">
-        <div class="section-head">
-          <h2>The problem</h2>
-        </div>
+        <div class="section-head"><h2>The problem</h2></div>
         <div class="panel">
-          <p>Agents gain practical authority through tool registries, credentials, network access, delegated specialists, filesystem access, and automated loops. Without a deliberate governance boundary, that authority can be implicit, bypassable, and difficult to reconstruct after an incident.</p>
+          <p>Agentic systems gain practical authority through tool registries, credentials, network access, delegated specialists, filesystem access, and automated loops. Without a deliberate governance boundary, that authority can be implicit, bypassable, and difficult to reconstruct after an incident.</p>
           <p>Anthesis turns a proposed consequential effect into a structured decision with explicit policy, authority, approval, capability, and evidence requirements. It does not become an enforcement guarantee merely because an application calls it; the integration must remove or constrain direct effect paths.</p>
         </div>
       </section>
 
       <section id="proof" class="section reveal">
         <div class="section-head">
-          <h2>Public proof paths</h2>
-          <p>Validation and execution are separate so their claims remain precise.</p>
+          <h2>Public proof model</h2>
+          <p>Governance Lab keeps three proof surfaces separate so each claim stays precise. The 24 inference-integrity cases are separate from the 27 general demo scenarios.</p>
         </div>
-        <div class="proof-grid">
-          <article class="panel proof-card">
+        <div class="split status-grid">
+          <article class="panel">
             <p class="status-label runnable">Runnable now</p>
-            <h3>Anthesis Governance Lab</h3>
-            <p>An independently runnable deterministic proof surface using the public Rust evaluator, immutable acquisition, reconciled scenario catalogs, and aggregate reports.</p>
-            <ul class="bullets">
-              <li>Reconciled themed packs spanning representative governed actions</li>
-              <li>Stable allow, approval-required, deny, guard, and drift outcomes</li>
-              <li>No declared filesystem, network, merge, deployment, or release effect is executed</li>
-            </ul>
+            <h3>7 canonical governance scenarios</h3>
+            <p>Stable public conformance fixtures for deterministic governance decisions and controlled expectation-drift testing.</p>
           </article>
-          <article class="panel proof-card">
-            <p class="status-label reference">Reference integration</p>
-            <h3>Dubnium governed-agent demo</h3>
-            <p>A bounded execution path that normalizes actions, invokes Anthesis, binds exact approvals, runs only constrained tools, and produces sanitized tamper-evident evidence.</p>
-            <p>This demonstrates one enforceable composition. It is not a claim that every Anthesis deployment has equivalent runtime controls.</p>
+          <article class="panel">
+            <p class="status-label runnable">Runnable now</p>
+            <h3>9 packs / 27 scenarios</h3>
+            <p>Broader synthetic governed-action coverage spanning SDLC and operational declarations without executing the effects.</p>
           </article>
+          <article class="panel">
+            <p class="status-label runnable">Runnable now</p>
+            <h3>24 inference-integrity scenarios</h3>
+            <p>Recorded provider-neutral evidence for identity, seed/token integrity, verifier trust, routing, topology, re-verification, operating modes, and recovery.</p>
+          </article>
+        </div>
+        <div class="trust-note">
+          <p><strong>Full reproduction path:</strong> signed evaluator acquisition, all three proof surfaces, controlled mismatch checks, evidence generation, and checksums are documented in the <a class="text-link" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/runbooks/full-verification.md">Governance Lab full-verification runbook</a>.</p>
+          <p>The dedicated <a class="text-link" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/runbooks/inference-integrity-demo.md">inference-integrity runbook</a> explains the 24-case verification classes and limitations.</p>
         </div>
       </section>
 
       <section class="section reveal">
-        <div class="section-head">
-          <h2>Responsibility boundaries</h2>
-        </div>
+        <div class="section-head"><h2>Responsibility boundaries</h2></div>
         <div class="table-wrap">
           <table class="responsibility-table">
             <caption class="sr-only">Anthesis ecosystem responsibilities</caption>
-            <thead>
-              <tr>
-                <th scope="col">Component</th>
-                <th scope="col">Owns</th>
-                <th scope="col">Does not own</th>
-              </tr>
-            </thead>
+            <thead><tr><th scope="col">Component</th><th scope="col">Owns</th><th scope="col">Does not own</th></tr></thead>
             <tbody>
-              <tr>
-                <th scope="row">Anthesis</th>
-                <td>Policy authority, deterministic decision contracts, approvals, capabilities, evidence semantics, and provenance</td>
-                <td>General-purpose agent orchestration or universal effect enforcement</td>
-              </tr>
-              <tr>
-                <th scope="row">Governance Lab</th>
-                <td>Independent conformance, scenario packs, reports, and walkthroughs</td>
-                <td>Runtime execution, durable approvals, or production non-bypassability</td>
-              </tr>
-              <tr>
-                <th scope="row">Dubnium</th>
-                <td>Reference runtime, gateway, bounded tools, execution, and runtime evidence</td>
-                <td>Anthesis policy authority or universal deployment guarantees</td>
-              </tr>
+              <tr><th scope="row">Anthesis</th><td>Policy authority, deterministic evaluator semantics, approval requirements, capabilities, evidence semantics, and provenance.</td><td>General-purpose orchestration or universal runtime enforcement.</td></tr>
+              <tr><th scope="row">Governance Lab</th><td>Independent conformance, scenario packs, inference-integrity fixtures, reports, and walkthroughs.</td><td>Runtime execution, durable production approvals, or universal non-bypassability.</td></tr>
+              <tr><th scope="row">Dubnium</th><td>Reference runtime, gateway, bounded tools, execution, and runtime evidence.</td><td>Anthesis policy authority or universal deployment guarantees.</td></tr>
             </tbody>
           </table>
         </div>
@@ -129,91 +101,51 @@
         </div>
         <div class="table-wrap">
           <table class="integration-table brief-integration-table">
-            <caption class="sr-only">Anthesis integration modes, enforcement locations, bypass controls, and typical assurance</caption>
-            <thead>
-              <tr>
-                <th scope="col">Mode</th>
-                <th scope="col">Enforcement location</th>
-                <th scope="col">Required bypass control</th>
-                <th scope="col">Typical assurance</th>
-              </tr>
-            </thead>
+            <caption class="sr-only">Anthesis integration modes and assurance</caption>
+            <thead><tr><th scope="col">Mode</th><th scope="col">Enforcement location</th><th scope="col">Required bypass control</th><th scope="col">Typical assurance</th></tr></thead>
             <tbody>
-              <tr>
-                <th scope="row">Tool wrapper / invoke</th>
-                <td>Tool surface</td>
-                <td>Raw tools are not available to the agent.</td>
-                <td>Moderate to strong</td>
-              </tr>
-              <tr>
-                <th scope="row">MCP mediation</th>
-                <td>Tool surface</td>
-                <td>Raw downstream MCP servers, credentials, and direct service paths are unavailable or constrained.</td>
-                <td>Moderate to strong</td>
-              </tr>
-              <tr>
-                <th scope="row">Gateway / sidecar</th>
-                <td>Infrastructure</td>
-                <td>Downstream services are unreachable except through the gateway.</td>
-                <td>Strong</td>
-              </tr>
-              <tr>
-                <th scope="row">Capability tokens</th>
-                <td>Infrastructure or downstream tool</td>
-                <td>Effects reject missing, expired, altered, replayed, or out-of-scope grants.</td>
-                <td>Strong</td>
-              </tr>
-              <tr>
-                <th scope="row">SDK wrapper</th>
-                <td>Application</td>
-                <td>Direct clients and raw credentials do not remain an uncontrolled path.</td>
-                <td>Advisory to moderate</td>
-              </tr>
-              <tr>
-                <th scope="row">Sandboxed runtime</th>
-                <td>Runtime</td>
-                <td>Filesystem, network, process, credentials, and tools are unavailable outside governed paths.</td>
-                <td>Runtime-enforced when complete</td>
-              </tr>
+              <tr><th scope="row">Tool wrapper / invoke</th><td>Tool surface</td><td>Raw effectful tools are not available to the agent.</td><td>Moderate to strong</td></tr>
+              <tr><th scope="row">MCP mediation</th><td>Tool surface</td><td>Raw downstream MCP servers, credentials, and direct service paths are unavailable or constrained.</td><td>Moderate to strong</td></tr>
+              <tr><th scope="row">Gateway / sidecar</th><td>Infrastructure</td><td>Downstream services are unreachable except through the governed gateway.</td><td>Strong</td></tr>
+              <tr><th scope="row">Capability tokens</th><td>Infrastructure / downstream tool</td><td>Effects reject missing, expired, altered, replayed, or out-of-scope grants.</td><td>Strong</td></tr>
+              <tr><th scope="row">SDK wrapper</th><td>Application</td><td>Direct clients and raw credentials do not remain an uncontrolled path.</td><td>Advisory to moderate</td></tr>
+              <tr><th scope="row">Sandboxed runtime</th><td>Runtime</td><td>Filesystem, network, process, credentials, and tools are unavailable outside governed paths.</td><td>Runtime-enforced when complete</td></tr>
             </tbody>
           </table>
         </div>
         <div class="trust-note">
-          <p><strong>Enforcement location and assurance are separate dimensions.</strong> An MCP or SDK integration may be cooperative or strong depending on credential ownership, network controls, registry restriction, downstream validation, and other bypass controls.</p>
+          <p><strong>Enforcement location and assurance are separate dimensions.</strong> An MCP, SDK, or tool-wrapper integration may be cooperative or strong depending on credential ownership, network controls, registry restriction, downstream validation, and remaining bypass paths.</p>
         </div>
       </section>
 
-      <section class="section reveal">
-        <div class="section-head">
-          <h2>Current maturity</h2>
-        </div>
-        <div class="split status-grid">
-          <div class="panel"><p class="status-label runnable">Runnable now</p><p>Public evaluator, Governance Lab packs, deterministic reports, and stakeholder walkthroughs.</p></div>
-          <div class="panel"><p class="status-label reference">Reference integration</p><p>Dubnium approval-gated bounded execution with authorization binding and verified evidence.</p></div>
-          <div class="panel"><p class="status-label development">In development</p><p>Broader production enforcement profiles and stronger live inference-integrity evidence, replay, verification, containment, and recovery.</p></div>
-        </div>
-      </section>
-
-      <section id="adoption" class="section reveal">
-        <div class="section-head">
-          <h2>Adoption path</h2>
-        </div>
+      <section id="trial" class="section reveal">
+        <div class="section-head"><h2>Trial criteria</h2><p>A useful trial evaluates the target workflow rather than only the evaluator.</p></div>
         <div class="panel">
           <ol class="compact-steps">
-            <li><strong>Validate the contract.</strong> Run Governance Lab and inspect deterministic decisions, reasons, rules, and reports.</li>
-            <li><strong>Integrate one bounded effect.</strong> Identify the action, credentials, executor, direct bypass paths, and required evidence.</li>
-            <li><strong>Strengthen enforcement.</strong> Add registry restriction, credential isolation, gateway controls, capability validation, egress controls, or sandboxing according to risk.</li>
+            <li><strong>Enforceability:</strong> governed effects must cross the selected boundary.</li>
+            <li><strong>Attribution:</strong> actor, runtime, tool, decision, approval/capability, and evidence are identifiable.</li>
+            <li><strong>Least privilege:</strong> out-of-scope variants are denied.</li>
+            <li><strong>Human approval:</strong> approval-required effects remain blocked until exact scope is granted.</li>
+            <li><strong>Auditability:</strong> decisions, approvals, effects, and outcomes can be reconstructed at the claimed verification level.</li>
+            <li><strong>Bypass resistance:</strong> direct effect paths and residual trust assumptions are explicitly tested or documented.</li>
           </ol>
-          <p>A trial is successful when reviewers can explain what Anthesis decided, what prevented bypass, who executed the action, which approval or capability authorized it, what evidence proves the outcome, and which residual assumptions remain.</p>
+          <p><a class="text-link" href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/trial-criteria.md">Read the full trial criteria →</a></p>
         </div>
       </section>
 
       <section class="section reveal">
-        <div class="section-head">
-          <h2>Trust boundary</h2>
+        <div class="section-head"><h2>Current maturity</h2></div>
+        <div class="split status-grid">
+          <div class="panel"><p class="status-label runnable">Runnable now</p><p>Signed public evaluator, 7 canonical scenarios, 9 packs / 27 scenarios, 24 inference-integrity scenarios, deterministic reports, and reproducible evidence.</p></div>
+          <div class="panel"><p class="status-label reference">Reference integration</p><p>Dubnium bounded execution with authorization binding, approval-gated constrained tools, and runtime evidence.</p></div>
+          <div class="panel"><p class="status-label development">In development</p><p>Broader production enforcement profiles and stronger live inference-integrity capture, replay, verification, containment, and recovery.</p></div>
         </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head"><h2>Trust boundary</h2></div>
         <div class="trust-note">
-          <p>Governance Lab demonstrates deterministic contract behavior, not effect execution. Dubnium demonstrates one bounded reference integration, not universal production enforcement. Anthesis does not guarantee deterministic model output, universal replay, complete compliance, or non-bypassability without an enforcing environment.</p>
+          <p>Governance Lab demonstrates deterministic contract behavior over synthetic declarations and recorded evidence, not effect execution. Dubnium demonstrates one bounded reference integration, not universal production enforcement. Anthesis does not guarantee deterministic model output, universal replay, complete compliance, or non-bypassability without an enforcing environment.</p>
         </div>
         <div class="hero-actions brief-actions">
           <a class="btn" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/walkthroughs/stakeholder-demo.md">Run Governance Lab</a>
@@ -226,16 +158,11 @@
 
   <footer class="footer">
     <div class="footer-content">
-      <div class="split">
-        <div>
-          <p>Anthesis project brief.</p>
-          <p class="mono"><a href="index.html">Homepage</a> · <a href="anthesis.pdf">Whitepaper</a> · <a href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/integrations/README.md">Integration docs</a></p>
-          <p class="footer-meta">All rights reserved © <a href="https://micrantha.com">Micrantha.com</a></p>
-        </div>
-      </div>
+      <p>Anthesis project brief.</p>
+      <p class="mono"><a href="index.html">Homepage</a> · <a href="anthesis.pdf">Whitepaper</a> · <a href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/integrations/README.md">Integration docs</a></p>
+      <p class="footer-meta">All rights reserved © <a href="https://micrantha.com">Micrantha.com</a></p>
     </div>
   </footer>
   <script src="app.js"></script>
 </body>
-
 </html>
