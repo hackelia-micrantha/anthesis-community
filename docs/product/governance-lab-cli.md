@@ -28,16 +28,23 @@ The public evaluator provides a concrete way to verify that Anthesis can:
 - fail closed on malformed, unsupported, unsafe, or unregistered inputs;
 - emit reproducible report and evidence contracts;
 - evaluate recorded provider-neutral inference evidence against explicit verification classes and policy postures;
-- detect controlled expectation drift rather than accepting fixture expectations as computed outcomes.
+- detect controlled expectation drift rather than accepting fixture expectations as computed outcomes;
+- generate and verify portable evidence bundles without treating evidence as execution authority.
 
 It does **not** prove production sandboxing, credential isolation, distributed enforcement, live provider replay, containment, universal non-bypassability, or resistance to a hostile administrator.
 
 ## Current commands
 
-Inspect the evaluator identity and advertised contract identifiers:
+Inspect evaluator identity and the exact advertised public contract set:
 
 ```bash
 anthesis-lab version --format json
+```
+
+Evaluate one declared scenario without executing its effect:
+
+```bash
+anthesis-lab evaluate --repo . --scenario .anthesis/scenarios/01-allowed-docs-edit.yaml --format json
 ```
 
 Run the seven canonical governance scenarios:
@@ -52,7 +59,26 @@ Run the 24 inference-integrity scenarios:
 anthesis-lab inference-integrity --repo . --format json
 ```
 
-Governance Lab also exercises individual declarations, evidence verification, demo-pack aggregation, controlled expectation mismatches, and output formats through its repository scripts.
+Generate a deterministic portable completed-run evidence bundle:
+
+```bash
+anthesis-lab generate-bundle \
+  --run <completed-run-directory> \
+  --output <bundle-directory> \
+  --bundle-id <bundle-id> \
+  --run-id <run-id> \
+  --format json
+```
+
+Verify a portable evidence bundle offline:
+
+```bash
+anthesis-lab verify --bundle <bundle-directory> --format json
+```
+
+The promoted evaluator also exposes `gateway-eligibility` for projecting trusted Dubnium gateway metadata into conservative verification eligibility. That integration command is not one of the 7 / 27 / 24 proof counts and does not grant runtime authority.
+
+Governance Lab additionally exercises evidence generation, demo-pack aggregation, controlled expectation mismatches, deterministic repeatability, and output formats through its repository scripts.
 
 ## Expected report contracts
 
@@ -68,7 +94,15 @@ Inference-integrity reports use:
 anthesis.inference-integrity-report/v1alpha1
 ```
 
-A successful inference-integrity run reports 24 total, 24 passed, and 0 failed. The executable validation also reruns the suite to require byte-identical JSON and mutates one copied expectation to require exit code `7` with exactly one failed scenario.
+Portable evidence-bundle verification reports use:
+
+```text
+anthesis.evidence-bundle-verification/v1
+```
+
+A successful inference-integrity run reports 24 total, 24 passed, and 0 failed. The executable validation reruns the suite to require byte-identical JSON and mutates one copied expectation to require exit code `7` with exactly one failed scenario.
+
+Evidence-bundle verification returns exit code `0` when the declared bundle is internally consistent, `7` for verification findings, `3` for invalid/unsafe input, `8` for unsupported contract versions, and `10` for internal failures. Successful verification validates evidence; it does not authorize or replay an effect.
 
 ## Signed immutable acquisition
 
@@ -83,14 +117,14 @@ The acquisition path verifies:
 5. provenance source and distribution identity;
 6. archive member allowlisting;
 7. CLI name and version;
-8. the exact evaluator-advertised contract identifier set;
+8. the exact evaluator-advertised public contract identifier set;
 9. repository-contained installation.
 
 Any mismatch fails closed before scenario execution.
 
-## Evaluator-advertised contract identifiers
+## Promoted public contract identifiers
 
-The promoted evaluator currently identifies these contracts as part of its signed runtime identity:
+The promoted evaluator currently advertises exactly these eight implementation-neutral public contracts:
 
 ```text
 anthesis.policy/v1
@@ -103,27 +137,33 @@ anthesis.evidence-bundle/v1
 anthesis.evidence-bundle-verification/v1
 ```
 
-This exact list is an **evaluator identity check**, not a claim that every identifier above is already defined as a normative schema under `specs/governance-lab/` in this repository. The normative community specification remains the source of truth for the implementation-neutral contracts actually published here. Additional evaluator-advertised contracts must not be treated as independently implementable public schemas until their corresponding semantics and schemas are published in this repository.
+All eight now have machine-readable schemas and published semantics under `specs/governance-lab/`. The bounded compatibility supplement is [`specs/governance-lab/PROMOTED-CONTRACTS.md`](../../specs/governance-lab/PROMOTED-CONTRACTS.md).
 
-The exact binary version and release identity remain pinned by Governance Lab rather than duplicated here as a mutable documentation promise.
+The promoted v1 request-binding field is `input_digest`. Historical internal spelling such as `action_input_digest` is not part of the public v1 contract and is rejected by compatibility validation.
+
+The original `anthesis.evidence/v1` and `anthesis.conformance/v1` artifacts remain public specification/conformance records but are not part of the evaluator's exact eight-identifier version-advertised compatibility set.
+
+A future evaluator release must not advertise a new identifier as an implementation-neutral public contract unless the corresponding externally observable schema and semantics are published here.
 
 ## Public contract
 
-The community repository publishes selected versioned schemas, semantics, fixtures, and release artifacts required to inspect the public claims, including:
+The community repository publishes the versioned contracts needed to independently inspect the promoted evaluator's public claims, including:
 
-- policy, runtime-profile, scenario, decision, evidence, and request-binding schemas currently present under `specs/governance-lab/`;
-- deterministic normalization and matching semantics;
+- policy, runtime-profile, scenario, decision, request-binding, and evaluation-request schemas;
+- portable evidence-bundle and evidence-bundle-verification schemas;
+- deterministic normalization, matching, canonicalization, and digest semantics;
 - default-deny and fail-closed requirements;
-- canonical policy and runtime fixtures;
-- seven canonical governance vectors;
-- inference-integrity fixture and report semantics documented by the Governance Lab proof surface;
-- exact policy/evidence digest fixtures and validators where applicable.
-
-The promoted evaluator also advertises `anthesis.evaluation-request/v1`, `anthesis.evidence-bundle/v1`, and `anthesis.evidence-bundle-verification/v1`. Their inclusion in evaluator version output is useful for release identity and compatibility checks, but this repository does not currently publish corresponding normative schemas under `specs/governance-lab/`. That publication gap should be resolved before describing those identifiers as implementation-neutral public contracts.
+- canonical policy/runtime fixtures and seven governance vectors;
+- representative evaluation-request, bundle, and verification examples;
+- compatibility validation requiring every promoted public identifier to have a published schema;
+- a guard against obsolete request-binding field spelling;
+- inference-integrity fixture/report semantics in the Governance Lab proof surface.
 
 Version 1 governance scenarios declare exactly one attempted effect. Natural-language goals are descriptive only and never grant authority.
 
 The canonical runtime profile explicitly lists permitted runtime identities. Unregistered runtimes are denied by an engine guard rather than silently accepted.
+
+Evidence bundles preserve and verify recorded material. Evidence, successful verification, prior execution, topology, or replay material cannot mint or widen invocation authority.
 
 ## Private implementation boundary
 
@@ -140,7 +180,8 @@ The CLI is a reference evaluator for controlled public validation:
 - policy defaults to deny;
 - invalid YAML, duplicate keys, unsupported values, unsafe paths, and unknown runtimes fail closed;
 - expected outcomes are assertions, not evaluator inputs;
-- evidence can be checksum-verified and, where specified, independently verified;
+- portable evidence bundles are checksum-bound and independently verifiable offline;
+- verification validates evidence consistency but cannot authorize execution;
 - obfuscation is IP friction, not a security boundary.
 
-For the executable operator procedure, use the Governance Lab repository's full-verification and inference-integrity runbooks. The normative Governance Lab specification remains under `specs/governance-lab/` in this repository.
+For the executable operator procedure, use the Governance Lab repository's full-verification and inference-integrity runbooks. The normative Governance Lab specification and promoted compatibility supplement remain under `specs/governance-lab/` in this repository.
