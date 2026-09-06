@@ -47,6 +47,14 @@ AI control plane
 
 Supervisors orchestrate. Specialists execute bounded work. Anthesis governs the effects and records the authority required to produce them.
 
+## Try Anthesis
+
+For the shortest executable path, use [`docs/product/try-anthesis.md`](docs/product/try-anthesis.md).
+
+The reference trial evaluates one exact repository mutation, executes it only through a constrained Anthesis-controlled tool wrapper, then deliberately attempts both a raw writer bypass and an out-of-scope write. Both negative paths must be hard-denied with repository state unchanged.
+
+It is intentionally explicit about what creates the enforcement claim: the simulated agent registry exposes only the governed writer and no shell, filesystem, Git, network, raw provider tool, or raw credential path. The walkthrough does not mistake deterministic evaluation for universal sandboxing.
+
 ## Public proof surfaces
 
 Anthesis keeps evaluation, demonstration coverage, and runtime enforcement deliberately separate.
@@ -120,6 +128,7 @@ The current evaluator exposes separate commands for the canonical governance con
 
 ## Read next
 
+- [`Try Anthesis`](docs/product/try-anthesis.md)
 - [Anthesis website](https://anthesis.micrantha.com/)
 - [Project brief](https://anthesis.micrantha.com/project-brief.html)
 - [Governance Lab](https://github.com/ryjen/anthesis-governance-lab)
