@@ -106,6 +106,48 @@ a:focus-visible {
   letter-spacing: 0.08em;
 }
 
+.github-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.nav-links .nav-community {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 14px;
+  margin-top: -9px;
+  margin-bottom: -9px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nav-links .nav-community:hover,
+.nav-links .nav-community:focus-visible {
+  background: #126456;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn.community-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.btn.community-btn:hover {
+  box-shadow: 0 14px 30px rgba(20, 16, 10, 0.2);
+  text-decoration: none;
+}
+
 .nav-toggle {
   display: none;
   background: transparent;
@@ -509,6 +551,15 @@ section:nth-child(odd) .panel {
 
   .nav.open .nav-links {
     display: flex;
+  }
+
+  .nav-links .nav-community {
+    align-self: flex-start;
+    margin: 0;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
   }
 
   .split,
