@@ -59,7 +59,32 @@ test.describe('Public website', () => {
     const brand = page.locator('.brand');
     await expect(brand).toContainText('Anthesis');
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('Build with accountable agents.');
+    await expect(h1).toContainText('Let agents act without giving them invisible authority.');
+  });
+
+  test('homepage leads to the constrained reference trial and public community', async ({ page }) => {
+    const trial = page.locator('#trial');
+    await expect(trial.getByRole('heading', { name: 'Run an authorized write. Attempt a bypass.' })).toBeVisible();
+    await expect(trial.getByRole('link', { name: /complete Try Anthesis walkthrough/ }))
+      .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
+    await expect(page.locator('.nav-community'))
+      .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
+    await expect(page.locator('.hero-actions .btn').first()).toHaveAttribute('href', '#trial');
+  });
+
+  test('mobile navigation closes on Escape and on internal link activation', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.getByRole('button', { name: 'Menu' });
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toBeFocused();
+    await toggle.click();
+    await page.locator('.nav-links a[href="#trial"]').click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page).toHaveURL(/#trial$/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
   test('health page responds with 200', async ({ request }) => {
