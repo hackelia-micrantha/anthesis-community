@@ -695,3 +695,24 @@ section:nth-child(odd) .panel {
   }
 
 }
+
+/* Trial-first homepage: reuse the existing palette and responsive patterns. */
+.trial-example { display: grid; gap: 12px; }
+.trial-example .card-title { margin-bottom: 2px; }
+.trial-example .example-step { display: grid; gap: 4px; margin: 0; padding: 10px 12px; border: 1px solid var(--stroke); border-radius: 12px; background: var(--card); }
+.trial-example .example-step strong { color: #126456; }
+.trial-example .example-denied strong { color: #8a3e25; }
+.trial-example .example-step span { font-size: 0.9rem; line-height: 1.5; }
+.trial-example .example-caveat { font-size: 0.85rem; color: var(--muted); line-height: 1.5; margin: 0; }
+.trial-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 18px; }
+.trial-layout .panel { min-width: 0; }
+.trial-command { padding: 16px; border-radius: 12px; background: var(--ink); color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+.trial-doc-link { display: inline-block; max-width: 100%; }
+.trial-outcomes .status-label { vertical-align: middle; margin-right: 8px; }
+@media (max-width: 900px) {
+  .trial-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 1100px) and (min-width: 901px) {
+  .nav-links { gap: 10px; font-size: 12px; letter-spacing: 0.04em; }
+  .nav { padding-right: 4vw; }
+}
