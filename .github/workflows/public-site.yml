@@ -5,12 +5,14 @@ on:
     paths:
       - "web/**"
       - "scripts/validate_public_site.py"
+      - "test/**"
       - ".github/workflows/public-site.yml"
   push:
     branches: [main]
     paths:
       - "web/**"
       - "scripts/validate_public_site.py"
+      - "test/**"
       - ".github/workflows/public-site.yml"
 
 permissions:
@@ -30,3 +32,17 @@ jobs:
           persist-credentials: false
       - name: Validate public site content contract
         run: python scripts/validate_public_site.py
+      - name: Set up Node.js for browser tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install website browser test dependencies
+        working-directory: test
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium for Playwright
+        working-directory: test
+        run: npx playwright install --with-deps chromium
+      - name: Test website in Chromium
+        working-directory: test
+        run: npm run test:e2e
+

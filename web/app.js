@@ -34,8 +34,29 @@ const nav = document.querySelector('.nav');
 const navToggle = document.querySelector('.nav-toggle');
 
 if (nav && navToggle) {
+  const links = nav.querySelector('.nav-links');
+  const closeMenu = () => {
+    nav.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  };
+
   navToggle.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  nav.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      closeMenu();
+      navToggle.focus();
+    }
+  });
+
+  links?.addEventListener('click', (event) => {
+    if (event.target.closest('a')) closeMenu();
+  });
+
+  window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
+    if (event.matches) closeMenu();
   });
 }
