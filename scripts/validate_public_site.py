@@ -133,20 +133,25 @@ def require_public_proof_model(text: str, surface: str) -> None:
 
 def validate_homepage(parser: DocumentParser) -> None:
     text = parser.text
-    require(parser.main_sections == 5, "homepage must contain five main sections plus the hero")
+    refs = " ".join(parser.references)
+    require(parser.main_sections == 6, "homepage must contain six main sections plus the hero")
     require("Governed execution for agentic systems" in text, "canonical hero eyebrow missing")
     require(
         "Let agents act without giving them invisible authority." in text,
         "canonical outcome headline missing",
     )
-    require("Run the deterministic demo" in text, "Governance Lab primary action missing")
-    require("View the governed-agent integration" in text, "Dubnium primary action missing")
+    require("Run an authorized write. Attempt a bypass." in text, "reference trial heading missing")
+    require("Try Anthesis" in text, "reference trial primary action missing")
+    require("docs/product/try-anthesis.md" in refs, "public trial walkthrough link missing")
+    require("anthesis-community" in refs, "GitHub community navigation link missing")
+    require("disposable Git repository" in text, "reference trial scope missing")
+    require("not universal agent containment" in text, "reference trial trust boundary missing")
     require("Governance Lab" in text and "Dubnium" in text, "proof paths missing")
     require("not in the runtime critical path" in text, "Governance Lab runtime boundary missing")
     require("does not define policy authority" in text, "Dubnium policy boundary missing")
     require("What prevents the agent" in text, "central bypass question missing")
-    require("full-verification.md" in " ".join(parser.references), "full verification link missing")
-    require("inference-integrity-demo.md" in " ".join(parser.references), "inference runbook link missing")
+    require("full-verification.md" in refs, "full verification link missing")
+    require("inference-integrity-demo.md" in refs, "inference runbook link missing")
     require_public_proof_model(text, "homepage")
     for label in MATURITY_LABELS:
         require(label in text, f"homepage maturity label missing: {label}")
