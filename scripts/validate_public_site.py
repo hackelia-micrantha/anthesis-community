@@ -159,17 +159,30 @@ def validate_homepage(parser: DocumentParser) -> None:
 
 def validate_project_brief(parser: DocumentParser) -> None:
     text = parser.text
+    refs = " ".join(parser.references)
+    require(parser.main_sections == 4, "project brief must have four focused sections")
     require(
-        "governance boundary between an agent's intent and its externally observable effects" in text,
-        "canonical project-brief positioning missing",
+        "A deterministic policy gateway for AI agent actions." in text,
+        "plain-language project definition missing",
     )
-    for mode in INTEGRATION_MODES:
-        require(mode in text, f"project brief integration mode missing: {mode}")
+    require("does not make an AI model's reasoning deterministic" in text,
+            "deterministic-decision distinction missing")
+    require("the surrounding tool, gateway, credential boundary, or runtime" in text,
+            "runtime enforcement distinction missing")
+    require("hard-denied with repository state unchanged" in text,
+            "reference trial blocked-bypass evidence missing")
+    require("docs/product/try-anthesis.md" in refs,
+            "reference trial entry point missing")
+    require("docs/product/integrations/README.md" in refs,
+            "integration detail link missing")
+    require("docs/product/trial-criteria.md" in refs,
+            "trial criteria link missing")
+    require("full-verification.md" in refs,
+            "public proof verification link missing")
+    require("anthesis-community" in refs,
+            "community link missing")
     for label in MATURITY_LABELS:
         require(label in text, f"project brief maturity label missing: {label}")
-    require("Enforcement location and assurance are separate dimensions." in text, "assurance distinction missing")
-    require_public_proof_model(text, "project brief")
-    require("full-verification.md" in " ".join(parser.references), "project brief full verification link missing")
 
 
 def validate_supporting_assets(
