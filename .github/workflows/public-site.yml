@@ -12,6 +12,7 @@ on:
     paths:
       - "web/**"
       - "scripts/validate_public_site.py"
+      - "test/**"
       - ".github/workflows/public-site.yml"
 
 permissions:
