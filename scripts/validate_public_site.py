@@ -160,7 +160,7 @@ def validate_homepage(parser: DocumentParser) -> None:
 def validate_project_brief(parser: DocumentParser) -> None:
     text = parser.text
     refs = " ".join(parser.references)
-    require(parser.main_sections == 4, "project brief must have four focused sections")
+    require(parser.main_sections == 5, "project brief must have five focused sections")
     require(
         "A deterministic policy gateway for AI agent actions." in text,
         "plain-language project definition missing",
@@ -171,6 +171,12 @@ def validate_project_brief(parser: DocumentParser) -> None:
             "runtime enforcement distinction missing")
     require("hard-denied with repository state unchanged" in text,
             "reference trial blocked-bypass evidence missing")
+    require("What success looks like" in text,
+            "design-partner evaluation goals missing")
+    require("Product goal:" in text and "Evaluation request:" in text,
+            "design-partner invitation missing")
+    for goal in ("Authorization:", "Bypass resistance:", "Attribution:", "Human approval:", "Adoption:"):
+        require(goal in text, f"project brief outcome missing: {goal}")
     require("docs/product/try-anthesis.md" in refs,
             "reference trial entry point missing")
     require("docs/product/integrations/README.md" in refs,
