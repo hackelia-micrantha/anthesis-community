@@ -87,6 +87,19 @@ test.describe('Public website', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
+  test('project brief explains gateway, enforcement, and reference trial', async ({ page }) => {
+    await page.goto(`http://localhost:${port}/project-brief.html`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Anthesis');
+    await expect(page.getByText('A deterministic policy gateway for AI agent actions.')).toBeVisible();
+    await expect(page.getByRole('link', { name: /Follow the reference trial/ }))
+      .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
+    await expect(page.getByText(/does not make an AI model's reasoning deterministic/)).toBeVisible();
+    await expect(page.locator('.nav-community'))
+      .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
   test('health page responds with 200', async ({ request }) => {
     const r = await request.get(`http://localhost:${port}/health.html`);
     expect(r.status()).toBe(200);
