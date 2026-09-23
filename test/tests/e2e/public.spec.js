@@ -128,6 +128,44 @@ test.describe('Public website', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
+  test('responsive homepage keeps navigation, actions and boundary inside the viewport', async ({ page }) => {
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 844 });
+      await expect(page.locator('.boundary-card')).toBeVisible();
+      await expect(page.locator('.hero-actions .btn').first()).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+        `unexpected horizontal overflow at ${width}px`).toBe(true);
+    }
+  });
+
+  test('security policy has a usable mobile menu and visible content without JavaScript', async ({ page, browser }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`http://localhost:${port}/security-policy.html`);
+    const toggle = page.getByRole('button', { name: 'Menu' });
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.getByRole('link', { name: 'Security.txt' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+    const noScriptContext = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    try {
+      const noScriptPage = await noScriptContext.newPage();
+      await noScriptPage.goto(`http://localhost:${port}/security-policy.html`);
+      await expect(noScriptPage.getByRole('heading', { name: 'Scope' })).toBeVisible();
+      expect(await noScriptPage.getByRole('heading', { name: 'Scope' }).evaluate(
+        (element) => getComputedStyle(element.closest('.reveal')).opacity
+      )).toBe('1');
+    } finally {
+      await noScriptContext.close();
+    }
+  });
+
   test('health page responds with 200', async ({ request }) => {
     const r = await request.get(`http://localhost:${port}/health.html`);
     expect(r.status()).toBe(200);
