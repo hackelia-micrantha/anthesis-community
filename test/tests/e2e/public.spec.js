@@ -145,7 +145,7 @@ test.describe('Public website', () => {
     await expect(toggle).toBeVisible();
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.getByRole('link', { name: 'Security.txt' })).toBeVisible();
+    await expect(page.locator('.nav-links').getByRole('link', { name: 'Security.txt' })).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
