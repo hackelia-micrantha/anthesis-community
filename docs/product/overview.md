@@ -38,7 +38,7 @@ The 24 inference-integrity cases are separate from the 27 general demo scenarios
 
 Governance Lab proves deterministic evaluator behavior and reproducible public evidence. It does not execute declared production effects or prove that arbitrary runtimes cannot bypass Anthesis.
 
-Dubnium provides a bounded reference execution environment for demonstrating how an Anthesis decision can be made authoritative at a runtime/tool boundary. It is a reference composition, not a universal deployment guarantee.
+Dubnium is a personally operated, self-hosted AI system and an Anthesis use case. It provides a bounded reference execution environment for demonstrating how an Anthesis decision can be made authoritative at a runtime/tool boundary. Dubnium is not required to use Anthesis, is not currently a generally available distribution, and may be released publicly in the future. The reference composition is not a universal deployment guarantee.
 
 ## Integration Strength
 

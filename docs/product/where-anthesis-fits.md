@@ -32,11 +32,13 @@ A developer might run a model via Ollama on a MacBook while an agent client requ
 
 **Enforcement dependency:** Unrestricted direct shell, raw filesystem access, alternate MCP servers, network clients, or inherited credentials can bypass tool-level policy. An OS-specific sandbox or equivalent capability boundary is required before making stronger containment claims. Executable names and permitted commands alone do not bound child processes or arbitrary script execution; symlinks and path replacement also need explicit treatment.
 
-## Use case 2: self-hosted execution with Dubnium
+## Use case 2: Dubnium as a personal AI system
 
-**Goal:** Apply consistent authority to a supervisor/specialist runtime operated on infrastructure under the owner's control.
+**Goal:** Apply consistent authority in a personally operated, self-hosted system for local models, supervisor/specialist agents, and tools.
 
-Dubnium owns inference/runtime execution, process and network restrictions, tool and credential placement, and runtime evidence. Anthesis owns authorization semantics; it consumes the normalized requested effect and returns the decision and obligations. Dubnium is a reference integration, not an Anthesis dependency or policy authority.
+Dubnium is a *personal system and Anthesis use case*, not the product that developers must install in order to use Anthesis. Its owner operates the model/runtime execution, process and network restrictions, tool and credential placement, and runtime evidence; Anthesis supplies independent authorization semantics. This demonstrates how the same portable contract can govern a broader personal environment beyond a single repository.
+
+**Availability:** Dubnium is currently a personal implementation and reference integration, not a generally available distribution. A public release could happen in the future, but no release date, public packaging, stability, or support commitment should be implied. The public Anthesis reference trial is independently runnable without Dubnium.
 
 See the [public Dubnium governed-agent integration guide](https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md).
 
@@ -56,7 +58,7 @@ This is a **layer and integration comparison**, not a ranking or a statement tha
 | --- | --- | --- |
 | [Ollama](https://docs.ollama.com/capabilities/tool-calling) | Local model serving and model-generated tool calls. | An agent client or tool executor must integrate Anthesis to govern an effect; model inference by itself does not enforce tool authorization. |
 | Anthesis | Exact-effect authorization, approval obligations, decision/evidence semantics. | Portable policy authority; requires a mediated execution boundary. |
-| [Dubnium](https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md) | Operator-controlled AI runtime and tool execution. | Reference consumer of Anthesis, not part of the core. |
+| [Dubnium](https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md) | Personal self-hosted AI system for models, agents, and tools; may be released publicly in the future. | Personal use case and reference consumer of Anthesis, not a generally available product or part of its core. |
 | [Amazon Bedrock / AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-core-concepts.html) | Managed model/agent infrastructure with native gateway policy controls. | Some governance responsibilities overlap; an independent policy contract is useful only when a concrete need and a real enforcement integration are identified. |
 | [Amazon SageMaker AI](https://docs.aws.amazon.com/sagemaker/latest/dg/train-model.html) | Model training, ML development, and deployment. | Potential model-lifecycle provider governed at selected operations; not an agent-effect authorization layer by itself. |
 | [Microsoft Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio) | Agent and workflow design/management. | Has native controls; any Anthesis integration must mediate a specific supported effect and respect existing policy boundaries. |
@@ -71,7 +73,7 @@ This is a **layer and integration comparison**, not a ranking or a statement tha
 | --- | --- | --- |
 | [Governance Lab](https://github.com/ryjen/anthesis-governance-lab) | Repeatable evaluator contracts and recorded-evidence checks. | Execution of declared production effects, universal sandboxing, or arbitrary runtime non-bypassability. |
 | [Public reference trial](try-anthesis.md) | An exact authorized repository write through a constrained tool registry; raw and out-of-scope attempts are blocked in that reference composition. | A released general-purpose Ollama adapter, containment of a hostile local user, or denial of alternate tool paths in other runtimes. |
-| [Dubnium integration](https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md) | A separate reference composition for governed execution. | A dependency on Dubnium or guarantees about every installation. |
+| [Dubnium personal-system integration](https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md) | A separate, personally operated reference composition for governed execution. | A generally available Dubnium release, an Anthesis dependency, or guarantees about every installation. |
 | Other platforms | Candidate integration surfaces or externally evaluated experiments. | Shipped adapters, equivalent native policy guarantees, or proven cross-provider enforceability. |
 
 ## Adoption and evaluation

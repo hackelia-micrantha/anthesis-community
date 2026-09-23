@@ -161,6 +161,8 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("disposable Git repository" in text, "reference trial scope missing")
     require("not universal agent containment" in text, "reference trial trust boundary missing")
     require("Governance Lab" in text and "Dubnium" in text, "proof paths missing")
+    require("Personal AI system" in text and "not a generally available product" in text,
+            "Dubnium personal-use-case and availability distinction missing")
     require("not in the runtime critical path" in text, "Governance Lab runtime boundary missing")
     require("does not define policy authority" in text, "Dubnium policy boundary missing")
     require("What prevents the agent" in text, "central bypass question missing")
@@ -187,6 +189,8 @@ def validate_project_brief(parser: DocumentParser) -> None:
             "reference trial blocked-bypass evidence missing")
     require("What success looks like" in text,
             "design-partner evaluation goals missing")
+    require("personal self-hosted AI system" in text and "public release may follow later" in text,
+            "project brief must distinguish Dubnium personal system from a public release")
     require("Product goal:" in text and "Evaluation request:" in text,
             "design-partner invitation missing")
     for goal in ("Authorization:", "Bypass resistance:", "Attribution:", "Human approval:", "Adoption:"):

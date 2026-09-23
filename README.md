@@ -115,14 +115,14 @@ The current evaluator exposes separate commands for the canonical governance con
 
 - **Anthesis** — policy authority, deterministic evaluator semantics, approvals, capabilities, evidence semantics, and provenance.
 - **Anthesis Governance Lab** — independent public conformance and demonstration fixtures; not part of the runtime critical path.
-- **Dubnium** — bounded reference execution environment and live-runtime integration surface; it consumes Anthesis decisions rather than defining policy authority.
+- **Dubnium** — personal self-hosted AI system and bounded reference execution environment; it consumes Anthesis decisions rather than defining policy authority. It is not required to run Anthesis or currently a generally available distribution; a future public release is possible.
 - **Anthesis Community** — public contracts, specifications, release artifacts, product documentation, website, project brief, and whitepaper distribution.
 
 ## Current maturity
 
 **Runnable now:** signed public evaluator acquisition, Governance Lab canonical/general/inference fixtures, deterministic reports, evidence bundles, and stakeholder walkthroughs.
 
-**Reference integration:** bounded governed-agent execution through Dubnium with approval binding and runtime evidence.
+**Reference integration:** bounded governed-agent execution through the personal Dubnium system with approval binding and runtime evidence. This does not imply a generally available Dubnium release.
 
 **In development:** broader production enforcement profiles and stronger live inference-integrity capture, replay, independent verification, containment, and recovery.
 
