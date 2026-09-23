@@ -59,7 +59,8 @@ test.describe('Public website', () => {
     const brand = page.locator('.brand');
     await expect(brand).toContainText('Anthesis');
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('Keep control of your data when AI agents act.');
+    await expect(h1).toContainText('Your agents.');
+    await expect(h1).toContainText('Your rules.');
   });
 
   test('homepage leads to the constrained reference trial and public community', async ({ page }) => {
@@ -69,6 +70,8 @@ test.describe('Public website', () => {
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
     await expect(page.locator('.nav-community'))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
+    await expect(page.locator('.boundary-card')).toBeVisible();
+    await expect(page.locator('.sovereignty-band')).toBeVisible();
     await expect(page.locator('.hero-actions .btn').first()).toHaveAttribute('href', '#trial');
   });
 
