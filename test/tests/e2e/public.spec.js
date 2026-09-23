@@ -55,11 +55,11 @@ test.describe('Public website', () => {
   });
 
   test('homepage has expected title and heading', async ({ page }) => {
-    await expect(page).toHaveTitle(/Anthesis/);
+    await expect(page).toHaveTitle('Anthesis | Data sovereignty for agentic AI');
     const brand = page.locator('.brand');
     await expect(brand).toContainText('Anthesis');
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('Let agents act without giving them invisible authority.');
+    await expect(h1).toContainText('Keep control of your data when AI agents act.');
   });
 
   test('homepage leads to the constrained reference trial and public community', async ({ page }) => {
@@ -74,11 +74,11 @@ test.describe('Public website', () => {
 
   test('local-first use cases show the real enforcement boundary and integration maturity', async ({ page }) => {
     const cases = page.locator('#use-cases');
-    await expect(cases.getByRole('heading', { name: 'Choose what your agents can do with your data.' })).toBeVisible();
+    await expect(cases.getByRole('heading', { name: 'Keep your data under your authority, from a laptop to a self-hosted system.' })).toBeVisible();
     await expect(cases.getByText(/Ollama on a MacBook/)).toBeVisible();
     await expect(cases.getByText(/not a claim that a turnkey Ollama\/MacBook sandbox has shipped/)).toBeVisible();
     await expect(cases.locator('.action-path li')).toHaveCount(4);
-    await expect(cases.getByText(/A policy decision is not a sandbox/)).toBeVisible();
+    await expect(cases.getByText(/A local policy decision does not guarantee local data handling/)).toBeVisible();
     await expect(cases.getByRole('link', { name: /Read use cases, integration boundaries/ }))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/where-anthesis-fits.md');
   });
@@ -113,7 +113,7 @@ test.describe('Public website', () => {
   test('project brief explains gateway, enforcement, and reference trial', async ({ page }) => {
     await page.goto(`http://localhost:${port}/project-brief.html`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Anthesis');
-    await expect(page.getByText('A deterministic policy gateway for AI agent actions.')).toBeVisible();
+    await expect(page.getByText('Portable, self-hostable governance for data sovereignty in agentic AI.')).toBeVisible();
     await expect(page.getByRole('link', { name: /Follow the reference trial/ }))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
     await expect(page.getByText(/does not make an AI model's reasoning deterministic/)).toBeVisible();
