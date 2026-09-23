@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+/* Font faces are declared once in site-theme.css; keep system fallbacks here. */
 
 :root {
   --bg: #f6f3ec;
