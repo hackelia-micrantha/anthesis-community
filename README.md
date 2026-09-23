@@ -8,7 +8,9 @@
 
 > *Anthesis* — the phase in which a flower is fully open and capable of function.
 
-Anthesis is a **deterministic governance boundary for agentic systems**.
+Anthesis is a **portable, self-hostable governance solution for data sovereignty in agentic AI**. It lets resource owners define and evaluate policies for how agents may access, modify, and transmit their code, data, and connected systems.
+
+Data sovereignty is the goal; deterministic exact-effect authorization is the mechanism. Anthesis does not host a model, replace an agent runtime, or independently guarantee data residency. The selected tool, gateway, capability validator, or isolated runtime must enforce Anthesis decisions, and all other data paths must be controlled.
 
 Its core invariant is:
 
@@ -122,7 +124,7 @@ The current evaluator exposes separate commands for the canonical governance con
 
 **Runnable now:** signed public evaluator acquisition, Governance Lab canonical/general/inference fixtures, deterministic reports, evidence bundles, and stakeholder walkthroughs.
 
-**Reference integration:** bounded governed-agent execution through the personal Dubnium system with approval binding and runtime evidence. This does not imply a generally available Dubnium release.
+**Reference integration:** bounded governed-agent execution through the personal Dubnium system with approval binding and runtime evidence. Dubnium is a personal-system use case, not a requirement for using Anthesis or a generally available release.
 
 **In development:** broader production enforcement profiles and stronger live inference-integrity capture, replay, independent verification, containment, and recovery.
 
@@ -133,6 +135,7 @@ The current evaluator exposes separate commands for the canonical governance con
 - [Project brief](https://anthesis.micrantha.com/project-brief.html)
 - [Governance Lab](https://github.com/ryjen/anthesis-governance-lab)
 - [`docs/product/overview.md`](docs/product/overview.md)
+- [`docs/product/where-anthesis-fits.md`](docs/product/where-anthesis-fits.md) — local-first data-sovereignty use cases and platform responsibilities
 - [`docs/product/trial-criteria.md`](docs/product/trial-criteria.md)
 - [`docs/product/integrations/README.md`](docs/product/integrations/README.md)
 - [`docs/product/governance-lab-cli.md`](docs/product/governance-lab-cli.md)
