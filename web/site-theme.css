@@ -185,9 +185,11 @@ main { max-width: 1280px; width: calc(100% - 100px); margin: 0 auto; padding: 0 
   .nav, .hero-content, .principles, main, .footer-content { width: calc(100% - 40px); }
   .nav { min-height: 76px; padding: 13px 0; }
   .brand { order: 1; }
-  .nav-toggle { order: 2; display: inline-flex; margin-left: auto; border-radius: 5px; color: var(--ink); }
-  .nav-links { order: 3; width: 100%; display: none; flex-direction: column; align-items: flex-start; gap: 13px; padding: 9px 0 13px; font-size: 14px; }
-  .nav.open .nav-links { display: flex; }
+  .nav-toggle { order: 2; display: none; margin-left: auto; border-radius: 5px; color: var(--ink); }
+  .js .nav-toggle { display: inline-flex; }
+  .nav-links { order: 3; width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 13px; padding: 9px 0 13px; font-size: 14px; }
+  .js .nav-links { display: none; }
+  .js .nav.open .nav-links { display: flex; }
   .nav-links .nav-community { align-self: flex-start; }
   .hero-content { grid-template-columns: 1fr; gap: 36px; padding: 43px 0 50px; }
   .hero-text { max-width: 720px; }
