@@ -59,7 +59,8 @@ test.describe('Public website', () => {
     const brand = page.locator('.brand');
     await expect(brand).toContainText('Anthesis');
     const h1 = page.locator('h1').first();
-    await expect(h1).toContainText('Keep control of your data when AI agents act.');
+    await expect(h1).toContainText('Your agents.');
+    await expect(h1).toContainText('Your rules.');
   });
 
   test('homepage leads to the constrained reference trial and public community', async ({ page }) => {
@@ -69,6 +70,8 @@ test.describe('Public website', () => {
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
     await expect(page.locator('.nav-community'))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
+    await expect(page.locator('.boundary-card')).toBeVisible();
+    await expect(page.locator('.sovereignty-band')).toBeVisible();
     await expect(page.locator('.hero-actions .btn').first()).toHaveAttribute('href', '#trial');
   });
 
@@ -123,6 +126,46 @@ test.describe('Public website', () => {
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
+  test('responsive homepage keeps navigation, actions and boundary inside the viewport', async ({ page }) => {
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 844 });
+      await expect(page.locator('.boundary-card')).toBeVisible();
+      await expect(page.locator('.hero-actions .btn').first()).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+        `unexpected horizontal overflow at ${width}px`).toBe(true);
+    }
+  });
+
+  test('security policy has a usable mobile menu and visible content without JavaScript', async ({ page, browser }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`http://localhost:${port}/security-policy.html`);
+    const toggle = page.getByRole('button', { name: 'Menu' });
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('.nav-links').getByRole('link', { name: 'Security.txt' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+    const noScriptContext = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    try {
+      const noScriptPage = await noScriptContext.newPage();
+      await noScriptPage.goto(`http://localhost:${port}/security-policy.html`);
+      await expect(noScriptPage.getByRole('heading', { name: 'Scope' })).toBeVisible();
+      await expect(noScriptPage.locator('.nav-links').getByRole('link', { name: 'Home' })).toBeVisible();
+      await expect(noScriptPage.locator('.nav-toggle')).toBeHidden();
+      expect(await noScriptPage.getByRole('heading', { name: 'Scope' }).evaluate(
+        (element) => getComputedStyle(element.closest('.reveal')).opacity
+      )).toBe('1');
+    } finally {
+      await noScriptContext.close();
+    }
   });
 
   test('health page responds with 200', async ({ request }) => {

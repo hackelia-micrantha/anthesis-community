@@ -7,6 +7,7 @@
   <meta name="description" content="Anthesis is a portable, self-hostable governance solution for data sovereignty in agentic AI. Define how agents may access, modify, and transmit your data, and enforce those decisions in your own runtime." />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Micrantha" />
+  <meta name="theme-color" content="#111914" />
   <link rel="canonical" href="https://anthesis.micrantha.com/" />
   <meta property="og:title" content="Anthesis | Data sovereignty for agentic AI" />
   <meta property="og:description" content="Keep authority over your data when agents act. Anthesis provides portable, self-hostable policy decisions for access, mutation, and transmission through enforced runtime boundaries." />
@@ -31,45 +32,53 @@
   </script>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="proof.css" />
+  <link rel="stylesheet" href="site-theme.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="page">
     <header class="hero" id="top">
       <nav class="nav" aria-label="Primary">
-        <a class="brand" href="#top" aria-label="Anthesis home">Anthesis</a>
+        <a class="brand" href="#top" aria-label="Anthesis home"><span class="brand-mark" aria-hidden="true">A</span><span>Anthesis<span class="brand-period">.</span></span></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
         <div class="nav-links" id="nav-links">
           <a href="#trial">Try Anthesis</a>
-          <a href="#use-cases">Use cases</a>
-          <a href="#platforms">Platforms</a>
-          <a href="#proof">Proof</a>
           <a href="#components">How it works</a>
-          <a href="#integrations">Integrations</a>
-          <a class="nav-community" href="https://github.com/hackelia-micrantha/anthesis-community" aria-label="Anthesis community on GitHub"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.637 22.41c.575.106.787-.25.787-.556v-2.03c-3.2.696-3.875-1.357-3.875-1.357-.524-1.33-1.28-1.686-1.28-1.686-1.046-.714.08-.7.08-.7 1.156.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.35.958.104-.744.402-1.252.731-1.54-2.555-.291-5.24-1.278-5.24-5.686 0-1.256.45-2.282 1.185-3.088-.119-.29-.514-1.46.112-3.045 0 0 .966-.309 3.163 1.18A11.03 11.03 0 0 1 12 6.15c.976.005 1.96.132 2.877.387 2.195-1.489 3.159-1.18 3.159-1.18.628 1.585.233 2.755.115 3.045.738.806 1.183 1.832 1.183 3.088 0 4.419-2.69 5.392-5.253 5.678.414.358.783 1.063.783 2.143v3.043c0 .309.207.668.793.554A11.5 11.5 0 0 0 12 .5Z"/></svg><span>Community</span></a>
+          <a href="#use-cases">Use cases</a>
+          <a href="#proof">Public proof</a>
+          <a class="nav-community" href="https://github.com/hackelia-micrantha/anthesis-community" aria-label="Anthesis community on GitHub"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.637 22.41c.575.106.787-.25.787-.556v-2.03c-3.2.696-3.875-1.357-3.875-1.357-.524-1.33-1.28-1.686-1.28-1.686-1.046-.714.08-.7.08-.7 1.156.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.35.958.104-.744.402-1.252.731-1.54-2.555-.291-5.24-1.278-5.24-5.686 0-1.256.45-2.282 1.185-3.088-.119-.29-.514-1.46.112-3.045 0 0 .966-.309 3.163 1.18A11.03 11.03 0 0 1 12 6.15c.976.005 1.96.132 2.877.387 2.195-1.489 3.159-1.18 3.159-1.18.628 1.585.233 2.755.115 3.045.738.806 1.183 1.832 1.183 3.088 0 4.419-2.69 5.392-5.253 5.678.414.358.783 1.063.783 2.143v3.043c0 .309.207.668.793.554A11.5 11.5 0 0 0 12 .5Z"/></svg><span>Community</span><span aria-hidden="true">↗</span></a>
         </div>
       </nav>
-
       <div class="hero-content">
         <div class="hero-text">
           <p class="eyebrow">Portable, self-hostable data sovereignty for agentic AI</p>
-          <h1>Keep control of your data when AI agents act.</h1>
-          <p class="lede">Anthesis helps you retain authority over how agents access, modify, and transmit your code, files, and connected resources. Define explicit policies for consequential actions without surrendering policy authority to a model or cloud provider.</p>
-          <p class="lede">An independent, deterministic decision must be enforced by the tool, gateway, or isolated runtime that actually performs the action. Direct paths around that boundary must be blocked for the protected effect.</p>
-          <p>Start with a local coding agent or integrate Anthesis into a self-hosted or existing agent runtime. The core requires no Dubnium installation, specific model provider, or cloud governance service.</p>
+          <h1>Your agents.<br>Your <em>rules.</em></h1>
+          <p class="lede">Keep authority over your code, tools, and data. Anthesis puts explicit policy between an agent’s intent and its actions.</p>
+          <p class="hero-detail">Define how agents access, modify, and transmit your resources. An independent, deterministic decision must be enforced by the tool, gateway, or isolated runtime that actually performs the action.</p>
           <div class="hero-actions">
-            <a class="btn" href="#trial">Try Anthesis — run a governed action</a>
-            <a class="btn ghost" href="https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md">Inspect the Dubnium integration</a>
+            <a class="btn" href="#trial">Try Anthesis — run a governed action <span aria-hidden="true">↗</span></a>
+            <a class="hero-secondary" href="#components">Explore the boundary <span aria-hidden="true">↓</span></a>
           </div>
+          <p class="hero-note">Independent of the model. Dubnium is one optional personal-system integration, not a prerequisite.</p>
         </div>
-        <aside class="hero-card trial-example" aria-label="Reference trial example">
-          <div class="card-title">Reference trial · repository write</div>
-          <p class="example-step"><strong>Request</strong><span>Write to <code>docs/onboarding.md</code></span></p>
-          <p class="example-step"><strong>Authorize</strong><span>Anthesis evaluates the exact action and path.</span></p>
-          <p class="example-step"><strong>Execute</strong><span>A constrained tool writes to a disposable Git repository and records evidence.</span></p>
-          <p class="example-step example-denied"><strong>Hard denial</strong><span>A raw writer and an out-of-scope write are rejected without changing repository state.</span></p>
-          <p class="example-caveat">The denial relies on this reference runtime’s restricted tool registry and exact-effect dispatcher, not universal agent containment.</p>
+        <aside class="boundary-card" aria-label="The action boundary">
+          <div class="boundary-heading"><span>The action boundary</span><span>01 / Architecture</span></div>
+          <div class="boundary-node"><span class="boundary-symbol" aria-hidden="true">⌘</span><div><strong>Agent / model</strong><small>Proposes an exact effect</small></div><span class="boundary-tag">Untrusted input</span></div>
+          <div class="boundary-connector">action + actor + target + context</div>
+          <div class="boundary-gate">
+            <div class="boundary-gate-title"><span class="boundary-mini-mark" aria-hidden="true">A</span><strong>Anthesis</strong><span>Policy boundary</span></div>
+            <p>Is this action authorized?</p>
+            <div class="boundary-checks"><span>Policy</span><span>Authority</span><span>Approval</span></div>
+            <div class="boundary-outcomes"><span>Allow</span><span>Require approval</span><span>Deny</span></div>
+          </div>
+          <div class="boundary-connector">authorized effects only</div>
+          <div class="boundary-node"><div><strong>Constrained executor</strong><small>Codebase · tools · services</small></div><span class="boundary-symbol end" aria-hidden="true">▤</span></div>
+          <div class="boundary-evidence">↳ Decision + execution evidence</div>
+          <p class="boundary-foot">Enforcement depends on closing every bypass path.</p>
         </aside>
+      </div>
+      <div class="principles" aria-label="Anthesis design principles">
+        <span>Explicit authority</span><span>Deterministic decisions</span><span>Bounded execution</span><span>Traceable outcomes</span>
       </div>
     </header>
 
@@ -86,7 +95,7 @@
             <p class="case-label">Individual developer · target integration</p>
             <h3>Keep a local coding agent within your repository policy.</h3>
             <p>Run a model using Ollama on a MacBook and use an agent that proposes file, shell, Git, and network operations. An Anthesis adapter can authorize specific paths and commands, require approval for sensitive changes, and deny out-of-scope effects.</p>
-            <p class="case-limit"><strong>Current status:</strong> This is the intended portable developer workflow, not a claim that a turnkey Ollama/MacBook sandbox has shipped. The public reference trial uses a constrained tool registry and a disposable Git repository.</p>
+            <p class="case-limit"><strong>Current status:</strong> This is the intended portable developer workflow, not a claim that a turnkey Ollama/MacBook sandbox has shipped. The public reference trial uses a constrained tool registry and a disposable Git repository; it is not universal agent containment.</p>
           </article>
           <article class="panel use-case">
             <p class="case-label">Personal AI system · reference use case</p>
@@ -111,6 +120,49 @@
           </ol>
           <p class="case-limit"><strong>Sovereignty boundary:</strong> A local policy decision does not guarantee local data handling or complete containment. If an agent or its tools retain direct shell, filesystem, network, or credential access, they may bypass Anthesis or send protected data elsewhere.</p>
           <p><a class="text-link" href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/where-anthesis-fits.md">Read use cases, integration boundaries, and platform responsibilities →</a></p>
+        </div>
+      </section>
+
+      <div class="sovereignty-band">
+        <div>
+          <p class="eyebrow">Data sovereignty, in practice</p>
+          <h2>Keep control where your <em>data lives.</em></h2>
+        </div>
+        <div>
+          <p class="sovereignty-lead">Choose where agents run.<br>Define what they can touch.<br>Decide what can leave.</p>
+          <p>Anthesis supplies policy decisions for protected actions. Your model endpoint, agent runtime, filesystem, credentials, network and storage must enforce the surrounding data boundary.</p>
+          <p class="sovereignty-limit">Local inference alone does not prevent unauthorized tool access or data egress.</p>
+        </div>
+      </div>
+
+      <section id="components" class="section reveal">
+        <div class="section-head">
+          <p class="eyebrow">Responsibility boundaries</p>
+          <h2>Reasoning is flexible. Authority is explicit.</h2>
+          <p>An agent can propose an action without being permitted to perform it. Anthesis makes that decision separate and inspectable.</p>
+        </div>
+        <div class="boundary-layout">
+          <div class="panel boundary-diagram" role="img" aria-label="An agent request crosses the Anthesis governance decision before bounded execution returns evidence. Governance Lab independently tests the public contract.">
+            <div class="flow-node">Agent request</div>
+            <div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-node emphasis">Anthesis governance boundary</div>
+            <div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-node">Bounded execution</div>
+            <div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-node">Evidence and outcome</div>
+            <div class="independent-check">Governance Lab independently tests the public Anthesis contract and is not in the runtime critical path.</div>
+          </div>
+          <div class="table-wrap">
+            <table class="responsibility-table">
+              <caption class="sr-only">Anthesis ecosystem responsibilities</caption>
+              <thead><tr><th scope="col">Component</th><th scope="col">Responsibility</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Anthesis</th><td>Policy authority, deterministic evaluator semantics, approval requirements, capabilities, evidence semantics, and provenance.</td></tr>
+                <tr><th scope="row">Governance Lab</th><td>Independent conformance, synthetic scenario packs, inference-integrity fixtures, reports, and walkthroughs. It does not execute production effects.</td></tr>
+                <tr><th scope="row">Dubnium</th><td>Personal AI system and reference runtime for models, agents, governed tools, execution, and runtime evidence. It consumes decisions and does not define policy authority; it is not a required Anthesis component.</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -166,37 +218,6 @@ bash scripts/run-reference-trial.sh</code></pre>
         </div>
         <div class="trust-note">
           <p><strong>Reproduce everything:</strong> use the Governance Lab <a class="text-link" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/runbooks/full-verification.md">full-verification runbook</a> for signed evaluator acquisition, expected counts, controlled mismatch checks, evidence generation, and checksums.</p>
-        </div>
-      </section>
-
-      <section id="components" class="section reveal">
-        <div class="section-head">
-          <p class="eyebrow">Responsibility boundaries</p>
-          <h2>Policy, validation, and execution have distinct owners.</h2>
-          <p>Keeping them separate prevents the demonstration harness or runtime from becoming a self-certifying policy authority.</p>
-        </div>
-        <div class="boundary-layout">
-          <div class="panel boundary-diagram" role="img" aria-label="An agent request crosses the Anthesis governance decision before bounded execution returns evidence. Governance Lab independently tests the public contract.">
-            <div class="flow-node">Agent request</div>
-            <div class="flow-arrow" aria-hidden="true">↓</div>
-            <div class="flow-node emphasis">Anthesis governance boundary</div>
-            <div class="flow-arrow" aria-hidden="true">↓</div>
-            <div class="flow-node">Bounded execution</div>
-            <div class="flow-arrow" aria-hidden="true">↓</div>
-            <div class="flow-node">Evidence and outcome</div>
-            <div class="independent-check">Governance Lab independently tests the public Anthesis contract and is not in the runtime critical path.</div>
-          </div>
-          <div class="table-wrap">
-            <table class="responsibility-table">
-              <caption class="sr-only">Anthesis ecosystem responsibilities</caption>
-              <thead><tr><th scope="col">Component</th><th scope="col">Responsibility</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">Anthesis</th><td>Policy authority, deterministic evaluator semantics, approval requirements, capabilities, evidence semantics, and provenance.</td></tr>
-                <tr><th scope="row">Governance Lab</th><td>Independent conformance, synthetic scenario packs, inference-integrity fixtures, reports, and walkthroughs. It does not execute production effects.</td></tr>
-                <tr><th scope="row">Dubnium</th><td>Personal AI system and reference runtime for models, agents, governed tools, execution, and runtime evidence. It consumes decisions and does not define policy authority; it is not a required Anthesis component.</td></tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </section>
 
@@ -274,7 +295,7 @@ bash scripts/run-reference-trial.sh</code></pre>
       <section id="learn-more" class="section reveal">
         <div class="section-head">
           <p class="eyebrow">Learn more</p>
-          <h2>Continue with the community and engineering references.</h2>
+          <h2>Good governance should be inspectable.</h2>
         </div>
         <div class="split resource-grid">
           <div class="panel"><h3>Run Governance Lab</h3><p>Use the short stakeholder walkthrough or reproduce every current public proof surface.</p><p><a class="text-link" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/walkthroughs/stakeholder-demo.md">Stakeholder walkthrough →</a><br /><a class="text-link" href="https://github.com/ryjen/anthesis-governance-lab/blob/main/docs/runbooks/full-verification.md">Full verification →</a></p></div>
