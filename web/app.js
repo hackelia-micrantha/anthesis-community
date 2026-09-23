@@ -16,7 +16,7 @@ if ('IntersectionObserver' in window) {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0 }
     );
 
     reveals.forEach((section) => observer.observe(section));
