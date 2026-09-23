@@ -41,6 +41,8 @@
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
         <div class="nav-links" id="nav-links">
           <a href="#trial">Try Anthesis</a>
+          <a href="#use-cases">Use cases</a>
+          <a href="#platforms">Platforms</a>
           <a href="#proof">Proof</a>
           <a href="#components">How it works</a>
           <a href="#integrations">Integrations</a>
@@ -54,6 +56,7 @@
           <h1>Let agents act without giving them invisible authority.</h1>
           <p class="lede">Anthesis evaluates consequential agent actions against explicit policy, authority, approvals, capabilities, and evidence requirements before they produce an external effect.</p>
           <p class="lede">An integration must then prevent agents from bypassing that decision through raw tools, credentials, or direct access.</p>
+          <p>Use the same authorization contract with a local coding agent or a self-hosted runtime. Anthesis does not require Dubnium or a particular model provider.</p>
           <div class="hero-actions">
             <a class="btn" href="#trial">Try Anthesis — run a governed action</a>
             <a class="btn ghost" href="https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md">Inspect the Dubnium integration</a>
@@ -71,6 +74,46 @@
     </header>
 
     <main id="main">
+
+      <section id="use-cases" class="section reveal">
+        <div class="section-head">
+          <p class="eyebrow">Local-first by design</p>
+          <h2>Choose what your agents can do with your data.</h2>
+          <p>Start with a developer's repository, then apply the same authorization contract to a self-hosted runtime or a selected enterprise workflow. Anthesis evaluates authority; a controlled execution path enforces the result.</p>
+        </div>
+        <div class="use-case-grid">
+          <article class="panel use-case">
+            <p class="case-label">Individual developer · target integration</p>
+            <h3>Keep a local coding agent within your repository policy.</h3>
+            <p>Run a model using Ollama on a MacBook and use an agent that proposes file, shell, Git, and network operations. An Anthesis adapter can authorize specific paths and commands, require approval for sensitive changes, and deny out-of-scope effects.</p>
+            <p class="case-limit"><strong>Current status:</strong> This is the intended portable developer workflow, not a claim that a turnkey Ollama/MacBook sandbox has shipped. The public reference trial uses a constrained tool registry and a disposable Git repository.</p>
+          </article>
+          <article class="panel use-case">
+            <p class="case-label">Self-hosted infrastructure · reference integration</p>
+            <h3>Govern agents without moving policy authority into the runtime.</h3>
+            <p>Use Anthesis with Dubnium or another operator-controlled runtime to scope agent capabilities, bind approval to exact effects, and correlate decisions with execution evidence.</p>
+            <p class="case-limit"><strong>Boundary:</strong> The runtime owns tool access, process and network isolation, and the enforcement path; it consumes Anthesis decisions rather than defining them.</p>
+          </article>
+          <article class="panel use-case">
+            <p class="case-label">Existing agent platforms · integration profile</p>
+            <h3>Add a common decision boundary to selected high-impact actions.</h3>
+            <p>Evaluate an adapter for an existing agent or workflow at the point where it changes a repository, invokes a privileged API, publishes an artifact, or sends data to an external service.</p>
+            <p class="case-limit"><strong>Boundary:</strong> Platform-native governance remains relevant. Anthesis cannot control actions that bypass the selected adapter or reach the same resource directly.</p>
+          </article>
+        </div>
+        <div class="local-path panel">
+          <h3>One governed repository action</h3>
+          <ol class="action-path" aria-label="Example agent action and enforcement path">
+            <li><strong>Model and agent</strong><span>Propose a write to a source file.</span></li>
+            <li><strong>Anthesis</strong><span>Bind actor, target, policy, and approval to the exact proposed effect.</span></li>
+            <li><strong>Enforcing adapter</strong><span>Reject the operation or execute it with the permitted scope.</span></li>
+            <li><strong>Source of truth</strong><span>Change the repository and record the observed outcome.</span></li>
+          </ol>
+          <p class="case-limit"><strong>Enforcement requirement:</strong> A policy decision is not a sandbox. If the agent retains direct shell, filesystem, network, or credential access, the same effect may bypass Anthesis.</p>
+          <p><a class="text-link" href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/where-anthesis-fits.md">Read use cases, integration boundaries, and platform responsibilities →</a></p>
+        </div>
+      </section>
+
       <section id="trial" class="section reveal">
         <div class="section-head">
           <p class="eyebrow">Start here · runnable reference trial</p>
@@ -180,6 +223,35 @@ bash scripts/run-reference-trial.sh</code></pre>
         <div class="trust-note">
           <p><strong>What prevents the agent from producing this effect without crossing Anthesis?</strong> The table is a reference, not an assurance guarantee for a particular deployment.</p>
           <p><a class="text-link" href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/integrations/README.md">Read the integration modes →</a></p>
+        </div>
+      </section>
+
+
+      <section id="platforms" class="section reveal">
+        <div class="section-head">
+          <p class="eyebrow">Different responsibilities, possible integrations</p>
+          <h2>Where Anthesis fits alongside other AI platforms.</h2>
+          <p>These products operate at different layers; this is a responsibility map, not a security ranking. Bedrock AgentCore, UiPath, and Microsoft products include native governance capabilities that may overlap with Anthesis.</p>
+        </div>
+        <div class="table-wrap" role="region" aria-label="Anthesis and AI platform responsibility comparison" tabindex="0">
+          <table class="integration-table platform-table">
+            <caption class="sr-only">Comparison of model serving, agent orchestration, governed execution and business automation responsibilities</caption>
+            <thead><tr><th scope="col">System</th><th scope="col">Primary role</th><th scope="col">Relationship to Anthesis</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><a href="https://docs.ollama.com/capabilities/tool-calling">Ollama</a></th><td>Local model serving and tool-call generation.</td><td>The agent application executes tool requests. Anthesis can govern selected actions through a mediated integration; Ollama alone is not that enforcement boundary.</td></tr>
+              <tr><th scope="row">Anthesis</th><td>Portable authorization, approval, and decision/evidence contracts.</td><td>Evaluates exact effects independently of the model; requires an enforcing integration for the selected action.</td></tr>
+              <tr><th scope="row"><a href="https://github.com/hackelia-micrantha/dubnium-community/blob/main/docs/governed-agent-integration.md">Dubnium</a></th><td>Operator-controlled model and agent execution environment.</td><td>A reference consumer of Anthesis authorization; not a dependency of the Anthesis core.</td></tr>
+              <tr><th scope="row"><a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-core-concepts.html">Amazon Bedrock / AgentCore</a></th><td>Managed model and agent infrastructure, including gateway policy controls.</td><td>Overlapping native authorization capabilities. Anthesis is an optional external decision boundary only for effects a real integration mediates.</td></tr>
+              <tr><th scope="row"><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/train-model.html">Amazon SageMaker AI</a></th><td>Machine-learning training and model deployment infrastructure.</td><td>A potential model-lifecycle or execution provider; not a replacement for an independent exact-action authorization contract.</td></tr>
+              <tr><th scope="row"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio">Microsoft Copilot Studio</a></th><td>Building and managing agents and workflows with enterprise connectors.</td><td>Its native governance applies inside its own supported surfaces. Anthesis would need an explicit adapter to govern selected effects.</td></tr>
+              <tr><th scope="row"><a href="https://docs.uipath.com/maestro/automation-cloud/latest/user-guide/overview">UiPath / Maestro</a></th><td>Orchestrating AI agents, software robots, and people in business processes.</td><td>Existing workflow and governance controls may be sufficient; Anthesis could add a shared external policy boundary where independently justified.</td></tr>
+              <tr><th scope="row"><a href="https://learn.microsoft.com/en-us/power-platform/">Microsoft Power Platform</a></th><td>Business applications, automations, agents, and data integration.</td><td>A possible source or destination for selected governed actions, subject to its own identity, connector, and policy controls.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="trust-note">
+          <p><strong>Data sovereignty is an end-to-end property:</strong> locally hosted policy evaluation does not, by itself, keep source code or prompts on-device. The agent, model endpoint, tools, telemetry, credentials, and external transfers must also be constrained within the chosen trust boundary.</p>
+          <p><strong>Integration status:</strong> This table describes architectural relationships, not a claim of released adapters or universal enforcement across the listed products. <a class="text-link" href="https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/where-anthesis-fits.md">Read the detailed responsibility map →</a></p>
         </div>
       </section>
 

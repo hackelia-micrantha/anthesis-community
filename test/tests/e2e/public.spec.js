@@ -72,6 +72,29 @@ test.describe('Public website', () => {
     await expect(page.locator('.hero-actions .btn').first()).toHaveAttribute('href', '#trial');
   });
 
+  test('local-first use cases show the real enforcement boundary and integration maturity', async ({ page }) => {
+    const cases = page.locator('#use-cases');
+    await expect(cases.getByRole('heading', { name: 'Choose what your agents can do with your data.' })).toBeVisible();
+    await expect(cases.getByText(/Ollama on a MacBook/)).toBeVisible();
+    await expect(cases.getByText(/not a claim that a turnkey Ollama\/MacBook sandbox has shipped/)).toBeVisible();
+    await expect(cases.locator('.action-path li')).toHaveCount(4);
+    await expect(cases.getByText(/A policy decision is not a sandbox/)).toBeVisible();
+    await expect(cases.getByRole('link', { name: /Read use cases, integration boundaries/ }))
+      .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/where-anthesis-fits.md');
+  });
+
+  test('platform comparison is a responsibility map with sovereignty caveats', async ({ page }) => {
+    const section = page.locator('#platforms');
+    await expect(section.locator('tbody tr')).toHaveCount(8);
+    await expect(section.getByText(/not a security ranking/)).toBeVisible();
+    await expect(section.getByText(/Data sovereignty is an end-to-end property/)).toBeVisible();
+    await expect(section.getByText(/not a claim of released adapters/)).toBeVisible();
+    await expect(section.getByRole('link', { name: 'Amazon Bedrock / AgentCore' }))
+      .toHaveAttribute('href', 'https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-core-concepts.html');
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
   test('mobile navigation closes on Escape and on internal link activation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     const toggle = page.getByRole('button', { name: 'Menu' });
