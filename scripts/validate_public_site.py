@@ -135,16 +135,21 @@ def validate_homepage(parser: DocumentParser) -> None:
     text = parser.text
     refs = " ".join(parser.references)
     require(parser.main_sections == 8, "homepage must contain eight main sections plus the hero")
-    require("Governed execution for agentic systems" in text, "canonical hero eyebrow missing")
+    require("Portable, self-hostable data sovereignty for agentic AI" in text,
+            "sovereignty hero eyebrow missing")
     require(
-        "Let agents act without giving them invisible authority." in text,
-        "canonical outcome headline missing",
+        "Keep control of your data when AI agents act." in text,
+        "sovereignty outcome headline missing",
     )
     require("Run an authorized write. Attempt a bypass." in text, "reference trial heading missing")
-    require("Choose what your agents can do with your data." in text,
+    require("Keep your data under your authority, from a laptop to a self-hosted system." in text,
             "local-first use cases missing")
     require("Ollama" in text and "MacBook" in text and "turnkey" in text,
             "local target use case or readiness disclosure missing")
+    require("how agents access, modify, and transmit" in text,
+            "data sovereignty must cover agent access, modification, and transfer")
+    require("does not guarantee local data handling" in text,
+            "sovereignty claims must acknowledge runtime and data-path limits")
     require("Enforcing adapter" in text and "Source of truth" in text,
             "model-to-effect authorization path missing")
     require("Where Anthesis fits alongside other AI platforms." in text,
@@ -178,7 +183,7 @@ def validate_project_brief(parser: DocumentParser) -> None:
     refs = " ".join(parser.references)
     require(parser.main_sections == 5, "project brief must have five focused sections")
     require(
-        "A deterministic policy gateway for AI agent actions." in text,
+        "Portable, self-hostable governance for data sovereignty in agentic AI." in text,
         "plain-language project definition missing",
     )
     require("does not make an AI model's reasoning deterministic" in text,

@@ -1,6 +1,8 @@
-# Where Anthesis fits: portable governance for agent actions
+# Where Anthesis fits: data sovereignty for agentic AI
 
-**Product boundary:** Anthesis accepts a normalized proposed effect, evaluates deterministic policy and current authority, expresses approval obligations, and produces a versioned decision and attributable evidence. An external adapter/runtime must enforce the decision at the effect boundary. Anthesis is not a model host, agent orchestrator, filesystem sandbox, or automatic data-residency guarantee.
+**Product positioning:** Anthesis is a portable, self-hostable governance solution for data sovereignty in agentic AI. A resource owner defines how agents may access, modify, or transmit protected data, code, and systems. Anthesis evaluates exact proposed effects against deterministic policy and current authority, expresses approval obligations, and produces a versioned decision and attributable evidence.
+
+**Product boundary:** An external adapter/runtime must enforce the decision at the actual effect boundary. Anthesis is not a model host, agent orchestrator, filesystem sandbox, or automatic data-residency guarantee. The surrounding runtime and infrastructure must constrain alternate data paths, model endpoints, telemetry, credentials, and outbound transfers.
 
 This document describes architectural use cases and desired integrations, **not** a list of shipped adapters. See [Try Anthesis](try-anthesis.md) for the current executable public reference and [Integration modes](integrations/README.md) for claims and bypass assumptions.
 
@@ -65,7 +67,7 @@ This is a **layer and integration comparison**, not a ranking or a statement tha
 | [UiPath / Maestro](https://docs.uipath.com/maestro/automation-cloud/latest/user-guide/overview) | Agent, robot, and human process orchestration. | Existing process governance may be sufficient; an Anthesis adapter could add an independent cross-runtime decision for a specific operation. |
 | [Microsoft Power Platform](https://learn.microsoft.com/en-us/power-platform/) | Business apps, workflow automation, agents, and data integration. | Possible source and destination of governed effects, with platform identity, connector, and data controls still in force. |
 
-**Data sovereignty requires more than local authorization.** Local model serving does not establish that an agent client, logging service, remote connector, backup, telemetry exporter, or tool never transmits protected content. Anthesis can specify a handling policy; the runtime and infrastructure must enforce it at actual data and effect boundaries. Policy labels on generated outputs are not a complete substitute for information-flow controls.
+**Data sovereignty requires more than local authorization.** Local model serving or policy evaluation does not establish that an agent client, logging service, remote connector, backup, telemetry exporter, or tool never transmits protected content. Anthesis supplies the policy and authorization mechanism; the runtime and infrastructure must enforce it at actual data and effect boundaries. Policy labels on generated outputs are not a complete substitute for information-flow controls. A deployment's data residency, administrator access, key custody, and applicable jurisdiction require independent evaluation.
 
 ## Current proof versus target integrations
 
