@@ -1,6 +1,8 @@
 # Anthesis Product Overview
 
-Anthesis is a deterministic governance boundary for agentic systems and lifecycle loops.
+Anthesis is a portable, self-hostable governance solution for data sovereignty in agentic AI. Resource owners define which actors may access, modify, or transmit particular resources under explicit policy and approval requirements. Anthesis supplies independent, deterministic authorization semantics for those consequential actions; its integration must enforce the decision at the actual effect boundary.
+
+Data sovereignty is an end-to-end deployment property, not a guarantee provided by the policy engine alone. The model endpoint, agent runtime, filesystem, network, credentials, observability, backups, and external services must also respect the owner's chosen trust boundaries. A self-hosted installation does not by itself establish legal jurisdiction, exclusive access, or confinement of every generated output.
 
 Core invariant:
 
@@ -9,6 +11,12 @@ Core invariant:
 Reasoning can remain internal. Effects must cross a governance boundary that the surrounding execution environment can make authoritative.
 
 Externally observable effects include tool invocation, specialist delegation, memory/context access, filesystem mutation, shell/process execution, network/API calls, repository writes, external communication, approval-gated actions, artifact publication, and long-term state mutation.
+
+## Portable local-first adoption
+
+A developer running Ollama on a laptop should be able to integrate the same Anthesis authorization contract used by a larger self-hosted system, without installing Dubnium or a cloud control plane. The agent client proposes effects; Anthesis authorizes them; the enclosing tool or runtime enforces the decision; the source of truth remains under its owner's control.
+
+The individual-developer Ollama/MacBook setup is a target integration, not a claim that a turnkey adapter or full host sandbox has shipped. See [use cases and platform responsibilities](where-anthesis-fits.md), the [public reference trial](try-anthesis.md), and [integration-mode bypass assumptions](integrations/README.md).
 
 ## Supervisor / Specialist Model
 
