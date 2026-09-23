@@ -138,9 +138,11 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("Portable, self-hostable data sovereignty for agentic AI" in text,
             "sovereignty hero eyebrow missing")
     require(
-        "Keep control of your data when AI agents act." in text,
-        "sovereignty outcome headline missing",
+        "Your agents. Your rules." in text,
+        "authorization and human authority headline missing",
     )
+    require("Keep control where your data lives." in text,
+            "data sovereignty band missing")
     require("Run an authorized write. Attempt a bypass." in text, "reference trial heading missing")
     require("Keep your data under your authority, from a laptop to a self-hosted system." in text,
             "local-first use cases missing")
@@ -219,6 +221,7 @@ def validate_supporting_assets(
     brief_parser: DocumentParser,
 ) -> None:
     require(PROOF_CSS_PATH.exists(), "governed-agent proof stylesheet missing")
+    require((WEB_ROOT / "site-theme.css").exists(), "shared policy-site theme missing")
     app_text = APP_PATH.read_text(encoding="utf-8")
     css_text = PROOF_CSS_PATH.read_text(encoding="utf-8")
 
@@ -229,6 +232,8 @@ def validate_supporting_assets(
         require("proof.css" in parser.references, f"proof stylesheet is not linked in {path}")
         require("app.js" in parser.references, f"application script is not linked in {path}")
 
+    require("site-theme.css" in index_parser.references, "homepage must link shared theme")
+    require("site-theme.css" in brief_parser.references, "project brief must link shared theme")
     require("proofStylesheet" not in app_text, "proof stylesheet must not depend on JavaScript injection")
     require(
         "document.documentElement.classList.add('js')" in app_text,
