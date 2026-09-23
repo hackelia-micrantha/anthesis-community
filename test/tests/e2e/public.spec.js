@@ -158,6 +158,8 @@ test.describe('Public website', () => {
       const noScriptPage = await noScriptContext.newPage();
       await noScriptPage.goto(`http://localhost:${port}/security-policy.html`);
       await expect(noScriptPage.getByRole('heading', { name: 'Scope' })).toBeVisible();
+      await expect(noScriptPage.locator('.nav-links').getByRole('link', { name: 'Home' })).toBeVisible();
+      await expect(noScriptPage.locator('.nav-toggle')).toBeHidden();
       expect(await noScriptPage.getByRole('heading', { name: 'Scope' }).evaluate(
         (element) => getComputedStyle(element.closest('.reveal')).opacity
       )).toBe('1');
