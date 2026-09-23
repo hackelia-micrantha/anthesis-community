@@ -132,6 +132,18 @@ main { max-width: 1280px; width: calc(100% - 100px); margin: 0 auto; padding: 0 
 .local-path { border: 1px solid var(--stroke); background: #edf3e7!important; margin-top: 22px; }
 .action-path li { border-radius: 4px; }
 .action-path li:nth-child(2) { border-color: #668f47; box-shadow: inset 4px 0 0 #668f47; }
+.sovereignty-band {
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(28px,5vw,88px);
+  margin-top: 82px; padding: clamp(28px,5vw,64px);
+  background: #111914; color: #f4f8ef; border-radius: 6px;
+}
+.sovereignty-band .eyebrow { color: #b5cba7; }
+.sovereignty-band h2 { margin: 0; font-size: clamp(36px,4vw,55px); line-height: 1.17; font-weight: 600; }
+.sovereignty-band h2 em { color: var(--accent); font-style: normal; }
+.sovereignty-band p { color: #d4ded1; max-width: 530px; font-size: 15px; }
+.sovereignty-band .sovereignty-lead { color: #f0f5eb; font-size: clamp(21px,2.1vw,27px); line-height: 1.5; margin: 0 0 24px; }
+.sovereignty-band .sovereignty-limit { color: #b7c7b1; font-size: 13px; margin-top: 20px; }
+@media(max-width:900px) { .sovereignty-band { grid-template-columns: 1fr; gap: 18px; margin-top: 62px; } }
 #components { padding-top: 92px; }
 #components .boundary-layout { align-items: stretch; }
 #components .boundary-diagram { background: #18241b; color: #f3f7ee; border-color: #18241b; }
