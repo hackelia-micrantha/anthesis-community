@@ -201,8 +201,12 @@ def validate_project_brief(parser: DocumentParser) -> None:
             "runtime enforcement distinction missing")
     require("hard-denied with repository state unchanged" in text,
             "reference trial blocked-bypass evidence missing")
-    require("What success looks like" in text,
-            "design-partner evaluation goals missing")
+    require("Bring one real workflow and test the boundary." in text,
+            "agentic-system trial goals missing")
+    require("Feedback sought:" in text and "Negative findings are useful evidence." in text,
+            "agentic-system trial feedback model missing")
+    require("services@micrantha.com?subject=Anthesis%20agentic%20system%20trial" in refs,
+            "project brief agentic-system trial contact missing")
     require("personal self-hosted AI system" in text and "public release may follow later" in text,
             "project brief must distinguish Dubnium personal system from a public release")
     require("Product goal:" in text and "Evaluation request:" in text,
