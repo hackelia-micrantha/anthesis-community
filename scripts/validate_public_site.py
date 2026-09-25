@@ -134,7 +134,7 @@ def require_public_proof_model(text: str, surface: str) -> None:
 def validate_homepage(parser: DocumentParser) -> None:
     text = parser.text
     refs = " ".join(parser.references)
-    require(parser.main_sections == 8, "homepage must contain eight main sections plus the hero")
+    require(parser.main_sections == 9, "homepage must contain nine main sections plus the hero")
     require("Portable, self-hostable data sovereignty for agentic AI" in text,
             "sovereignty hero eyebrow missing")
     require(
@@ -165,6 +165,11 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("Try Anthesis" in text, "reference trial primary action missing")
     require("docs/product/try-anthesis.md" in refs, "public trial walkthrough link missing")
     require("anthesis-community" in refs, "GitHub community navigation link missing")
+    require("Challenge the governance boundary with real requirements." in text,
+            "collaboration section missing")
+    require("CONTRIBUTING.md" in refs, "public contribution guide link missing")
+    require("looking-for-collaborators" in refs,
+            "Micrantha collaboration overview link missing")
     require("disposable Git repository" in text, "reference trial scope missing")
     require("not universal agent containment" in text, "reference trial trust boundary missing")
     require("Governance Lab" in text and "Dubnium" in text, "proof paths missing")
