@@ -120,8 +120,11 @@ test.describe('Public website', () => {
     await expect(page.getByRole('link', { name: /Follow the reference trial/ }))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community/blob/main/docs/product/try-anthesis.md');
     await expect(page.getByText(/does not make an AI model's reasoning deterministic/)).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'What success looks like' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Bring one real workflow and test the boundary.' })).toBeVisible();
     await expect(page.getByText(/Evaluation request:/)).toBeVisible();
+    await expect(page.getByText(/Feedback sought:/)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Discuss an agentic-system trial →' }))
+      .toHaveAttribute('href', 'mailto:services@micrantha.com?subject=Anthesis%20agentic%20system%20trial');
     await expect(page.locator('.nav-community'))
       .toHaveAttribute('href', 'https://github.com/hackelia-micrantha/anthesis-community');
     await page.setViewportSize({ width: 390, height: 844 });
