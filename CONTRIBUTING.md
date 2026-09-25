@@ -16,6 +16,28 @@ High-value contributions include:
 - independent reproduction of public claims and release artifacts;
 - interoperability findings from existing agent, MCP, tool, gateway, or runtime environments.
 
+## Agentic-system trial program
+
+Anthesis is actively looking for existing agentic systems that can participate in bounded trial runs.
+
+A useful trial starts with one real but low-risk consequential effect in an existing system—for example a repository mutation, privileged tool call, deployment step, external API action, or data-transfer decision. The goal is not to retrofit an entire platform. It is to learn whether Anthesis can govern one meaningful effect without hiding bypass paths or imposing unacceptable operational friction.
+
+Useful trial systems include coding agents, supervisor/specialist architectures, MCP-based tool systems, autonomous developer workflows, local/self-hosted agents, CI/release agents, and other systems where an agent can produce externally observable effects.
+
+Trial feedback should capture:
+
+- integration effort and architectural changes required;
+- direct or alternate authority paths discovered during bypass analysis;
+- policy or capability concepts that do not map cleanly to the host system;
+- approval and operator-experience friction;
+- evidence that is missing, ambiguous, excessive, or hard to verify;
+- runtime overhead and operational complexity;
+- failure modes, false assumptions, and cases where Anthesis is not a good fit.
+
+Negative results are first-class feedback. A trial that shows the integration is too invasive, cannot close an important bypass, or needs a different contract is useful evidence.
+
+For a trial involving non-public architecture or environment details, contact **services@micrantha.com** with the subject **Anthesis agentic system trial** before sharing sensitive material.
+
 ## Design-partner feedback
 
 Real-world integration feedback is particularly useful when it can be reduced to reusable requirements or safe synthetic examples.
