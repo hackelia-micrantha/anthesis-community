@@ -134,7 +134,7 @@ def require_public_proof_model(text: str, surface: str) -> None:
 def validate_homepage(parser: DocumentParser) -> None:
     text = parser.text
     refs = " ".join(parser.references)
-    require(parser.main_sections == 8, "homepage must contain eight main sections plus the hero")
+    require(parser.main_sections == 9, "homepage must contain nine main sections plus the hero")
     require("Portable, self-hostable data sovereignty for agentic AI" in text,
             "sovereignty hero eyebrow missing")
     require(
@@ -165,6 +165,13 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("Try Anthesis" in text, "reference trial primary action missing")
     require("docs/product/try-anthesis.md" in refs, "public trial walkthrough link missing")
     require("anthesis-community" in refs, "GitHub community navigation link missing")
+    require("Bring an agentic system. Run a bounded trial. Tell us what breaks." in text,
+            "agentic-system trial collaboration section missing")
+    require("services@micrantha.com?subject=Anthesis%20agentic%20system%20trial" in refs,
+            "agentic-system trial contact link missing")
+    require("CONTRIBUTING.md" in refs, "public contribution guide link missing")
+    require("looking-for-collaborators" in refs,
+            "Micrantha collaboration overview link missing")
     require("disposable Git repository" in text, "reference trial scope missing")
     require("not universal agent containment" in text, "reference trial trust boundary missing")
     require("Governance Lab" in text and "Dubnium" in text, "proof paths missing")
@@ -194,8 +201,12 @@ def validate_project_brief(parser: DocumentParser) -> None:
             "runtime enforcement distinction missing")
     require("hard-denied with repository state unchanged" in text,
             "reference trial blocked-bypass evidence missing")
-    require("What success looks like" in text,
-            "design-partner evaluation goals missing")
+    require("Bring one real workflow and test the boundary." in text,
+            "agentic-system trial goals missing")
+    require("Feedback sought:" in text and "Negative findings are useful evidence." in text,
+            "agentic-system trial feedback model missing")
+    require("services@micrantha.com?subject=Anthesis%20agentic%20system%20trial" in refs,
+            "project brief agentic-system trial contact missing")
     require("personal self-hosted AI system" in text and "public release may follow later" in text,
             "project brief must distinguish Dubnium personal system from a public release")
     require("Product goal:" in text and "Evaluation request:" in text,

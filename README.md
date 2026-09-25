@@ -12,6 +12,8 @@ Anthesis is a **portable, self-hostable governance solution for data sovereignty
 
 Data sovereignty is the goal; deterministic exact-effect authorization is the mechanism. Anthesis does not host a model, replace an agent runtime, or independently guarantee data residency. The selected tool, gateway, capability validator, or isolated runtime must enforce Anthesis decisions, and all other data paths must be controlled.
 
+**Running an agentic system that could serve as an Anthesis trial?** Anthesis is actively looking for real agent workflows to exercise the governance boundary and provide implementation feedback. See [How to help Anthesis](#how-to-help-anthesis).
+
 Its core invariant is:
 
 > Every externally observable agentic effect is authorized, constrained, attributable, and auditable through Anthesis.
@@ -119,6 +121,23 @@ The current evaluator exposes separate commands for the canonical governance con
 - **Anthesis Governance Lab** — independent public conformance and demonstration fixtures; not part of the runtime critical path.
 - **Dubnium** — personal self-hosted AI system and bounded reference execution environment; it consumes Anthesis decisions rather than defining policy authority. It is not required to run Anthesis or currently a generally available distribution; a future public release is possible.
 - **Anthesis Community** — public contracts, specifications, release artifacts, product documentation, website, project brief, and whitepaper distribution.
+
+## How to help Anthesis
+
+Anthesis is looking for external scrutiny and real integration pressure more than undirected feature work. In particular, it is seeking **existing agentic systems for bounded trial runs** so the project can measure integration effort, identify bypass paths, expose missing policy/evidence semantics, and gather operator feedback from systems that were not designed around Anthesis.
+
+- **Agentic-system trial partners** — bring an existing coding agent, supervisor/specialist system, MCP/tool workflow, automation platform, or other agentic runtime and select one low-risk consequential action for a bounded Anthesis integration trial. Useful feedback includes integration friction, unexpected authority paths, policy-model gaps, approval UX, evidence quality, and operational overhead.
+- **Security and governance reviewers** — challenge authorization, approval binding, capability scope, evidence semantics, provenance, replay, bypass resistance, and failure-closed behavior.
+- **Design partners and adopters** — bring concrete agentic workflows where data sovereignty, local/self-hosted operation, privileged tools, approvals, or audit evidence matter.
+- **Integration contributors** — help define and validate adapters, gateways, capability validation, MCP/tool mediation, runtime enforcement profiles, and interoperability with existing agent platforms.
+- **Governance Lab and conformance contributors** — add safe synthetic scenarios, adversarial cases, independent reproductions, documentation, and implementation-neutral contract feedback.
+- **Strategic partners** — help test product direction, applied research, distribution, sustainability, and production adoption while preserving the separation between public proof surfaces and private implementation.
+
+A trial does not need to prove that Anthesis is a fit. Negative results, awkward integration points, unacceptable overhead, and bypasses that cannot be closed are useful findings. Trial feedback should be reduced to reusable requirements or safe synthetic cases before public publication; environment-specific or confidential details can stay private.
+
+For a trial conversation, contact [services@micrantha.com](mailto:services@micrantha.com?subject=Anthesis%20agentic%20system%20trial) with a short description of the agentic system, the effect you want to govern, and the main trust boundary you want to test.
+
+The core Anthesis implementation remains closed source. Public contribution is intentionally focused on contracts, specifications, documentation, release/proof artifacts, integrations, conformance, and reproducible review. See [CONTRIBUTING.md](CONTRIBUTING.md) for the public contribution boundary. Micrantha-wide strategic-partner and co-founder interests are described in the [organization collaboration overview](https://github.com/hackelia-micrantha/.github/blob/main/profile/README.md#looking-for-collaborators).
 
 ## Current maturity
 
