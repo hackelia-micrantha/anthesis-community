@@ -167,7 +167,7 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("anthesis-community" in refs, "GitHub community navigation link missing")
     require("Bring an agentic system. Run a bounded trial. Tell us what breaks." in text,
             "agentic-system trial collaboration section missing")
-    require("Anthesis agentic system trial" in refs,
+    require("services@micrantha.com?subject=Anthesis%20agentic%20system%20trial" in refs,
             "agentic-system trial contact link missing")
     require("CONTRIBUTING.md" in refs, "public contribution guide link missing")
     require("looking-for-collaborators" in refs,
