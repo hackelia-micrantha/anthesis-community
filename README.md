@@ -131,6 +131,7 @@ The current evaluator exposes separate commands for the canonical governance con
 ## Read next
 
 - [`Try Anthesis`](docs/product/try-anthesis.md)
+- [Documentation maintenance contract](docs/documentation-maintenance.md) — maintainer validation and public/private authority boundaries
 - [Anthesis website](https://anthesis.micrantha.com/)
 - [Project brief](https://anthesis.micrantha.com/project-brief.html)
 - [Governance Lab](https://github.com/ryjen/anthesis-governance-lab)
