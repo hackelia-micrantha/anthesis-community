@@ -12,6 +12,8 @@ Anthesis is a **portable, self-hostable governance solution for data sovereignty
 
 Data sovereignty is the goal; deterministic exact-effect authorization is the mechanism. Anthesis does not host a model, replace an agent runtime, or independently guarantee data residency. The selected tool, gateway, capability validator, or isolated runtime must enforce Anthesis decisions, and all other data paths must be controlled.
 
+**Looking to review, integrate, or validate Anthesis against a real agentic workflow?** See [How to help Anthesis](#how-to-help-anthesis).
+
 Its core invariant is:
 
 > Every externally observable agentic effect is authorized, constrained, attributable, and auditable through Anthesis.
@@ -119,7 +121,6 @@ The current evaluator exposes separate commands for the canonical governance con
 - **Anthesis Governance Lab** — independent public conformance and demonstration fixtures; not part of the runtime critical path.
 - **Dubnium** — personal self-hosted AI system and bounded reference execution environment; it consumes Anthesis decisions rather than defining policy authority. It is not required to run Anthesis or currently a generally available distribution; a future public release is possible.
 - **Anthesis Community** — public contracts, specifications, release artifacts, product documentation, website, project brief, and whitepaper distribution.
-
 
 ## How to help Anthesis
 
