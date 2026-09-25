@@ -120,6 +120,19 @@ The current evaluator exposes separate commands for the canonical governance con
 - **Dubnium** — personal self-hosted AI system and bounded reference execution environment; it consumes Anthesis decisions rather than defining policy authority. It is not required to run Anthesis or currently a generally available distribution; a future public release is possible.
 - **Anthesis Community** — public contracts, specifications, release artifacts, product documentation, website, project brief, and whitepaper distribution.
 
+
+## How to help Anthesis
+
+Anthesis is looking for external scrutiny and real integration pressure more than undirected feature work.
+
+- **Security and governance reviewers** — challenge authorization, approval binding, capability scope, evidence semantics, provenance, replay, bypass resistance, and failure-closed behavior.
+- **Design partners and adopters** — bring concrete agentic workflows where data sovereignty, local/self-hosted operation, privileged tools, approvals, or audit evidence matter.
+- **Integration contributors** — help define and validate adapters, gateways, capability validation, MCP/tool mediation, runtime enforcement profiles, and interoperability with existing agent platforms.
+- **Governance Lab and conformance contributors** — add safe synthetic scenarios, adversarial cases, independent reproductions, documentation, and implementation-neutral contract feedback.
+- **Strategic partners** — help test product direction, applied research, distribution, sustainability, and production adoption while preserving the separation between public proof surfaces and private implementation.
+
+The core Anthesis implementation remains closed source. Public contribution is intentionally focused on contracts, specifications, documentation, release/proof artifacts, integrations, conformance, and reproducible review. See [CONTRIBUTING.md](CONTRIBUTING.md) for the public contribution boundary. Micrantha-wide strategic-partner and co-founder interests are described in the [organization collaboration overview](https://github.com/hackelia-micrantha/.github/blob/main/profile/README.md#looking-for-collaborators).
+
 ## Current maturity
 
 **Runnable now:** signed public evaluator acquisition, Governance Lab canonical/general/inference fixtures, deterministic reports, evidence bundles, and stakeholder walkthroughs.
