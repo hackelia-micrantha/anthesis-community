@@ -165,8 +165,10 @@ def validate_homepage(parser: DocumentParser) -> None:
     require("Try Anthesis" in text, "reference trial primary action missing")
     require("docs/product/try-anthesis.md" in refs, "public trial walkthrough link missing")
     require("anthesis-community" in refs, "GitHub community navigation link missing")
-    require("Challenge the governance boundary with real requirements." in text,
-            "collaboration section missing")
+    require("Bring an agentic system. Run a bounded trial. Tell us what breaks." in text,
+            "agentic-system trial collaboration section missing")
+    require("Anthesis agentic system trial" in refs,
+            "agentic-system trial contact link missing")
     require("CONTRIBUTING.md" in refs, "public contribution guide link missing")
     require("looking-for-collaborators" in refs,
             "Micrantha collaboration overview link missing")
