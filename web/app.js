@@ -65,6 +65,8 @@ if (nav && navToggle) {
 const experiment = globalThis.AnthesisExperiment;
 
 if (experiment?.track) {
+  experiment.track('page_view');
+
   const classifyExperimentLink = (link) => {
     const href = link.getAttribute('href') || '';
 
