@@ -64,10 +64,25 @@ test.describe('Public website', () => {
   });
 
   test('visual experiment supports explicit, sticky variants and structured events', async ({ page, context }) => {
+    await page.addInitScript(() => {
+      globalThis.__initialExperimentEvents = [];
+      document.addEventListener('anthesis:experiment', (event) => {
+        globalThis.__initialExperimentEvents.push(event.detail);
+      });
+    });
+
     await page.goto(`http://localhost:${port}/?variant=current`);
     await expect(page.locator('html')).toHaveAttribute('data-experiment', 'phyllotaxis-utility-v1');
     await expect(page.locator('html')).toHaveAttribute('data-variant', 'current');
     await expect(page.locator('#site-theme')).toHaveAttribute('href', 'site-theme-current.css');
+
+    const initialEvents = await page.evaluate(() => globalThis.__initialExperimentEvents);
+    expect(initialEvents).toContainEqual({
+      experiment: 'phyllotaxis-utility-v1',
+      variant: 'current',
+      event: 'page_view',
+      surface: '/',
+    });
 
     const cookies = await context.cookies();
     expect(cookies.find((cookie) => cookie.name === 'anthesis_variant')?.value).toBe('current');
