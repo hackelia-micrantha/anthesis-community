@@ -14,6 +14,8 @@ INDEX_PATH = WEB_ROOT / "index.html"
 BRIEF_PATH = WEB_ROOT / "project-brief.html"
 APP_PATH = WEB_ROOT / "app.js"
 PROOF_CSS_PATH = WEB_ROOT / "proof.css"
+CURRENT_THEME_PATH = WEB_ROOT / "site-theme-current.css"
+EXPERIMENT_PATH = WEB_ROOT / "experiment.js"
 
 INTEGRATION_MODES = (
     "Tool wrapper / invoke",
@@ -233,8 +235,11 @@ def validate_supporting_assets(
 ) -> None:
     require(PROOF_CSS_PATH.exists(), "governed-agent proof stylesheet missing")
     require((WEB_ROOT / "site-theme.css").exists(), "shared policy-site theme missing")
+    require(CURRENT_THEME_PATH.exists(), "current visual experiment theme missing")
+    require(EXPERIMENT_PATH.exists(), "visual experiment bootstrap missing")
     app_text = APP_PATH.read_text(encoding="utf-8")
     css_text = PROOF_CSS_PATH.read_text(encoding="utf-8")
+    experiment_text = EXPERIMENT_PATH.read_text(encoding="utf-8")
 
     for path, parser in (
         (INDEX_PATH, index_parser),
@@ -242,9 +247,16 @@ def validate_supporting_assets(
     ):
         require("proof.css" in parser.references, f"proof stylesheet is not linked in {path}")
         require("app.js" in parser.references, f"application script is not linked in {path}")
+        require("experiment.js" in parser.references, f"visual experiment bootstrap is not linked in {path}")
 
     require("site-theme.css" in index_parser.references, "homepage must link shared theme")
     require("site-theme.css" in brief_parser.references, "project brief must link shared theme")
+    require("anthesis_variant" in experiment_text, "experiment assignment cookie missing")
+    require("phyllotaxis-utility-v1" in experiment_text, "experiment identity missing")
+    require("current" in experiment_text and "utility" in experiment_text,
+            "experiment variants missing")
+    require("CustomEvent('anthesis:experiment'" in experiment_text,
+            "experiment event contract missing")
     require("proofStylesheet" not in app_text, "proof stylesheet must not depend on JavaScript injection")
     require(
         "document.documentElement.classList.add('js')" in app_text,
@@ -259,7 +271,14 @@ def validate_supporting_assets(
 
 
 def main() -> int:
-    for path in (INDEX_PATH, BRIEF_PATH, APP_PATH, PROOF_CSS_PATH):
+    for path in (
+        INDEX_PATH,
+        BRIEF_PATH,
+        APP_PATH,
+        PROOF_CSS_PATH,
+        CURRENT_THEME_PATH,
+        EXPERIMENT_PATH,
+    ):
         require(path.exists(), f"required public-site file missing: {path}")
 
     index_parser = parse_document(INDEX_PATH)
