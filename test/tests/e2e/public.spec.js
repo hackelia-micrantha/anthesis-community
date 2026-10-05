@@ -51,7 +51,7 @@ test.afterAll(async () => {
 
 test.describe('Public website', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`http://localhost:${port}/`);
+    await page.goto(`http://localhost:${port}/?variant=utility`);
   });
 
   test('homepage has expected title and heading', async ({ page }) => {
@@ -61,6 +61,41 @@ test.describe('Public website', () => {
     const h1 = page.locator('h1').first();
     await expect(h1).toContainText('Your agents.');
     await expect(h1).toContainText('Your rules.');
+  });
+
+  test('visual experiment supports explicit, sticky variants and structured events', async ({ page, context }) => {
+    await page.goto(`http://localhost:${port}/?variant=current`);
+    await expect(page.locator('html')).toHaveAttribute('data-experiment', 'phyllotaxis-utility-v1');
+    await expect(page.locator('html')).toHaveAttribute('data-variant', 'current');
+    await expect(page.locator('#site-theme')).toHaveAttribute('href', 'site-theme-current.css');
+
+    const cookies = await context.cookies();
+    expect(cookies.find((cookie) => cookie.name === 'anthesis_variant')?.value).toBe('current');
+
+    await page.goto(`http://localhost:${port}/`);
+    await expect(page.locator('html')).toHaveAttribute('data-variant', 'current');
+
+    await page.evaluate(() => {
+      globalThis.__experimentEvents = [];
+      document.addEventListener('anthesis:experiment', (event) => {
+        globalThis.__experimentEvents.push(event.detail);
+      });
+    });
+
+    await page.locator('.hero-actions .btn').first().click();
+    const events = await page.evaluate(() => globalThis.__experimentEvents);
+    expect(events).toEqual([
+      {
+        experiment: 'phyllotaxis-utility-v1',
+        variant: 'current',
+        event: 'try_anthesis',
+        surface: '/',
+      },
+    ]);
+
+    await page.goto(`http://localhost:${port}/?variant=utility`);
+    await expect(page.locator('html')).toHaveAttribute('data-variant', 'utility');
+    await expect(page.locator('#site-theme')).toHaveAttribute('href', 'site-theme.css');
   });
 
   test('homepage leads to the constrained reference trial and public community', async ({ page }) => {
@@ -98,9 +133,20 @@ test.describe('Public website', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 
-  test('mobile navigation closes on Escape and on internal link activation', async ({ page }) => {
+  test('utility navigation stays visible on mobile without menu state', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator('.nav-toggle')).toBeHidden();
+    await expect(page.locator('.nav-links a[href="#trial"]')).toBeVisible();
+    await page.locator('.nav-links a[href="#trial"]').click();
+    await expect(page).toHaveURL(/#trial$/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+
+  test('current variant retains the compact mobile menu', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`http://localhost:${port}/?variant=current`);
     const toggle = page.getByRole('button', { name: 'Menu' });
+    await expect(toggle).toBeVisible();
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await page.keyboard.press('Escape');
@@ -141,16 +187,11 @@ test.describe('Public website', () => {
     }
   });
 
-  test('security policy has a usable mobile menu and visible content without JavaScript', async ({ page, browser }) => {
+  test('security policy uses utility navigation and keeps content visible without JavaScript', async ({ page, browser }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`http://localhost:${port}/security-policy.html`);
-    const toggle = page.getByRole('button', { name: 'Menu' });
-    await expect(toggle).toBeVisible();
-    await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await page.goto(`http://localhost:${port}/security-policy.html?variant=utility`);
+    await expect(page.locator('.nav-toggle')).toBeHidden();
     await expect(page.locator('.nav-links').getByRole('link', { name: 'Security.txt' })).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
     const noScriptContext = await browser.newContext({
@@ -159,7 +200,7 @@ test.describe('Public website', () => {
     });
     try {
       const noScriptPage = await noScriptContext.newPage();
-      await noScriptPage.goto(`http://localhost:${port}/security-policy.html`);
+      await noScriptPage.goto(`http://localhost:${port}/security-policy.html?variant=utility`);
       await expect(noScriptPage.getByRole('heading', { name: 'Scope' })).toBeVisible();
       await expect(noScriptPage.locator('.nav-links').getByRole('link', { name: 'Home' })).toBeVisible();
       await expect(noScriptPage.locator('.nav-toggle')).toBeHidden();
