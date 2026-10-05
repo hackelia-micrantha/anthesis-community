@@ -14,6 +14,8 @@ INDEX_PATH = WEB_ROOT / "index.html"
 BRIEF_PATH = WEB_ROOT / "project-brief.html"
 APP_PATH = WEB_ROOT / "app.js"
 PROOF_CSS_PATH = WEB_ROOT / "proof.css"
+CURRENT_THEME_PATH = WEB_ROOT / "site-theme-current.css"
+EXPERIMENT_PATH = WEB_ROOT / "experiment.js"
 
 INTEGRATION_MODES = (
     "Tool wrapper / invoke",
