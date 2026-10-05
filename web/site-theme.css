@@ -1101,3 +1101,75 @@ tbody tr:last-child td {
     font-size: 30pt;
   }
 }
+
+
+/* Remove remaining decorative base-layer fallbacks on secondary pages/components. */
+.hero-card {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid #999;
+  border-radius: 0;
+  box-shadow: none;
+  background: #fafafa;
+  overflow: visible;
+}
+
+.hero-card::after {
+  display: none;
+  content: none;
+}
+
+.split > * {
+  display: block;
+}
+
+.text-link {
+  font-weight: 400;
+}
+
+.trial-example {
+  gap: 0;
+}
+
+.trial-example .example-step {
+  display: block;
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  border-top: 1px solid #ccc;
+  border-radius: 0;
+  background: transparent;
+}
+
+.trial-example .example-step strong {
+  color: var(--utility-good);
+}
+
+.trial-example .example-denied strong {
+  color: var(--utility-bad);
+}
+
+.trial-example .example-step span,
+.trial-example .example-caveat,
+.compact-steps {
+  color: #444;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.compact-steps {
+  gap: 3px;
+}
+
+@media (max-width: 900px) {
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .hero-actions .btn {
+    width: auto;
+  }
+}
