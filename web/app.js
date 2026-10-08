@@ -60,33 +60,3 @@ if (nav && navToggle) {
     if (event.matches) closeMenu();
   });
 }
-
-
-const experiment = globalThis.AnthesisExperiment;
-
-if (experiment?.track) {
-  experiment.track('page_view');
-
-  const classifyExperimentLink = (link) => {
-    const href = link.getAttribute('href') || '';
-
-    if (link.classList.contains('nav-community')) return 'community_github';
-    if (href.includes('docs/product/try-anthesis.md')) return 'trial_docs';
-    if (href === '#trial') return 'try_anthesis';
-    if (href.endsWith('project-brief.html')) return 'project_brief';
-    if (href.includes('CONTRIBUTING.md')) return 'contributing';
-    if (href.startsWith('mailto:services@micrantha.com') && href.includes('Anthesis%20agentic%20system%20trial')) {
-      return 'trial_contact';
-    }
-
-    return null;
-  };
-
-  document.addEventListener('click', (event) => {
-    const link = event.target.closest?.('a');
-    if (!link) return;
-
-    const eventName = classifyExperimentLink(link);
-    if (eventName) experiment.track(eventName);
-  });
-}
