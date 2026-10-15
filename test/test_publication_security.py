@@ -69,6 +69,20 @@ class PublicationSecurityTests(unittest.TestCase):
             findings = guard.inspect(root, [Path("../elsewhere")])
             self.assertEqual(findings, [("../elsewhere", "unsafe relative path")])
 
+    def test_web_directory_symlinks_fail_closed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            web = root / "web"
+            web.mkdir()
+            outside = root / "outside"
+            outside.mkdir()
+            (web / "external").symlink_to(outside, target_is_directory=True)
+            self.assertIn(Path("web/external"), guard.web_files(root))
+            self.assertEqual(
+                guard.inspect(root, guard.web_files(root)),
+                [("web/external", "publication symlink")],
+            )
+
     def test_web_only_scans_web_directory(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
