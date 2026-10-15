@@ -21,6 +21,7 @@ class PublicationSecurityTests(unittest.TestCase):
             "web/.env", "web/.env.production", "web/.dev.vars",
             "web/.dev.vars.production", "runtime/secrets.yaml",
             "keys/id_ed25519", "backup/credentials.json", "data/users.db",
+            "web/secrets.yml", "runtime/secrets.yml",
         ]
         good = [
             "web/anthesis.pdf", "web/index.html", "specs/governance-lab/policy.schema.json",
@@ -42,6 +43,31 @@ class PublicationSecurityTests(unittest.TestCase):
             self.assertEqual(
                 guard.inspect(root, [Path("site.txt")]),
                 [("site.txt", "private-key PEM marker")],
+            )
+
+    def test_detects_pgp_private_armor_across_stream_chunks(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            marker = b"-----BEGIN " + b"PGP PRIVATE KEY BLOCK-----"
+            (root / "private.asc").write_bytes(
+                b"x" * (guard.READ_CHUNK_BYTES - 9) + marker
+            )
+            self.assertEqual(
+                guard.inspect(root, [Path("private.asc")]),
+                [("private.asc", "private-key PEM marker")],
+            )
+
+    def test_allows_pgp_public_armor_and_signature(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "public.asc").write_bytes(
+                b"-----BEGIN PGP PUBLIC KEY BLOCK-----\\nsynthetic"
+            )
+            (root / "sig.asc").write_bytes(
+                b"-----BEGIN PGP SIGNATURE-----\\nsynthetic"
+            )
+            self.assertEqual(
+                guard.inspect(root, [Path("public.asc"), Path("sig.asc")]), []
             )
 
     def test_detects_marker_in_nonstandard_extension(self):
