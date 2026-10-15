@@ -66,7 +66,11 @@ def web_files(root: Path) -> list[Path]:
     web = root / "web"
     if web.is_symlink() or not web.is_dir():
         raise ValueError("web directory missing or symlinked")
-    return [path.relative_to(root) for path in web.rglob("*") if not path.is_dir()]
+    return [
+        path.relative_to(root)
+        for path in web.rglob("*")
+        if path.is_symlink() or not path.is_dir()
+    ]
 
 
 def inspect(root: Path, files: list[Path]) -> list[tuple[str, str]]:
