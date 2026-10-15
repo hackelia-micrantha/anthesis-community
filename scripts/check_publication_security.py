@@ -16,13 +16,13 @@ import sys
 from pathlib import Path
 
 PRIVATE_KEY = re.compile(
-    rb"-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----"
+    rb"-----BEGIN (?:(?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY|PGP PRIVATE KEY BLOCK)-----"
 )
 BLOCKED_SUFFIXES = frozenset({
     ".pem", ".key", ".p12", ".pfx", ".jks", ".keystore", ".sqlite", ".db",
 })
 BLOCKED_NAMES = frozenset({
-    "id_rsa", "id_ed25519", "id_ecdsa", "credentials.json", "secrets.yaml",
+    "id_rsa", "id_ed25519", "id_ecdsa", "credentials.json", "secrets.yaml", "secrets.yml",
 })
 EXAMPLE_SUFFIXES = (".example", ".sample", ".template")
 READ_CHUNK_BYTES = 65536
