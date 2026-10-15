@@ -164,3 +164,17 @@ The core Anthesis implementation remains closed source. Public contribution is i
 ## License and implementation boundary
 
 The core Anthesis implementation remains closed source and all rights reserved unless separately licensed. This community repository intentionally publishes selected contracts, specifications, documentation, release artifacts, and validation surfaces so external reviewers can inspect and reproduce the public governance claims without access to private implementation details.
+
+## Public repository publication safety
+
+CI runs a current-tree credential-publication preflight on **every pull request and push to main**, independent of which part of the community repository changes. It scans both Git-tracked source and deployable `web/` assets, rejecting private-key PEM markers, local environment files, credential-like filenames and symlink escapes. Only paths and rule names appear in CI logs; secret bytes are never printed. The published `web/anthesis.pdf` and intentional synthetic policy examples remain permitted.
+
+To validate locally:
+
+```sh
+python3 scripts/check_publication_security.py --tracked
+python3 scripts/check_publication_security.py --web
+python3 -m unittest discover -s test -p 'test_publication_security.py'
+```
+
+**Scope:** This is prevention for new commits and static-site content, not evidence that historical Git objects, old releases or external mirrors are free of secrets. Publication from private implementation sources must still use an explicitly reviewed allowlist; this scanner alone cannot authorize copying private runtime code or operator data into the public repository.
