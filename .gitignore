@@ -1,2 +1,19 @@
 node_modules
 test-results
+
+# Local credentials and machine-specific secrets (never publish).
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+!.dev.vars.sample
+!.dev.vars.template
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.yaml
