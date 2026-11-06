@@ -8,7 +8,7 @@
 
 ## Summary
 
-Propose a small, **implementation-independent test suite** for evaluating the security properties of agent-initiated tool execution: authenticated identity, exact-effect authorization, policy freshness, replay safety, revocation at the effect boundary, recovery, and evidence integrity.
+Propose a small, **implementation-independent test suite** for evaluating the security properties of agent-initiated tool execution: authenticated identity, exact-effect authorization, policy freshness, revocation at the effect boundary, bypass resistance, and evidence integrity, with replay safety and crash recovery as separately qualified extensions.
 
 A system should be able to run the suite whether it uses Anthesis, a separate MCP gateway, an agent runtime, a capability service, or its own policy engine. Results must specify the tested **enforcement point and residual bypass paths**. A policy evaluator that returns `allow` is not evidence that the effect is mediated.
 
@@ -54,7 +54,15 @@ Each profile declares its trusted components, authority sources, effect targets,
 
 This draft proposes `agent-tool-auth-conformance/profile-v0` as a **non-normative, pinned candidate requirements version**. The final public conformance scheme, if any, requires working-group and independent implementation review. A verifier MUST load required test IDs from a trusted versioned profile manifest, not from an implementation-supplied results document.
 
-**Result vocabulary:** `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`.
+**Result vocabulary:** `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`. Qualification is separately `QUALIFIED | NOT_QUALIFIED`. Draft machine-readable contracts live under [`../conformance/schema/`](../conformance/schema/).
+
+- `PASS`: preconditions and trusted observations establish the required security predicate.
+- `FAIL`: observed contradiction, including a forbidden effect; missing ancillary evidence cannot downgrade an observed violation.
+- `NOT_RUN`: never started or intentionally skipped.
+- `NOT_APPLICABLE`: outside the trusted manifest's required set, with reason; never a waiver.
+- `INCONCLUSIVE`: attempted but insufficient observation or preconditions; never conceal a known violation.
+
+**Qualification cohort:** All positive and negative cases counted for one profile MUST bind identical `implementation_digest`, `profile_manifest_digest`, `trust_policy_digest`, `authority_configuration_digest`, and `environment_digest`. A scenario may change only an explicitly declared test variable (e.g., policy revision or authority epoch), recording the base cohort and mutation. Silent configuration switching invalidates qualification. Each observation binds the request, operation, target, identity source and fixture digest. Required cases cannot pass without their declared trusted observer.
 
 - Required scenarios MUST yield `PASS` to qualify. Any `FAIL`, `NOT_RUN`, `INCONCLUSIVE`, omitted result or `NOT_APPLICABLE` on a required case prevents qualification.
 - `NOT_APPLICABLE` is valid only for a scenario that is **outside the chosen profile's required set** and when a profile-specific justification is recorded. Unsupported required functionality MUST NOT be relabeled inapplicable.
@@ -65,10 +73,12 @@ This draft proposes `agent-tool-auth-conformance/profile-v0` as a **non-normativ
 
 | Candidate profile | Required initial cases | Specific observation contract |
 | --- | --- | --- |
-| `decision-only` | `AUTH-001-D`, `AUTH-002-D`, `AUTH-003-D`, `AUTH-004-D` | Decision outcome and exact trusted-input binding only; effect status is **unobserved**, never `not_committed` |
-| `mediated-dispatch` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-009` | Verify successful allow at constrained dispatch and negative controls with actual bounded effect observations and enumerated bypass routes |
-| `owned-effect-sink` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-005`, `AUTH-007` | Verify committed positive effect, denied negative sink writes and both ordered interleavings around commit/revocation |
+| `decision-only` | `AUTH-001-D`, `AUTH-002-D`, `AUTH-003-D`, `AUTH-004-D`, `AUTH-010-D` | Decision outcome and exact trusted-input binding only; `dispatch_state=not_observed` and `effect_state=not_observed`; no effect assertion |
+| `mediated-dispatch` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-004`, `AUTH-009`, `AUTH-010` | Verify successful allow at constrained dispatch and negative controls with actual bounded effect observations and enumerated bypass routes |
+| `owned-effect-sink` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-004`, `AUTH-005`, `AUTH-007`, `AUTH-009`, `AUTH-010` | Verify committed positive effect, denied negative sink writes and both ordered interleavings around commit/revocation |
 | `external-provider` | None defined at baseline | **Not qualified by this draft**: requires provider-specific authority, consistency and effect observation profile |
+
+`AUTH-010-D` tests detached decision-evidence substitution, not sink receipts. `AUTH-006` replay safety and `AUTH-008` crash recovery are **optional capability extensions** to an already qualified execution profile. Baseline qualification implies neither. `AUTH-009` is bounded to enumerated routes, never universal containment.
 
 The `-D` suffix explicitly denotes a **decision-only projection** of a scenario's policy stimulus, without effect assertions. This is not the same test result as the execution-capable `AUTH-001` through `AUTH-010` suite.
 
@@ -93,18 +103,23 @@ Profiles are **not a linear security ladder**: a mediated-dispatch result and an
 
 ## Execution, observation and evidence state semantics
 
-Three **orthogonal dimensions** must be reported separately:
+Five independently reported concerns are required; verification is a list of claim-scoped records, not one global truth bit:
 
-| Dimension | Candidate states | What it means |
+| Concern | Candidate states | Meaning |
 | --- | --- | --- |
-| Decision | `allow`, `deny`, `approval_required`, `escalate`, `indeterminate` | Policy outcome for an exact request and trusted fact set |
-| Admission | `admit`, `deny`, `not_evaluated`, `indeterminate` | Enforcement-point admission, not automatically equivalent to decision |
-| Effect lifecycle | `not_dispatched`, `dispatched`, `committed`, `failed`, `unknown` | Observed effect status; `not_dispatched` is not automatically evidence that a raw bypass did not occur |
-| Evidence verification | `valid`, `invalid`, `insufficient`, `not_evaluated` | Integrity, provenance and semantic checks for a particular claim; `valid` is not an authorization outcome |
+| Decision | `allow`, `deny`, `approval_required`, `escalate`, `indeterminate` | Policy result for bound request |
+| Admission | `admit`, `deny`, `not_evaluated`, `indeterminate` | Enforcement-point outcome |
+| Dispatch observation | `not_observed`, `not_dispatched`, `dispatched`, `unknown` | Mediated path only; bypass can occur independently |
+| Target effect observation | `not_observed`, `unchanged`, `committed`, `partially_committed`, `unknown` | Target state, not process exit status |
+| Evidence verification | `verification[]`: `valid`, `invalid`, `insufficient`, `not_evaluated` | Each claim has verifier, trust policy and evidence refs |
 
-**Safety invariant:** `decision=deny` or `admission=deny` may coexist with `effect=committed` if a bypass occurred; this is a **FAIL**, not an invalid record to discard. `effect=unknown` is not `not_committed`. A signed receipt describing a successful action does not alone establish the effect happened. Evidence verification must state the *specific claim* it validates and the observations/trust assumptions backing it.
+**Non-terminal decisions:** `approval_required`, `escalate` and `indeterminate` MUST NOT directly authorize admission. Execution requires a distinct bound resolution yielding terminal `allow`, recording approver identity, authority, policy revision and original request/operation digest. `decision=deny` with `admission=admit`, or admission following an unresolved non-terminal decision, is a representable **FAIL**, not a schema-invalid record.
 
-**Candidate transition constraints:** `not_dispatched -> dispatched -> committed/failed/unknown`; `unknown` may become `committed` or `failed` only through documented reconciliation evidence. Transitions are observational, not guarantees that asynchronous systems will reveal every effect. In particular, absence of a recorded dispatch is insufficient proof of no effect if other routes exist. A denied admission with a committed effect constitutes a bypass finding.
+**Independent observations:** `admission=deny` and `effect_state=committed` or `partially_committed` is a valid record and security **FAIL**. `dispatch_state=not_dispatched` and `effect_state=committed` can coexist when a bypass occurs. A failed RPC/process is not evidence of an unchanged target. `unknown` means unresolved outcome; `not_observed` means outside the declared observation profile. An observed forbidden effect cannot be downgraded to `INCONCLUSIVE`.
+
+**Claim-scoped evidence:** Each verification entry binds `claim`, `status`, `verifier`, `trust_policy_digest`, and `evidence_refs`. Signature validity does not validate effect truth. Wrong request, target or source bindings must be rejected even when signed. Execution-capable `PASS` requires an independent effect observation; decision-only cases MUST report `effect_state=not_observed`.
+
+**Transitions:** Dispatch and effect are not one linear state machine. Mediated dispatch can progress from `not_dispatched` to `dispatched`, but alternate routes can mutate the target independently. Reconcile `unknown` to `unchanged`, `partially_committed` or `committed` only with documented target evidence. Distinguish malformed records from well-formed records proving violations.
 
 For concurrent revocation (AUTH-007), publish the effect sink's **linearization point**, the revocation operation's linearization point, and controlled interleavings; permit-before-revoke can commit and revoke-before-effect must deny under the declared consistency model. Provider-delayed asynchronous effects may continue after a local revocation and remain OUT OF SCOPE until independently fenced at that provider.
 
@@ -115,27 +130,44 @@ This is an **illustrative field set** rather than an interoperable schema or sou
 ```json
 {
   "profile": "owned-effect-sink",
+  "profile_version": "agent-tool-auth-conformance/profile-v0",
   "scenario_id": "AUTH-005",
-  "implementation_id": "example-gateway",
-  "source_revision": "replace-with-real-commit-sha",
-  "request_digest": "replace-with-test-request-digest",
+  "scenario_result": "NOT_RUN",
+  "implementation_digest": "sha256:example",
+  "profile_manifest_digest": "sha256:example",
+  "trust_policy_digest": "sha256:example",
+  "authority_configuration_digest": "sha256:example",
+  "environment_digest": "sha256:example",
+  "fixture_digest": "sha256:example",
+  "source_revision": "example-revision",
+  "request_digest": "sha256:example",
+  "operation_digest": "sha256:example",
+  "target_digest": "sha256:example",
   "trusted_actor_ref": "test-principal-A",
-  "authority_version": "epoch-7",
-  "policy_digest": "replace-with-policy-digest",
-  "operation_digest": "replace-with-exact-effect-digest",
+  "identity_source": "test-identity-broker",
+  "observation_authority": "test-sink-observer",
   "decision_result": "deny",
   "admission_result": "deny",
-  "effect_state": "not_dispatched",
-  "effect_observation": "example-sink-state-unchanged-observation",
-  "profile_version": "agent-tool-auth-conformance/profile-v0",
-  "profile_manifest_digest": "replace-with-trusted-manifest-digest",
-  "receipt_digest": "replace-with-actual-receipt-digest",
-  "evidence_verification": "not_evaluated",
-  "scenario_result": "NOT_RUN"
+  "dispatch_state": "not_dispatched",
+  "effect_state": "unchanged",
+  "effect_observation_refs": [
+    "example-sink-snapshot"
+  ],
+  "verification": [
+    {
+      "claim": "effect_unchanged",
+      "status": "not_evaluated",
+      "verifier": "test-sink-observer",
+      "trust_policy_digest": "sha256:example",
+      "evidence_refs": [
+        "example-sink-snapshot"
+      ]
+    }
+  ]
 }
 ```
 
-A subsequent schema should distinguish **authorization decision, admission, dispatch, committed effect, denied effect, and unknown effect**; include evidence of identity binding, decision freshness and effect-boundary constraints; and reject fabricated or unverifiable receipts. Cryptographic authenticity, log integrity and trust anchors require a separate threat model.
+The companion draft schemas define structural requirements; semantic qualification additionally requires a trusted harness and independent negative controls. This example is deliberately `NOT_RUN` and is not test evidence. Cryptographic authenticity, log integrity and trust anchors require a separate threat model.
 
 ## Optional provenance integrations: Sigstore and gittuf
 
@@ -224,7 +256,7 @@ The proposal should **reuse** existing Governance Lab public vectors and harness
 
 ## Proposed first pilot
 
-**Candidate:** `AUTH-001`, `AUTH-002`, `AUTH-003` and `AUTH-009` for a constrained mediated-dispatch profile, plus `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-005` and `AUTH-007` for an explicitly separate owned-effect-sink profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
+**Candidate:** the complete required sets in the pinned profile manifest, including policy freshness, bypass and evidence substitution. A smaller smoke-test subset is not a qualifying profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
 
 **Pilot artifacts:** threat model, [Governance Lab fixture reuse/gap matrix](../conformance/governance-lab-reuse-matrix.md), pinned profile manifest, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
 
