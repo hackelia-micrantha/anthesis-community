@@ -52,16 +52,27 @@ Each profile declares its trusted components, authority sources, effect targets,
 
 ### Applicability and qualification
 
-Scenario outcomes are `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`. `NOT_APPLICABLE` requires an explicit profile-based rationale, and must never be used to hide a required test. A profile qualifies only if **all required applicable scenarios PASS** at the declared exact source revision and test environment. `FAIL`, `NOT_RUN` and `INCONCLUSIVE` prevent qualification; optional checks cannot compensate. Neither a `decision-only` qualification nor `owned-effect-sink` qualification implies `external-provider` qualification.
+This draft proposes `agent-tool-auth-conformance/profile-v0` as a **non-normative, pinned candidate requirements version**. The final public conformance scheme, if any, requires working-group and independent implementation review. A verifier MUST load required test IDs from a trusted versioned profile manifest, not from an implementation-supplied results document.
 
-| Profile | Initial required case(s) | Constraints |
+**Result vocabulary:** `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`.
+
+- Required scenarios MUST yield `PASS` to qualify. Any `FAIL`, `NOT_RUN`, `INCONCLUSIVE`, omitted result or `NOT_APPLICABLE` on a required case prevents qualification.
+- `NOT_APPLICABLE` is valid only for a scenario that is **outside the chosen profile's required set** and when a profile-specific justification is recorded. Unsupported required functionality MUST NOT be relabeled inapplicable.
+- Optional scenario outcomes never compensate for required failures, and are published separately. A verifier must distinguish **not qualified**, **not evaluated**, and **evaluated and failed** rather than inventing a passing aggregate.
+- Negative tests without a successful positive control are insufficient to qualify any profile. An implementation that denies everything fails `AUTH-001`.
+- Each execution-capable case must observe the effect at the declared enforcement boundary; a decision-only case can validate the decision result and its input binding **but must never claim absence of an effect**.
+- Source revision, profile manifest digest, fixture digests, observation authority, trusted identity source and test environment are bound to the result. Independently verifiable receipts must not be generated from self-reported status strings alone.
+
+| Candidate profile | Required initial cases | Specific observation contract |
 | --- | --- | --- |
-| `decision-only` | Decision fixture evaluation for identity/scope/policy using AUTH-002/003/004 at the decision boundary | Must label effect-commit assertions NOT_APPLICABLE; decision correctness only |
-| `mediated-dispatch` | AUTH-002, AUTH-003, AUTH-009 | Enumerate and test agent-visible alternate tool and credential paths |
-| `owned-effect-sink` | AUTH-002, AUTH-003, AUTH-005; AUTH-007 before claiming concurrent-revocation safety | Observe actual sink writes and define serialization/linearization point |
-| `external-provider` | No baseline qualification defined | Requires a provider-specific extension and its own required suite |
+| `decision-only` | `AUTH-001-D`, `AUTH-002-D`, `AUTH-003-D`, `AUTH-004-D` | Decision outcome and exact trusted-input binding only; effect status is **unobserved**, never `not_committed` |
+| `mediated-dispatch` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-009` | Verify successful allow at constrained dispatch and negative controls with actual bounded effect observations and enumerated bypass routes |
+| `owned-effect-sink` | `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-005`, `AUTH-007` | Verify committed positive effect, denied negative sink writes and both ordered interleavings around commit/revocation |
+| `external-provider` | None defined at baseline | **Not qualified by this draft**: requires provider-specific authority, consistency and effect observation profile |
 
-These are **candidate requirements for review**, not a frozen certification scheme. A future profile manifest must pin versioned applicability and prevent a tester from redefining required cases to manufacture a PASS.
+The `-D` suffix explicitly denotes a **decision-only projection** of a scenario's policy stimulus, without effect assertions. This is not the same test result as the execution-capable `AUTH-001` through `AUTH-010` suite.
+
+Profiles are **not a linear security ladder**: a mediated-dispatch result and an owned-sink result are separate claims, potentially requiring composition-specific evidence. Positive and negative fixtures need distinct request IDs and measured effect states. Test harnesses must reject any result set that silently substitutes another profile's observations.
 
 ## Proposed scenario catalog
 
@@ -78,7 +89,7 @@ These are **candidate requirements for review**, not a frozen certification sche
 | AUTH-009 | Raw tool/credential bypass | Blocked within explicitly enumerated runtime surface | A hidden alternate path invalidates the claim |
 | AUTH-010 | Receipt substitution or source mismatch | Evidence verification rejects mismatched request, revision or outcome | A receipt does not independently prove actual effect |
 
-**Expected results are specifications for future tests, not observations.** No scenario is marked verified by this RFC.
+**Expected results are specifications for future tests, not observations.** No scenario is marked verified by this RFC. The `-D` projections validate decision semantics **only**; they cannot inherit the execution and state-unchanged assertions in the catalog. See the [Governance Lab reuse/gap matrix](../conformance/governance-lab-reuse-matrix.md).
 
 ## Execution, observation and evidence state semantics
 
@@ -86,7 +97,8 @@ Three **orthogonal dimensions** must be reported separately:
 
 | Dimension | Candidate states | What it means |
 | --- | --- | --- |
-| Decision / admission | `allow`, `deny`, `approval_required`, `escalate`, `indeterminate` | A policy decision and whether the enforcement boundary admitted the exact operation; these are distinct recorded fields |
+| Decision | `allow`, `deny`, `approval_required`, `escalate`, `indeterminate` | Policy outcome for an exact request and trusted fact set |
+| Admission | `admit`, `deny`, `not_evaluated`, `indeterminate` | Enforcement-point admission, not automatically equivalent to decision |
 | Effect lifecycle | `not_dispatched`, `dispatched`, `committed`, `failed`, `unknown` | Observed effect status; `not_dispatched` is not automatically evidence that a raw bypass did not occur |
 | Evidence verification | `valid`, `invalid`, `insufficient`, `not_evaluated` | Integrity, provenance and semantic checks for a particular claim; `valid` is not an authorization outcome |
 
@@ -115,6 +127,8 @@ This is an **illustrative field set** rather than an interoperable schema or sou
   "admission_result": "deny",
   "effect_state": "not_dispatched",
   "effect_observation": "example-sink-state-unchanged-observation",
+  "profile_version": "agent-tool-auth-conformance/profile-v0",
+  "profile_manifest_digest": "replace-with-trusted-manifest-digest",
   "receipt_digest": "replace-with-actual-receipt-digest",
   "evidence_verification": "not_evaluated",
   "scenario_result": "NOT_RUN"
@@ -178,6 +192,9 @@ A test harness must not be accepted merely because expected and actual status st
 - Multiple implementations with the same fixture semantics should be comparable at their **declared profile**, not conflated across enforcement strengths.
 - Prefer synthetic identities and disposable resources; do not ingest production credentials, confidential policies or private incident data.
 - Mapping to SAF-MCP, MCP security guidance or other catalogs is a **requested collaboration activity**, not a claim of upstream approval.
+- The security of an Open Responses `allowed_tools` selection rule is bounded to the server/tool-selection interface that enforces it; it cannot authorize downstream provider effects or unmediated hosted tool paths.
+- OpenEnv is a scenario/evaluation lifecycle framework; repeatable `reset` requires explicit cleanup or snapshotting of external, persistent authorization and effect states, with failed cleanup reported as `INCONCLUSIVE` rather than `PASS`.
+- OpenSandbox offers process/runtime isolation features subject to actual configuration; proof of containment requires capability, credential, filesystem, network and provider bypass testing. It is not an authorization policy engine.
 - Any community conformance logo, scoring, acceptance criteria, license or governance rules require independent project review.
 
 ## Relationship to existing community work
@@ -187,10 +204,10 @@ A test harness must not be accepted merely because expected and actual status st
 | [SAFE-MCP](https://github.com/SAFE-MCP/safe-mcp) / OpenSSF AI/ML Security | Agent/MCP threat identification and mitigations | Map selected attack classes to measurable authorization/enforcement scenarios |
 | [SLSA](https://slsa.dev/) | Source/build provenance and assurance levels | Record provenance for conformance harness and tested binaries, not authority to execute |
 | [GUAC](https://guac.sh/) | Graph of software supply-chain relationships | Optional export/query of evidence lineage and artifact relationships |
-| [Gemara](https://openssf.org/projects/) | Structured governance/compliance modeling | Explore control-to-test mappings, without claiming audit certification |
+| [Gemara](https://openssf.org/projects/gemara/) | Structured governance/compliance modeling | Explore control-to-test mappings, without claiming audit certification |
 | [OpenSSF OSPS Baseline](https://baseline.openssf.org/) and [Scorecard](https://securityscorecards.dev/) | Project security hygiene and maturity | Assess the conformance project's own delivery/security posture |
-| [OpenSSF Model Signing](https://openssf.org/projects/) | ML model signature verification | Candidate provenance mapping for model-input supply chains; not necessary for v1 authorization |
-| [OSS-CRS](https://openssf.org/projects/) | AI-driven vulnerability discovery/repair orchestration | Candidate constrained agent-effect test environment, not a dependency |
+| [OpenSSF Model Signing](https://openssf.org/projects/model-signing/) | ML model signature verification | Candidate provenance mapping for model-input supply chains; not necessary for v1 authorization |
+| [OSS-CRS](https://openssf.org/projects/oss-crs/) | AI-driven vulnerability discovery/repair orchestration | Candidate constrained agent-effect test environment, not a dependency |
 | [AAIF MCP](https://modelcontextprotocol.io/) and [agentgateway](https://github.com/agentgateway/agentgateway) | Agent tool protocol and gateway mediation | Potential independent adapters for tool identity, mediation and denial tests |
 | [AAIF Agent Skills](https://github.com/agentskills/agentskills) | Portable skill instructions, scripts and resources | Test untrusted skill content, script execution authority and permission confusion; optional `skill provenance` fixture, not execution permission |
 | [AAIF Open Responses](https://www.openresponses.org/specification) | Provider-neutral response, stream and tool-call schema | Test translation of model-proposed calls to exact admission requests; distinguish developer-controlled from provider-hosted tools, and handle partial/duplicate streaming events |
@@ -198,18 +215,18 @@ A test harness must not be accepted merely because expected and actual status st
 | [AAIF OpenSandbox](https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox) | Agent execution runtime isolation with Docker/Kubernetes adapters | Candidate isolated effect-sink test substrate; isolation does not itself authorize a requested effect |
 | [CNCF SPIFFE/SPIRE](https://www.cncf.io/projects/spiffe/) | Workload identity and attestation | Candidate trusted actor identity input; authorization requires a distinct policy decision |
 | [CNCF Open Policy Agent](https://www.cncf.io/projects/open-policy-agent-opa/) | Independent policy decision evaluation | Useful implementation-neutral comparison for `decision-only` profiles |
-| [CNCF in-toto](https://www.cncf.io/projects/) | Attested software supply-chain steps | Candidate schema/attestation alignment for evidence provenance; does not prove live effect admission |
+| [in-toto](https://in-toto.io/) | Attested software supply-chain steps | Candidate schema/attestation alignment for evidence provenance; does not prove live effect admission |
 | [CNCF OpenTelemetry](https://opentelemetry.io/) | Runtime tracing and correlation | Optional diagnostics for decision/dispatch/effect linkage, not a tamper-proof evidence ledger |
 
 **AAIF-specific security boundaries:** Agent Skills' experimental `allowed-tools` metadata is not a trust-rooted authorization grant. Open Responses `tool_choice` and `allowed_tools` controls are provider/runtime tool-selection and admission surfaces, not proof of authority at an external effect sink; provider-hosted tools may not traverse a developer-controlled Anthesis gateway. OpenEnv `reset()` must also reset or explicitly version persistent authorization and effect-sink state for repeatable tests. OpenSandbox's process isolation still requires credential, filesystem, network and provider bypass controls at their real boundaries.
 
-The proposal should **reuse** existing Governance Lab public vectors and harness infrastructure where semantically equivalent; maintain a mapping of `AUTH-*` scenarios to current public fixtures. New effect-sink tests should be separate where existing deterministic evaluator fixtures lack an enforced effect boundary. None of the listed projects is asserted as an official sponsor, partner or approving body.
+The proposal should **reuse** existing Governance Lab public vectors and harness infrastructure where semantically equivalent; the [candidate reuse/gap matrix](../conformance/governance-lab-reuse-matrix.md) traces each `AUTH-*` scenario to current public fixtures. New effect-sink tests should be separate where existing deterministic evaluator fixtures lack an enforced effect boundary. None of the listed projects is asserted as an official sponsor, partner or approving body.
 
 ## Proposed first pilot
 
-**Candidate:** `AUTH-002`, `AUTH-003` and `AUTH-009` for a constrained mediated-dispatch profile, plus `AUTH-005` for an explicitly separate owned-effect-sink profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
+**Candidate:** `AUTH-001`, `AUTH-002`, `AUTH-003` and `AUTH-009` for a constrained mediated-dispatch profile, plus `AUTH-001`, `AUTH-002`, `AUTH-003`, `AUTH-005` and `AUTH-007` for an explicitly separate owned-effect-sink profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
 
-**Pilot artifacts:** threat model, Governance Lab fixture reuse/gap matrix, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
+**Pilot artifacts:** threat model, [Governance Lab fixture reuse/gap matrix](../conformance/governance-lab-reuse-matrix.md), pinned profile manifest, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
 
 **Funding:** none requested or committed by this RFC. An LFX Crowdfunding initiative or sponsored engineering arrangement, if pursued, would need separate project eligibility, independent governance and procurement/IP decisions.
 
