@@ -193,6 +193,10 @@ A test harness must not be accepted merely because expected and actual status st
 | [OSS-CRS](https://openssf.org/projects/) | AI-driven vulnerability discovery/repair orchestration | Candidate constrained agent-effect test environment, not a dependency |
 | [AAIF MCP](https://modelcontextprotocol.io/) and [agentgateway](https://github.com/agentgateway/agentgateway) | Agent tool protocol and gateway mediation | Potential independent adapters for tool identity, mediation and denial tests |
 | [AAIF OpenSandbox](https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox) | Agent execution isolation | Candidate disposable containment test environment; does not itself guarantee effect authorization |
+| [CNCF SPIFFE/SPIRE](https://www.cncf.io/projects/spiffe/) | Workload identity and attestation | Candidate trusted actor identity input; authorization requires a distinct policy decision |
+| [CNCF Open Policy Agent](https://www.cncf.io/projects/open-policy-agent-opa/) | Independent policy decision evaluation | Useful implementation-neutral comparison for `decision-only` profiles |
+| [CNCF in-toto](https://www.cncf.io/projects/) | Attested software supply-chain steps | Candidate schema/attestation alignment for evidence provenance; does not prove live effect admission |
+| [CNCF OpenTelemetry](https://opentelemetry.io/) | Runtime tracing and correlation | Optional diagnostics for decision/dispatch/effect linkage, not a tamper-proof evidence ledger |
 
 The proposal should **reuse** existing Governance Lab public vectors and harness infrastructure where semantically equivalent; maintain a mapping of `AUTH-*` scenarios to current public fixtures. New effect-sink tests should be separate where existing deterministic evaluator fixtures lack an enforced effect boundary. None of the listed projects is asserted as an official sponsor, partner or approving body.
 
