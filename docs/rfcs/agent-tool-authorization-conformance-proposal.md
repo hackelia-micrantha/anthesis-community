@@ -4,7 +4,7 @@
 **Date:** 2026-11-06  
 **Proposer:** Micrantha / Anthesis community  
 **Normative status:** None. This is an interoperability proposal, not an accepted Anthesis RFC, OpenSSF standard, SAF-MCP deliverable, or claim of Linux Foundation affiliation.  
-**License:** No separate license grant is asserted by this document; publication and reuse terms must be established before importing it into another project.
+**License:** Authored here as a public discussion draft, but the repository has no verified general redistribution license for this RFC. Permission to copy, modify, or contribute this text upstream must be explicitly confirmed by the rights holder and aligned with the destination project's licensing before submission. The proposal itself does not relicense Anthesis implementations or contracts.
 
 ## Summary
 
@@ -50,6 +50,19 @@ Separate the test **profile** from each implementation's wiring:
 
 Each profile declares its trusted components, authority sources, effect targets, revocation semantics, clock assumptions, tested bypass routes and unsupported guarantees. Scenarios are applicable only when their required enforcement boundary exists: a decision-only evaluator cannot pass effect-sink tests, and an owned-effect-sink test must not claim external-provider properties. There is **no aggregate PASS** that silently upgrades one profile into another.
 
+### Applicability and qualification
+
+Scenario outcomes are `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`. `NOT_APPLICABLE` requires an explicit profile-based rationale, and must never be used to hide a required test. A profile qualifies only if **all required applicable scenarios PASS** at the declared exact source revision and test environment. `FAIL`, `NOT_RUN` and `INCONCLUSIVE` prevent qualification; optional checks cannot compensate. Neither a `decision-only` qualification nor `owned-effect-sink` qualification implies `external-provider` qualification.
+
+| Profile | Initial required case(s) | Constraints |
+| --- | --- | --- |
+| `decision-only` | Decision fixture evaluation for identity/scope/policy using AUTH-002/003/004 at the decision boundary | Must label effect-commit assertions NOT_APPLICABLE; decision correctness only |
+| `mediated-dispatch` | AUTH-002, AUTH-003, AUTH-009 | Enumerate and test agent-visible alternate tool and credential paths |
+| `owned-effect-sink` | AUTH-002, AUTH-003, AUTH-005; AUTH-007 before claiming concurrent-revocation safety | Observe actual sink writes and define serialization/linearization point |
+| `external-provider` | No baseline qualification defined | Requires a provider-specific extension and its own required suite |
+
+These are **candidate requirements for review**, not a frozen certification scheme. A future profile manifest must pin versioned applicability and prevent a tester from redefining required cases to manufacture a PASS.
+
 ## Proposed scenario catalog
 
 | ID | Scenario | Required observation | Caveat |
@@ -67,6 +80,22 @@ Each profile declares its trusted components, authority sources, effect targets,
 
 **Expected results are specifications for future tests, not observations.** No scenario is marked verified by this RFC.
 
+## Execution, observation and evidence state semantics
+
+Three **orthogonal dimensions** must be reported separately:
+
+| Dimension | Candidate states | What it means |
+| --- | --- | --- |
+| Decision / admission | `allow`, `deny`, `approval_required`, `escalate`, `indeterminate` | A policy decision and whether the enforcement boundary admitted the exact operation; these are distinct recorded fields |
+| Effect lifecycle | `not_dispatched`, `dispatched`, `committed`, `failed`, `unknown` | Observed effect status; `not_dispatched` is not automatically evidence that a raw bypass did not occur |
+| Evidence verification | `valid`, `invalid`, `insufficient`, `not_evaluated` | Integrity, provenance and semantic checks for a particular claim; `valid` is not an authorization outcome |
+
+**Safety invariant:** `decision=deny` or `admission=deny` may coexist with `effect=committed` if a bypass occurred; this is a **FAIL**, not an invalid record to discard. `effect=unknown` is not `not_committed`. A signed receipt describing a successful action does not alone establish the effect happened. Evidence verification must state the *specific claim* it validates and the observations/trust assumptions backing it.
+
+**Candidate transition constraints:** `not_dispatched -> dispatched -> committed/failed/unknown`; `unknown` may become `committed` or `failed` only through documented reconciliation evidence. Transitions are observational, not guarantees that asynchronous systems will reveal every effect. In particular, absence of a recorded dispatch is insufficient proof of no effect if other routes exist. A denied admission with a committed effect constitutes a bypass finding.
+
+For concurrent revocation (AUTH-007), publish the effect sink's **linearization point**, the revocation operation's linearization point, and controlled interleavings; permit-before-revoke can commit and revoke-before-effect must deny under the declared consistency model. Provider-delayed asynchronous effects may continue after a local revocation and remain OUT OF SCOPE until independently fenced at that provider.
+
 ## Candidate adapter-neutral evidence envelope
 
 This is an **illustrative field set** rather than an interoperable schema or source-code contract:
@@ -82,10 +111,13 @@ This is an **illustrative field set** rather than an interoperable schema or sou
   "authority_version": "epoch-7",
   "policy_digest": "replace-with-policy-digest",
   "operation_digest": "replace-with-exact-effect-digest",
+  "decision_result": "deny",
   "admission_result": "deny",
-  "effect_result": "not_committed",
+  "effect_state": "not_dispatched",
+  "effect_observation": "example-sink-state-unchanged-observation",
   "receipt_digest": "replace-with-actual-receipt-digest",
-  "verification_status": "not_executed"
+  "evidence_verification": "not_evaluated",
+  "scenario_result": "NOT_RUN"
 }
 ```
 
@@ -93,12 +125,14 @@ A subsequent schema should distinguish **authorization decision, admission, disp
 
 ## Optional provenance integrations: Sigstore and gittuf
 
-**Status:** candidate mechanisms, not dependencies or deployed integrations.
+**Status:** existing Anthesis-specific integration/design surfaces; **optional** for independent conformance implementations. This RFC does not assert those integrations have passed conformance or are deployed in production.
+
+Anthesis already contains a `SigstoreVerifier` using `cosign verify-blob` for plugin-distribution verification in the private implementation, and RFC-0044 describes **gittuf as its Git-native repository policy and verification substrate**. These are existing components/design commitments, **not new proposed integrations**. The conformance proposal instead asks whether their provenance properties should be tested through portable optional adapters. Do not confuse implemented verification code, living RFC design and verified runtime rollout.
 
 This proposal intentionally separates (1) authenticating the **origin and integrity** of evidence from (2) authorizing a **current effect** and (3) proving that the effect was actually constrained or committed.
 
-- **Sigstore / Cosign:** a potential way to sign a digest-bound test manifest, release artifact, or in-toto attestation and distribute a verification bundle. Verification must pin the expected signer identity and OIDC issuer (or an explicitly configured trusted key), check the signed subject digest, and validate the configured Sigstore trust root / transparency evidence. A valid signature or log inclusion is provenance evidence, **not** proof that the attested claims are true.
-- **gittuf:** a potential way to attest to trusted Git reference transitions, repository policy, review/approval evidence and reference-state history. It can strengthen source-revision provenance for a test input, but does **not** authorize runtime tool effects or automatically provide freshness of the current repository state to an offline verifier.
+- **Sigstore / Cosign:** existing Anthesis plugin-verification usage, plus a candidate extension for signing digest-bound test manifests, release artifacts or in-toto attestations. Verification must pin the expected signer identity and OIDC issuer (or an explicitly configured trusted key), check the signed subject digest, and validate the configured Sigstore trust root / transparency evidence. A valid signature or log inclusion is provenance evidence, **not** proof that the attested claims are true.
+- **gittuf:** an existing Anthesis RFC-0044 architectural integration for signed repository policy, approved reference transitions and independently verifiable Git history; proposed conformance checks for those properties would be optional. It can strengthen source-revision provenance for a test input, but does **not** authorize runtime tool effects or automatically provide freshness of the current repository state to an offline verifier.
 - **Baseline compatibility:** implementations **must not require** Sigstore, gittuf, GitHub, public network access, a particular CI service, or Micrantha infrastructure to produce baseline conformance evidence. These mechanisms are optional provenance adapters. An implementation can demonstrate equivalent properties through a separately documented trust root and verifier.
 
 ### Candidate provenance verification cases
@@ -121,6 +155,8 @@ These scenarios are **PROPOSED / NOT_RUN**, not part of the initial AUTH-001–0
 
 **Design questions:** Should source-repository provenance be a separate `provenance` profile rather than part of execution conformance? Which minimum identity / expected-policy checks are mandatory when an optional Sigstore or gittuf adapter is claimed?
 
+For PROV-002, separately establish (a) authenticated gittuf trust-root and policy history, (b) whether a particular protected ref update satisfied that policy, (c) the freshness of the reference state relative to an independently observed remote state, and (d) linkage between the evaluated artifact and that verified source. A historical valid gittuf log can be stale; a correctly signed artifact may originate from an unapproved ref update. Report these outcomes independently.
+
 ## Reproducibility and acceptance protocol
 
 A candidate implementation is evaluated only when it supplies:
@@ -131,7 +167,7 @@ A candidate implementation is evaluated only when it supplies:
 4. Evidence of **state unchanged** on denied paths, not merely an HTTP status or log message.
 5. Crash/retry and concurrency evidence where claimed, including order controls and observation windows.
 6. A bypass inventory describing all alternative tool, filesystem, process, network and credential paths in the test environment.
-7. A results manifest with per-scenario `PASS / FAIL / NOT_RUN / INCONCLUSIVE` and explicit unsupported claims.
+7. A results manifest with per-scenario `PASS / FAIL / NOT_RUN / NOT_APPLICABLE / INCONCLUSIVE`, the tested profile version, reasons for inapplicability, and explicit unsupported claims.
 8. An independent reviewer report, when invoking independent verification; document reviewed commit and findings.
 
 A test harness must not be accepted merely because expected and actual status strings match. It must inspect the effect sink and make fake receipts/identity claims fail negative controls.
@@ -144,11 +180,27 @@ A test harness must not be accepted merely because expected and actual status st
 - Mapping to SAF-MCP, MCP security guidance or other catalogs is a **requested collaboration activity**, not a claim of upstream approval.
 - Any community conformance logo, scoring, acceptance criteria, license or governance rules require independent project review.
 
+## Relationship to existing community work
+
+| Project / initiative | Complementary scope | Proposed interface, not an adopted integration |
+| --- | --- | --- |
+| [SAFE-MCP](https://github.com/SAFE-MCP/safe-mcp) / OpenSSF AI/ML Security | Agent/MCP threat identification and mitigations | Map selected attack classes to measurable authorization/enforcement scenarios |
+| [SLSA](https://slsa.dev/) | Source/build provenance and assurance levels | Record provenance for conformance harness and tested binaries, not authority to execute |
+| [GUAC](https://guac.sh/) | Graph of software supply-chain relationships | Optional export/query of evidence lineage and artifact relationships |
+| [Gemara](https://openssf.org/projects/) | Structured governance/compliance modeling | Explore control-to-test mappings, without claiming audit certification |
+| [OpenSSF OSPS Baseline](https://baseline.openssf.org/) and [Scorecard](https://securityscorecards.dev/) | Project security hygiene and maturity | Assess the conformance project's own delivery/security posture |
+| [OpenSSF Model Signing](https://openssf.org/projects/) | ML model signature verification | Candidate provenance mapping for model-input supply chains; not necessary for v1 authorization |
+| [OSS-CRS](https://openssf.org/projects/) | AI-driven vulnerability discovery/repair orchestration | Candidate constrained agent-effect test environment, not a dependency |
+| [AAIF MCP](https://modelcontextprotocol.io/) and [agentgateway](https://github.com/agentgateway/agentgateway) | Agent tool protocol and gateway mediation | Potential independent adapters for tool identity, mediation and denial tests |
+| [AAIF OpenSandbox](https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox) | Agent execution isolation | Candidate disposable containment test environment; does not itself guarantee effect authorization |
+
+The proposal should **reuse** existing Governance Lab public vectors and harness infrastructure where semantically equivalent; maintain a mapping of `AUTH-*` scenarios to current public fixtures. New effect-sink tests should be separate where existing deterministic evaluator fixtures lack an enforced effect boundary. None of the listed projects is asserted as an official sponsor, partner or approving body.
+
 ## Proposed first pilot
 
 **Candidate:** `AUTH-002`, `AUTH-003` and `AUTH-009` for a constrained mediated-dispatch profile, plus `AUTH-005` for an explicitly separate owned-effect-sink profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
 
-**Pilot artifacts:** threat model, fixture set, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
+**Pilot artifacts:** threat model, Governance Lab fixture reuse/gap matrix, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
 
 **Funding:** none requested or committed by this RFC. An LFX Crowdfunding initiative or sponsored engineering arrangement, if pursued, would need separate project eligibility, independent governance and procurement/IP decisions.
 
