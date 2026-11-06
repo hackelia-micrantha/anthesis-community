@@ -48,7 +48,7 @@ Separate the test **profile** from each implementation's wiring:
 - `owned-effect-sink`: current-authority fencing at a bounded effect sink; demonstrate a defined commit linearization point.
 - `external-provider`: downstream authorization and failure behavior; vendor/protocol-specific tests required, not covered by the baseline suite.
 
-Each profile declares its trusted components, authority sources, effect targets, revocation semantics, clock assumptions, tested bypass routes and unsupported guarantees. There is **no aggregate PASS** that silently upgrades one profile into another.
+Each profile declares its trusted components, authority sources, effect targets, revocation semantics, clock assumptions, tested bypass routes and unsupported guarantees. Scenarios are applicable only when their required enforcement boundary exists: a decision-only evaluator cannot pass effect-sink tests, and an owned-effect-sink test must not claim external-provider properties. There is **no aggregate PASS** that silently upgrades one profile into another.
 
 ## Proposed scenario catalog
 
@@ -91,6 +91,36 @@ This is an **illustrative field set** rather than an interoperable schema or sou
 
 A subsequent schema should distinguish **authorization decision, admission, dispatch, committed effect, denied effect, and unknown effect**; include evidence of identity binding, decision freshness and effect-boundary constraints; and reject fabricated or unverifiable receipts. Cryptographic authenticity, log integrity and trust anchors require a separate threat model.
 
+## Optional provenance integrations: Sigstore and gittuf
+
+**Status:** candidate mechanisms, not dependencies or deployed integrations.
+
+This proposal intentionally separates (1) authenticating the **origin and integrity** of evidence from (2) authorizing a **current effect** and (3) proving that the effect was actually constrained or committed.
+
+- **Sigstore / Cosign:** a potential way to sign a digest-bound test manifest, release artifact, or in-toto attestation and distribute a verification bundle. Verification must pin the expected signer identity and OIDC issuer (or an explicitly configured trusted key), check the signed subject digest, and validate the configured Sigstore trust root / transparency evidence. A valid signature or log inclusion is provenance evidence, **not** proof that the attested claims are true.
+- **gittuf:** a potential way to attest to trusted Git reference transitions, repository policy, review/approval evidence and reference-state history. It can strengthen source-revision provenance for a test input, but does **not** authorize runtime tool effects or automatically provide freshness of the current repository state to an offline verifier.
+- **Baseline compatibility:** implementations **must not require** Sigstore, gittuf, GitHub, public network access, a particular CI service, or Micrantha infrastructure to produce baseline conformance evidence. These mechanisms are optional provenance adapters. An implementation can demonstrate equivalent properties through a separately documented trust root and verifier.
+
+### Candidate provenance verification cases
+
+| ID | Question | Expected verifier behavior | Scope |
+| --- | --- | --- | --- |
+| PROV-001 | Is an evidence bundle signed by an expected identity over the exact digest? | Reject tampered payloads, unexpected identities or issuers and invalid signatures | Optional Sigstore adapter |
+| PROV-002 | Does the claimed source revision match the trusted Git history/policy record? | Reject untrusted reference updates and a mismatched source/release identity | Optional gittuf adapter |
+| PROV-003 | Is the artifact's signed provenance being mistaken for runtime authority? | Verifier may accept provenance but **must not** upgrade a denied, stale or unobserved effect into authorization success | Cross-profile negative control |
+
+These scenarios are **PROPOSED / NOT_RUN**, not part of the initial AUTH-001–010 pilot or a claim that integrations already exist.
+
+### Trust-root and offline-verifier constraints
+
+- State how the verifier initially obtains and authenticates signer policies, keys, OIDC identity constraints, gittuf roots and expected reference-log tips. Trust-on-first-use must be identified as such.
+- A signature over a false claim remains a signed false claim. Validate **subject, predicate semantics, input/output binding and effect-sink observations** independently.
+- Transparency inclusion is not the same as independent audit of the claims or guarantee of up-to-date revocation/policy state. A signed reference-state log still requires a freshness source or a declared bounded-staleness assumption.
+- Avoid posting secret-bearing request details or sensitive evidence in public attestations or transparency logs; publish only safe digests and reviewed metadata when appropriate.
+- Define how a verifier reports `authentic-but-untrusted`, `not-fresh`, `unverifiable`, `verified-provenance` separately from `effect-authorized` and `effect-observed`.
+
+**Design questions:** Should source-repository provenance be a separate `provenance` profile rather than part of execution conformance? Which minimum identity / expected-policy checks are mandatory when an optional Sigstore or gittuf adapter is claimed?
+
 ## Reproducibility and acceptance protocol
 
 A candidate implementation is evaluated only when it supplies:
@@ -116,7 +146,7 @@ A test harness must not be accepted merely because expected and actual status st
 
 ## Proposed first pilot
 
-**Candidate:** `AUTH-002`, `AUTH-003`, `AUTH-005` and `AUTH-009` on one deliberately constrained test tool and a disposable effect sink. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
+**Candidate:** `AUTH-002`, `AUTH-003` and `AUTH-009` for a constrained mediated-dispatch profile, plus `AUTH-005` for an explicitly separate owned-effect-sink profile. The pilot must report each profile independently; one passing profile does not qualify the other. Extend to concurrent revocation, replay and crash recovery only after defining reproducible failure controls.
 
 **Pilot artifacts:** threat model, fixture set, runnable harness, source-pinned receipts, bypass inventory, implementation-neutral integration guide, independent review plan.
 
@@ -130,6 +160,7 @@ A test harness must not be accepted merely because expected and actual status st
 4. What is the smallest useful independent implementation target and what tests are essential?
 5. What evidence would make an execution-enforcement claim independently reviewable without overstating downstream provider guarantees?
 6. Should this work remain a working-group contribution, become a subproject, or be proposed for separate neutral hosting only after external adoption?
+7. Would optional Sigstore attestations or gittuf repository-policy verification add value as separate provenance adapters, without coupling execution conformance to those toolchains?
 
 ## References
 
@@ -138,3 +169,6 @@ A test harness must not be accepted merely because expected and actual status st
 - [Anthesis Governance Lab](https://github.com/ryjen/anthesis-governance-lab) — separate public evaluator and controlled trial surfaces; not evidence of this proposed conformance suite.
 - [OpenSSF AI/ML Security Working Group](https://openssf.org/groups/ai-ml-security/) — intended feedback audience.
 - [SAF-MCP](https://github.com/secure-agentic-framework/saf-mcp) — potential threat-catalog mapping to discuss, not an asserted dependency or endorsement.
+
+- [Sigstore signing and verification](https://docs.sigstore.dev/about/overview/) — candidate provenance mechanism; not an authorization engine.
+- [gittuf design](https://github.com/gittuf/gittuf/blob/main/docs/design-document.md) — candidate trusted Git policy and reference-state verification; not an effect-sink fence.
