@@ -145,7 +145,7 @@ class ContractTests(unittest.TestCase):
         raw = path.read_bytes()
         pinned = (BASE / "governance-lab-pin.json")
         expected = json.loads(pinned.read_text())
-        self.assertEqual(hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\\0" + raw).hexdigest(), expected["git_blob_sha1"])
+        self.assertEqual(hashlib.sha1(b"blob " + str(len(raw)).encode() + bytes([0]) + raw).hexdigest(), expected["git_blob_sha1"])
         for fid in expected["fixture_ids"]:
             self.assertIn("id: " + fid, raw.decode())
         self.assertEqual(len(re.findall(r"(?m)^    id: ", raw.decode())), len(expected["fixture_ids"]))
