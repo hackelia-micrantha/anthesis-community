@@ -1,0 +1,13 @@
+{
+  "path": "specs/governance-lab/conformance-vectors.yaml",
+  "git_blob_sha1": "ad14a59aaa4470aede05c7d46a3de399bebaa068",
+  "fixture_ids": [
+    "01-allowed-docs-edit",
+    "02-block-ci-change",
+    "03-require-network-approval",
+    "04-block-secret-access",
+    "05-require-dependency-approval",
+    "06-fail-unknown-runtime",
+    "07-block-evidence-tamper"
+  ]
+}
