@@ -32,7 +32,7 @@ def validate_record(r):
             raise ValueError("decision-only must not claim effect observation")
     elif r["scenario_id"].endswith("-D"):
         raise ValueError("decision projection in execution profile")
-    if not re.fullmatch(r"AUTH-0(?:0[1-9]|10)(?:-D)?", r["scenario_id"]):
+    if not re.fullmatch(r"AUTH-(?:00[1-9]|010)(?:-D)?", r["scenario_id"]):
         raise ValueError("unknown scenario")
     if not isinstance(r["verification"], list) or not isinstance(r["effect_observation_refs"], list):
         raise ValueError("invalid evidence collection")
@@ -58,6 +58,8 @@ def qualification(profile, records):
     if profile not in SETS:
         return "NOT_QUALIFIED"
     required = {"AUTH-" + x for x in SETS[profile]}
+    if any(not isinstance(r, dict) or "scenario_id" not in r for r in records):
+        return "NOT_QUALIFIED"
     if len(records) != len({r["scenario_id"] for r in records}):
         return "NOT_QUALIFIED"
     cohort_keys = ("implementation_digest", "profile_manifest_digest", "trust_policy_digest", "authority_configuration_digest", "environment_digest")
@@ -89,10 +91,16 @@ def record(profile, sid, result="PASS", effect=None):
         dispatch_state="not_observed" if decision_only else ("dispatched" if sid == "AUTH-001" else "not_dispatched"),
         effect_state="committed" if sid == "AUTH-001" else effect,
         effect_observation_refs=[] if decision_only else ["snapshot"],
-        verification=[dict(claim="decision_binding" if decision_only else "effect_unchanged",status="valid",verifier="test-observer",trust_policy_digest=DIGEST,evidence_refs=["snapshot"])])
+        verification=[dict(claim="decision_binding" if decision_only else ("effect_committed" if sid == "AUTH-001" else "effect_unchanged"),status="valid",verifier="test-observer",trust_policy_digest=DIGEST,evidence_refs=["snapshot"])])
 
 
 class ContractTests(unittest.TestCase):
+    def test_valid_scenario_ids(self):
+        for sid in ("AUTH-001", "AUTH-010", "AUTH-010-D"):
+            self.assertTrue(validate_record(record("decision-only" if sid.endswith("-D") else "mediated-dispatch", sid)))
+        with self.assertRaises(ValueError):
+            validate_record(record("mediated-dispatch", "AUTH-0001"))
+
     def test_manifest_exact_sets(self):
         self.assertEqual(len(SETS), 3)
         self.assertIn("AUTH-010-D", ["AUTH-" + x for x in SETS["decision-only"]])
