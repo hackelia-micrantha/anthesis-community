@@ -16,9 +16,11 @@
 
 ## Still open — not markable complete by documentation alone
 
-- [ ] Implement and **run** schema validation, negative model/property tests and cohort qualification checks in CI.
+- [x] Add a draft PR workflow for JSON parsing and synthetic state-model/cohort/qualification tests; **workflow execution not yet verified**. These are not complete JSON Schema validation or independent conformance tests.
+- [ ] Run and verify exact-head CI; add a full JSON Schema validator, complete negative-control matrix and independent semantic evidence checks.
 - [ ] Build and **run** owned-sink, deterministic race, replay, crash/reconciliation, two-tenant identity, policy-version and bypass/evidence negative fixtures.
-- [ ] Pin Governance Lab vector revision and execute fixture traceability checks.
+- [x] Pin the current Governance Lab canonical vector by Git blob SHA and assert all seven fixture IDs in the synthetic contract test.
+- [ ] Run fixture traceability CI and execute real Governance Lab vectors against an independent implementation.
 - [ ] Update workflow actions to verified Node-24-compatible immutable revisions and deliberately pin the runner image; verify against an actual workflow run.
 - [ ] Resolve ownership, third-party provenance, recipient governance and **rights-holder-approved** path-based SPDX/license split. Candidate: Apache-2.0 for software/executable fixtures, CC-BY-4.0 for explanatory docs, Community-Spec-1.0 for an adopted formal specification **only if recipient governance chooses it**.
 - [ ] Obtain a separate human security-semantics review and an independent non-Anthesis implementation/interoperability review.
