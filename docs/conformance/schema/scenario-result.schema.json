@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "profile_version",
+    "scenario_id",
+    "scenario_result",
+    "decision_result",
+    "admission_result",
+    "dispatch_state",
+    "effect_state",
+    "effect_observation_refs",
+    "verification",
+    "implementation_digest",
+    "profile_manifest_digest",
+    "trust_policy_digest",
+    "authority_configuration_digest",
+    "environment_digest",
+    "fixture_digest",
+    "source_revision",
+    "request_digest",
+    "operation_digest",
+    "target_digest",
+    "trusted_actor_ref",
+    "identity_source",
+    "observation_authority"
+  ],
+  "properties": {
+    "profile": {
+      "enum": [
+        "decision-only",
+        "mediated-dispatch",
+        "owned-effect-sink"
+      ]
+    },
+    "profile_version": {
+      "const": "agent-tool-auth-conformance/profile-v0"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^AUTH-0(0[1-9]|10)(-D)?$"
+    },
+    "scenario_result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_RUN",
+        "NOT_APPLICABLE",
+        "INCONCLUSIVE"
+      ]
+    },
+    "decision_result": {
+      "enum": [
+        "allow",
+        "deny",
+        "approval_required",
+        "escalate",
+        "indeterminate"
+      ]
+    },
+    "admission_result": {
+      "enum": [
+        "admit",
+        "deny",
+        "not_evaluated",
+        "indeterminate"
+      ]
+    },
+    "dispatch_state": {
+      "enum": [
+        "not_observed",
+        "not_dispatched",
+        "dispatched",
+        "unknown"
+      ]
+    },
+    "effect_state": {
+      "enum": [
+        "not_observed",
+        "unchanged",
+        "committed",
+        "partially_committed",
+        "unknown"
+      ]
+    },
+    "effect_observation_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim",
+          "status",
+          "verifier",
+          "trust_policy_digest",
+          "evidence_refs"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "valid",
+              "invalid",
+              "insufficient",
+              "not_evaluated"
+            ]
+          },
+          "verifier": {
+            "type": "string"
+          },
+          "trust_policy_digest": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "implementation_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_manifest_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trust_policy_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_configuration_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixture_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trusted_actor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identity_source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observation_authority": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "profile": {
+            "const": "decision-only"
+          }
+        },
+        "required": [
+          "profile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "scenario_id": {
+            "pattern": "-D$"
+          },
+          "dispatch_state": {
+            "const": "not_observed"
+          },
+          "effect_state": {
+            "const": "not_observed"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scenario_result": {
+            "const": "PASS"
+          },
+          "profile": {
+            "enum": [
+              "mediated-dispatch",
+              "owned-effect-sink"
+            ]
+          }
+        },
+        "required": [
+          "scenario_result",
+          "profile"
+        ]
+      },
+      "then": {
+        "properties": {
+          "effect_state": {
+            "enum": [
+              "unchanged",
+              "committed",
+              "partially_committed"
+            ]
+          },
+          "effect_observation_refs": {
+            "minItems": 1
+          },
+          "verification": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

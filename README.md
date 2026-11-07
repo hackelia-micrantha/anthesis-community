@@ -51,6 +51,10 @@ AI control plane
 
 Supervisors orchestrate. Specialists execute bounded work. Anthesis governs the effects and records the authority required to produce them.
 
+## Working-group discussion proposal
+
+A [vendor-neutral agent tool-execution authorization conformance RFC](docs/rfcs/agent-tool-authorization-conformance-proposal.md) is available for technical feedback from the OpenSSF AI/ML Security Working Group and interested maintainers. It proposes bounded test profiles, a security scenario catalog and explicit evidence/limitations requirements. **It is a discussion draft, not an accepted Anthesis specification, OpenSSF deliverable or foundation affiliation.**
+
 ## Try Anthesis
 
 For the shortest executable path, use [`docs/product/try-anthesis.md`](docs/product/try-anthesis.md).

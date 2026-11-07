@@ -1,0 +1,32 @@
+name: Agent Conformance Contract (Draft)
+
+on:
+  pull_request:
+    paths:
+      - 'docs/conformance/**'
+      - 'docs/rfcs/agent-tool-authorization-conformance-proposal.md'
+      - 'scripts/check_agent_conformance_contract.py'
+      - '.github/workflows/agent-conformance-contract.yml'
+      - 'specs/governance-lab/conformance-vectors.yaml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  schema-and-vocabulary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0; immutable commit
+        with:
+          persist-credentials: false
+      - name: Parse candidate JSON schemas and pinned fixtures
+        run: |
+          python3 -m json.tool docs/conformance/schema/profile-manifest.schema.json >/dev/null
+          python3 -m json.tool docs/conformance/schema/scenario-result.schema.json >/dev/null
+          python3 -m json.tool docs/conformance/schema/governance-lab-pin.json >/dev/null
+      - name: Synthetic state-model, profile and fixture-contract tests
+        run: python3 scripts/check_agent_conformance_contract.py
