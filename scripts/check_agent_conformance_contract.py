@@ -36,12 +36,50 @@ def validate_record(r):
         raise ValueError("unknown scenario")
     if not isinstance(r["verification"], list) or not isinstance(r["effect_observation_refs"], list):
         raise ValueError("invalid evidence collection")
+    if not all(isinstance(ref, str) and ref for ref in r["effect_observation_refs"]):
+        raise ValueError("invalid effect observation reference")
     for v in r["verification"]:
         if not isinstance(v, dict) or not all(v.get(k) for k in ("claim", "status", "verifier", "trust_policy_digest", "evidence_refs")):
             raise ValueError("unbound verification")
         if v["status"] not in ("valid", "invalid", "insufficient", "not_evaluated"):
             raise ValueError("unknown verification status")
+        if not isinstance(v["evidence_refs"], list) or not all(
+            isinstance(ref, str) and ref for ref in v["evidence_refs"]
+        ):
+            raise ValueError("invalid verification reference")
     if r["scenario_result"] == "PASS":
+        # Only count claims bound to the declared observer and trust policy.
+        def verified(claim, observation_refs=None):
+            return any(
+                v["status"] == "valid" and v["claim"] == claim
+                and v["verifier"] == r["observation_authority"]
+                and v["trust_policy_digest"] == r["trust_policy_digest"]
+                and (observation_refs is None or all(ref in v["evidence_refs"] for ref in observation_refs))
+                for v in r["verification"]
+            )
+
+        # These scenarios require hard denial before dispatch, not merely a
+        # self-reported PASS. Decision projections do not assert effects.
+        if r["scenario_id"] in ("AUTH-002", "AUTH-003", "AUTH-004", "AUTH-002-D", "AUTH-003-D", "AUTH-004-D"):
+            if r["decision_result"] != "deny":
+                raise ValueError("negative decision must deny")
+            if r["profile"] != "decision-only" and (
+                r["admission_result"] != "deny"
+                or r["dispatch_state"] != "not_dispatched"
+                or r["effect_state"] != "unchanged"
+            ):
+                raise ValueError("negative control must deny before effect")
+        if r["scenario_id"] == "AUTH-005" and (
+            r["admission_result"] != "deny" or r["effect_state"] != "unchanged"
+        ):
+            raise ValueError("stale authority must deny at sink")
+        if r["scenario_id"] == "AUTH-009" and (
+            r["admission_result"] == "admit"
+            or r["dispatch_state"] != "not_dispatched"
+            or r["effect_state"] != "unchanged"
+        ):
+            raise ValueError("bypass control must block effect")
+
         if r["scenario_id"] in ("AUTH-001", "AUTH-001-D"):
             if r["decision_result"] != "allow":
                 raise ValueError("positive control must allow")
@@ -55,11 +93,14 @@ def validate_record(r):
             raise ValueError("unresolved or denied admission")
         if r["effect_state"] in ("committed", "partially_committed") and r["admission_result"] == "deny":
             raise ValueError("forbidden effect")
-        if r["profile"] != "decision-only":
+        if r["profile"] == "decision-only":
+            if not verified("decision_binding"):
+                raise ValueError("no bound decision verification")
+        else:
             if r["effect_state"] in ("not_observed", "unknown") or not r["effect_observation_refs"]:
                 raise ValueError("no independent effect observation")
-            if not any(v["status"] == "valid" and v["claim"].startswith("effect_") for v in r["verification"]):
-                raise ValueError("no effect verification")
+            if not verified("effect_" + r["effect_state"], r["effect_observation_refs"]):
+                raise ValueError("no matching bound effect verification")
     return True
 
 
@@ -142,6 +183,56 @@ class ContractTests(unittest.TestCase):
         p = "mediated-dispatch"
         records = [record("owned-effect-sink", sid) for sid in SETS[p]]
         self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+
+    def test_negative_controls_reject_false_pass(self):
+        for profile, ids in SETS.items():
+            for sid in ids:
+                if sid not in ("AUTH-002", "AUTH-003", "AUTH-004", "AUTH-002-D", "AUTH-003-D", "AUTH-004-D", "AUTH-005", "AUTH-009"):
+                    continue
+                with self.subTest(profile=profile, sid=sid):
+                    records = [record(profile, x) for x in ids]
+                    r = next(r for r in records if r["scenario_id"] == sid)
+                    r["decision_result"] = "allow"
+                    if profile != "decision-only":
+                        r.update(admission_result="admit", dispatch_state="dispatched", effect_state="committed")
+                        r["verification"][0]["claim"] = "effect_committed"
+                    self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
+                    r["scenario_result"] = "FAIL"
+                    self.assertTrue(validate_record(r))
+
+    def test_effect_claim_must_match_observation_and_binding(self):
+        p = "mediated-dispatch"
+        for field, value in (
+            ("claim", "effect_committed"),
+            ("claim", "effect_arbitrary"),
+            ("status", "invalid"),
+            ("verifier", "different-observer"),
+            ("trust_policy_digest", "sha256:other"),
+            ("evidence_refs", ["different-snapshot"]),
+            ("evidence_refs", "snapshot"),
+        ):
+            with self.subTest(field=field, value=value):
+                records = [record(p, x) for x in SETS[p]]
+                r = next(r for r in records if r["scenario_id"] == "AUTH-002")
+                r["verification"][0][field] = value
+                self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+
+    def test_decision_projection_requires_bound_verification(self):
+        p = "decision-only"
+        for sid in SETS[p]:
+            for evidence in (
+                [],
+                [dict(claim="decision_binding", status="invalid", verifier="test-observer",
+                      trust_policy_digest=DIGEST, evidence_refs=["snapshot"])],
+                [dict(claim="effect_unchanged", status="valid", verifier="test-observer",
+                      trust_policy_digest=DIGEST, evidence_refs=["snapshot"])],
+                [dict(claim="decision_binding", status="valid", verifier="different-observer",
+                      trust_policy_digest=DIGEST, evidence_refs=["snapshot"])],
+            ):
+                with self.subTest(sid=sid, evidence=evidence):
+                    records = [record(p, x) for x in SETS[p]]
+                    next(r for r in records if r["scenario_id"] == sid)["verification"] = evidence
+                    self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
 
     def test_missing_and_inconclusive_required(self):
         p = "decision-only"
