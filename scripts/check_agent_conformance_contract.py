@@ -42,6 +42,15 @@ def validate_record(r):
         if v["status"] not in ("valid", "invalid", "insufficient", "not_evaluated"):
             raise ValueError("unknown verification status")
     if r["scenario_result"] == "PASS":
+        if r["scenario_id"] in ("AUTH-001", "AUTH-001-D"):
+            if r["decision_result"] != "allow":
+                raise ValueError("positive control must allow")
+            if r["profile"] != "decision-only" and (
+                r["admission_result"] != "admit"
+                or r["dispatch_state"] != "dispatched"
+                or r["effect_state"] != "committed"
+            ):
+                raise ValueError("positive control must commit the allowed effect")
         if r["admission_result"] == "admit" and r["decision_result"] != "allow":
             raise ValueError("unresolved or denied admission")
         if r["effect_state"] in ("committed", "partially_committed") and r["admission_result"] == "deny":
@@ -57,7 +66,7 @@ def validate_record(r):
 def qualification(profile, records):
     if profile not in SETS:
         return "NOT_QUALIFIED"
-    required = {"AUTH-" + x for x in SETS[profile]}
+    required = set(SETS[profile])
     if any(not isinstance(r, dict) or "scenario_id" not in r for r in records):
         return "NOT_QUALIFIED"
     if len(records) != len({r["scenario_id"] for r in records}):
@@ -65,6 +74,8 @@ def qualification(profile, records):
     cohort_keys = ("implementation_digest", "profile_manifest_digest", "trust_policy_digest", "authority_configuration_digest", "environment_digest")
     cohort = None
     for r in records:
+        if r.get("profile") != profile:
+            return "NOT_QUALIFIED"
         try:
             validate_record(r)
         except (ValueError, TypeError):
@@ -103,25 +114,38 @@ class ContractTests(unittest.TestCase):
 
     def test_manifest_exact_sets(self):
         self.assertEqual(len(SETS), 3)
-        self.assertIn("AUTH-010-D", ["AUTH-" + x for x in SETS["decision-only"]])
-        self.assertIn("AUTH-009", ["AUTH-" + x for x in SETS["owned-effect-sink"]])
+        self.assertIn("AUTH-010-D", SETS["decision-only"])
+        self.assertIn("AUTH-009", SETS["owned-effect-sink"])
 
     def test_qualifying_synthetic_cohorts(self):
         for profile, ids in SETS.items():
-            records = [record(profile, "AUTH-" + x) for x in ids]
+            records = [record(profile, x) for x in ids]
             self.assertEqual(qualification(profile, records), "QUALIFIED")
             records[0]["trust_policy_digest"] = "sha256:changed"
             self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
 
     def test_deny_all_positive_control(self):
         p = "mediated-dispatch"
-        records = [record(p, "AUTH-" + x) for x in SETS[p]]
+        records = [record(p, x) for x in SETS[p]]
         records[0]["scenario_result"] = "FAIL"
+        self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+
+    def test_pass_label_does_not_qualify_deny_all_or_wrong_profile(self):
+        for profile, ids in SETS.items():
+            with self.subTest(profile=profile):
+                records = [record(profile, sid) for sid in ids]
+                records[0]["decision_result"] = "deny"
+                if profile != "decision-only":
+                    records[0].update(admission_result="deny", dispatch_state="not_dispatched", effect_state="unchanged")
+                    records[0]["verification"][0]["claim"] = "effect_unchanged"
+                self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
+        p = "mediated-dispatch"
+        records = [record("owned-effect-sink", sid) for sid in SETS[p]]
         self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
 
     def test_missing_and_inconclusive_required(self):
         p = "decision-only"
-        rs = [record(p, "AUTH-" + x) for x in SETS[p]]
+        rs = [record(p, x) for x in SETS[p]]
         self.assertEqual(qualification(p, rs[:-1]), "NOT_QUALIFIED")
         rs[-1]["scenario_result"] = "INCONCLUSIVE"
         self.assertEqual(qualification(p, rs), "NOT_QUALIFIED")
