@@ -15,7 +15,7 @@ DIGEST = "sha256:" + "0" * 64
 
 
 def validate_record(r):
-    """Semantic checks layered on top of candidate JSON schema; no third-party dependencies."""
+    """Partial semantic checks for synthetic records, not full schema validation."""
     for k in RESULT["required"]:
         if k not in r:
             raise ValueError("missing " + k)
@@ -47,6 +47,25 @@ def validate_record(r):
             isinstance(ref, str) and ref for ref in v["evidence_refs"]
         ):
             raise ValueError("invalid verification reference")
+    if "applicability_justification" in r and (
+        not isinstance(r["applicability_justification"], str)
+        or not r["applicability_justification"].strip()
+    ):
+        raise ValueError("invalid applicability justification")
+    if r["scenario_result"] == "NOT_APPLICABLE":
+        if r["scenario_id"] in SETS[r["profile"]]:
+            raise ValueError("required scenario cannot be inapplicable")
+        if "applicability_justification" not in r:
+            raise ValueError("missing applicability justification")
+    # Preserve observed violations as FAIL, independent of ancillary evidence.
+    if r["scenario_result"] != "FAIL":
+        if r["admission_result"] == "admit" and r["decision_result"] != "allow":
+            raise ValueError("unresolved or denied admission must be FAIL")
+        if r["effect_state"] in ("committed", "partially_committed") and (
+            r["admission_result"] == "deny"
+            or r["scenario_id"] in ("AUTH-002", "AUTH-003", "AUTH-004", "AUTH-005", "AUTH-009")
+        ):
+            raise ValueError("forbidden effect must be FAIL")
     if r["scenario_result"] == "PASS":
         # Only count claims bound to the declared observer and trust policy.
         def verified(claim, observation_refs=None):
@@ -89,10 +108,6 @@ def validate_record(r):
                 or r["effect_state"] != "committed"
             ):
                 raise ValueError("positive control must commit the allowed effect")
-        if r["admission_result"] == "admit" and r["decision_result"] != "allow":
-            raise ValueError("unresolved or denied admission")
-        if r["effect_state"] in ("committed", "partially_committed") and r["admission_result"] == "deny":
-            raise ValueError("forbidden effect")
         if r["profile"] == "decision-only":
             if not verified("decision_binding"):
                 raise ValueError("no bound decision verification")
@@ -104,29 +119,30 @@ def validate_record(r):
     return True
 
 
-def qualification(profile, records):
+def check_synthetic_cohort(profile, records):
+    """Check fixture bookkeeping only; never return implementation qualification."""
     if profile not in SETS:
-        return "NOT_QUALIFIED"
+        return "SYNTHETIC_CHECK_FAIL"
     required = set(SETS[profile])
     if any(not isinstance(r, dict) or "scenario_id" not in r for r in records):
-        return "NOT_QUALIFIED"
+        return "SYNTHETIC_CHECK_FAIL"
     if len(records) != len({r["scenario_id"] for r in records}):
-        return "NOT_QUALIFIED"
+        return "SYNTHETIC_CHECK_FAIL"
     cohort_keys = ("implementation_digest", "profile_manifest_digest", "trust_policy_digest", "authority_configuration_digest", "environment_digest")
     cohort = None
     for r in records:
         if r.get("profile") != profile:
-            return "NOT_QUALIFIED"
+            return "SYNTHETIC_CHECK_FAIL"
         try:
             validate_record(r)
         except (ValueError, TypeError):
-            return "NOT_QUALIFIED"
+            return "SYNTHETIC_CHECK_FAIL"
         current = tuple(r[k] for k in cohort_keys)
         if cohort is None:
             cohort = current
         if cohort != current:
-            return "NOT_QUALIFIED"
-    return "QUALIFIED" if all(any(r["scenario_id"] == sid and r["scenario_result"] == "PASS" for r in records) for sid in required) else "NOT_QUALIFIED"
+            return "SYNTHETIC_CHECK_FAIL"
+    return "SYNTHETIC_CHECK_PASS" if all(any(r["scenario_id"] == sid and r["scenario_result"] == "PASS" for r in records) for sid in required) else "SYNTHETIC_CHECK_FAIL"
 
 
 def record(profile, sid, result="PASS", effect=None):
@@ -161,15 +177,15 @@ class ContractTests(unittest.TestCase):
     def test_qualifying_synthetic_cohorts(self):
         for profile, ids in SETS.items():
             records = [record(profile, x) for x in ids]
-            self.assertEqual(qualification(profile, records), "QUALIFIED")
+            self.assertEqual(check_synthetic_cohort(profile, records), "SYNTHETIC_CHECK_PASS")
             records[0]["trust_policy_digest"] = "sha256:changed"
-            self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
+            self.assertEqual(check_synthetic_cohort(profile, records), "SYNTHETIC_CHECK_FAIL")
 
     def test_deny_all_positive_control(self):
         p = "mediated-dispatch"
         records = [record(p, x) for x in SETS[p]]
         records[0]["scenario_result"] = "FAIL"
-        self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+        self.assertEqual(check_synthetic_cohort(p, records), "SYNTHETIC_CHECK_FAIL")
 
     def test_pass_label_does_not_qualify_deny_all_or_wrong_profile(self):
         for profile, ids in SETS.items():
@@ -179,10 +195,10 @@ class ContractTests(unittest.TestCase):
                 if profile != "decision-only":
                     records[0].update(admission_result="deny", dispatch_state="not_dispatched", effect_state="unchanged")
                     records[0]["verification"][0]["claim"] = "effect_unchanged"
-                self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
+                self.assertEqual(check_synthetic_cohort(profile, records), "SYNTHETIC_CHECK_FAIL")
         p = "mediated-dispatch"
         records = [record("owned-effect-sink", sid) for sid in SETS[p]]
-        self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+        self.assertEqual(check_synthetic_cohort(p, records), "SYNTHETIC_CHECK_FAIL")
 
     def test_negative_controls_reject_false_pass(self):
         for profile, ids in SETS.items():
@@ -196,7 +212,7 @@ class ContractTests(unittest.TestCase):
                     if profile != "decision-only":
                         r.update(admission_result="admit", dispatch_state="dispatched", effect_state="committed")
                         r["verification"][0]["claim"] = "effect_committed"
-                    self.assertEqual(qualification(profile, records), "NOT_QUALIFIED")
+                    self.assertEqual(check_synthetic_cohort(profile, records), "SYNTHETIC_CHECK_FAIL")
                     r["scenario_result"] = "FAIL"
                     self.assertTrue(validate_record(r))
 
@@ -215,7 +231,7 @@ class ContractTests(unittest.TestCase):
                 records = [record(p, x) for x in SETS[p]]
                 r = next(r for r in records if r["scenario_id"] == "AUTH-002")
                 r["verification"][0][field] = value
-                self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+                self.assertEqual(check_synthetic_cohort(p, records), "SYNTHETIC_CHECK_FAIL")
 
     def test_decision_projection_requires_bound_verification(self):
         p = "decision-only"
@@ -232,24 +248,49 @@ class ContractTests(unittest.TestCase):
                 with self.subTest(sid=sid, evidence=evidence):
                     records = [record(p, x) for x in SETS[p]]
                     next(r for r in records if r["scenario_id"] == sid)["verification"] = evidence
-                    self.assertEqual(qualification(p, records), "NOT_QUALIFIED")
+                    self.assertEqual(check_synthetic_cohort(p, records), "SYNTHETIC_CHECK_FAIL")
 
     def test_missing_and_inconclusive_required(self):
         p = "decision-only"
         rs = [record(p, x) for x in SETS[p]]
-        self.assertEqual(qualification(p, rs[:-1]), "NOT_QUALIFIED")
+        self.assertEqual(check_synthetic_cohort(p, rs[:-1]), "SYNTHETIC_CHECK_FAIL")
         rs[-1]["scenario_result"] = "INCONCLUSIVE"
-        self.assertEqual(qualification(p, rs), "NOT_QUALIFIED")
+        self.assertEqual(check_synthetic_cohort(p, rs), "SYNTHETIC_CHECK_FAIL")
         rs[-1]["scenario_result"] = "NOT_APPLICABLE"
-        self.assertEqual(qualification(p, rs), "NOT_QUALIFIED")
+        self.assertEqual(check_synthetic_cohort(p, rs), "SYNTHETIC_CHECK_FAIL")
 
-    def test_bypass_record_is_representable_but_not_pass(self):
-        r = record("owned-effect-sink", "AUTH-009")
-        r["effect_state"] = "committed"
+    def test_observed_violation_must_be_fail(self):
+        for changes in (
+            dict(admission_result="deny", effect_state="committed"),
+            dict(admission_result="deny", effect_state="partially_committed"),
+            dict(admission_result="not_evaluated", effect_state="committed"),
+            dict(admission_result="admit", decision_result="approval_required"),
+        ):
+            for label in ("PASS", "INCONCLUSIVE", "NOT_RUN", "NOT_APPLICABLE", "FAIL"):
+                with self.subTest(changes=changes, label=label):
+                    r = record("owned-effect-sink", "AUTH-009", label)
+                    r.update(changes)
+                    if label == "FAIL":
+                        self.assertTrue(validate_record(r))
+                    else:
+                        with self.assertRaises(ValueError):
+                            validate_record(r)
+
+    def test_inapplicable_requires_reason_and_optional_scenario(self):
+        p = "mediated-dispatch"
+        r = record(p, "AUTH-006", "NOT_APPLICABLE")
+        for reason in (None, "", "   ", 7):
+            with self.subTest(reason=reason):
+                if reason is not None:
+                    r["applicability_justification"] = reason
+                with self.assertRaises(ValueError):
+                    validate_record(r)
+        r["applicability_justification"] = "Replay extension not claimed"
+        self.assertTrue(validate_record(r))
+        self.assertEqual(check_synthetic_cohort(p, [record(p, sid) for sid in SETS[p]] + [r]), "SYNTHETIC_CHECK_PASS")
+        r["scenario_id"] = "AUTH-002"
         with self.assertRaises(ValueError):
             validate_record(r)
-        r["scenario_result"] = "FAIL"
-        self.assertTrue(validate_record(r))
 
     def test_nonterminal_admission_never_passes(self):
         r = record("mediated-dispatch", "AUTH-001")

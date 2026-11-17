@@ -181,6 +181,11 @@
     "observation_authority": {
       "type": "string",
       "minLength": 1
+    },
+    "applicability_justification": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
     }
   },
   "allOf": [
@@ -243,6 +248,23 @@
             "minItems": 1
           }
         }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scenario_result": {
+            "const": "NOT_APPLICABLE"
+          }
+        },
+        "required": [
+          "scenario_result"
+        ]
+      },
+      "then": {
+        "required": [
+          "applicability_justification"
+        ]
       }
     }
   ]

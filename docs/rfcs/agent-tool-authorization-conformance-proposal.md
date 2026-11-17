@@ -54,7 +54,7 @@ Each profile declares its trusted components, authority sources, effect targets,
 
 This draft proposes `agent-tool-auth-conformance/profile-v0` as a **non-normative, pinned candidate requirements version**. The final public conformance scheme, if any, requires working-group and independent implementation review. A verifier MUST load required test IDs from a trusted versioned profile manifest, not from an implementation-supplied results document.
 
-**Result vocabulary:** `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`. Qualification is separately `QUALIFIED | NOT_QUALIFIED`. Draft machine-readable contracts live under [`../conformance/schema/`](../conformance/schema/).
+**Result vocabulary:** `PASS | FAIL | NOT_RUN | NOT_APPLICABLE | INCONCLUSIVE`. Qualification is separately `QUALIFIED | NOT_QUALIFIED`. Draft machine-readable contracts live under [`../conformance/schema/`](../conformance/schema/). The bundled synthetic self-test reports `SYNTHETIC_CHECK_PASS` or `SYNTHETIC_CHECK_FAIL` for fixture bookkeeping only; neither establishes implementation qualification or runs AUTH-007 or AUTH-010.
 
 - `PASS`: preconditions and trusted observations establish the required security predicate.
 - `FAIL`: observed contradiction, including a forbidden effect; missing ancillary evidence cannot downgrade an observed violation.
@@ -65,7 +65,7 @@ This draft proposes `agent-tool-auth-conformance/profile-v0` as a **non-normativ
 **Qualification cohort:** All positive and negative cases counted for one profile MUST bind identical `implementation_digest`, `profile_manifest_digest`, `trust_policy_digest`, `authority_configuration_digest`, and `environment_digest`. A scenario may change only an explicitly declared test variable (e.g., policy revision or authority epoch), recording the base cohort and mutation. Silent configuration switching invalidates qualification. Each observation binds the request, operation, target, identity source and fixture digest. Required cases cannot pass without their declared trusted observer.
 
 - Required scenarios MUST yield `PASS` to qualify. Any `FAIL`, `NOT_RUN`, `INCONCLUSIVE`, omitted result or `NOT_APPLICABLE` on a required case prevents qualification.
-- `NOT_APPLICABLE` is valid only for a scenario that is **outside the chosen profile's required set** and when a profile-specific justification is recorded. Unsupported required functionality MUST NOT be relabeled inapplicable.
+- `NOT_APPLICABLE` is valid only for a scenario that is **outside the chosen profile's required set** and when a nonblank profile-specific `applicability_justification` is recorded. Unsupported required functionality MUST NOT be relabeled inapplicable.
 - Optional scenario outcomes never compensate for required failures, and are published separately. A verifier must distinguish **not qualified**, **not evaluated**, and **evaluated and failed** rather than inventing a passing aggregate.
 - Negative tests without a successful positive control are insufficient to qualify any profile. An implementation that denies everything fails `AUTH-001`.
 - Each execution-capable case must observe the effect at the declared enforcement boundary; a decision-only case can validate the decision result and its input binding **but must never claim absence of an effect**.
