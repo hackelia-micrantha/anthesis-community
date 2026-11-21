@@ -1,22 +1,22 @@
 {
   "artifact": "anthesis.pdf",
-  "artifact_sha256": "e32c13e016286d189f70ab43c43bf4d8116df90122a469a53a4987f09f66ab6d",
+  "artifact_sha256": "60ddbbe3ef2c2b63f221eaac84cf72015fe5b1a51ebd6d1af4b2a5dbecd9fbc3",
   "build_inputs": [
     {
       "path": "Makefile",
-      "sha256": "04b077c017c215b7bfdedeea5ab973670f3579889968fa1e4dc36914c5c9b289"
+      "sha256": "7d4ca190e0d3f05fd4e40f947a8c6d113030be5a747a3821ff8d51fba7cea772"
     },
     {
       "path": ".github/workflows/whitepaper-publication.yml",
-      "sha256": "34084e399ca04d2c7acd0c8e89efa11d48e96e126970e74dac92c246d4e43072"
+      "sha256": "cd34978da833db2143ff929264613803272cd1105eda0f97dd278368ff0da45f"
     },
     {
       "path": "plugins/docs/config/defaults.yaml",
-      "sha256": "66e9f412daa21015630c6517d0aa11b8f609a9ed739b5f0b0879ad5d4bd40be9"
+      "sha256": "2150dd98b1c4305371de27ad6a79c90171b8fb196256aa6debbb7342ce0dc761"
     },
     {
       "path": "plugins/docs/src/anthesis_docs/build_whitepaper.py",
-      "sha256": "121448228b15bf60c0d32fd2db60868be405acbbcb70a044063a8516e63c1803"
+      "sha256": "33a62f46423b17bfc3167c058bbb9eb68638087df5765d0753421b424f560ba0"
     },
     {
       "path": "plugins/docs/src/anthesis_docs/build_pdfs.py",
@@ -24,7 +24,7 @@
     },
     {
       "path": "plugins/docs/scripts/publish_whitepaper.sh",
-      "sha256": "5e792ee3d6fa860172e060dab2a9ebd4cdf60770b9ac7627f4fc7c4100cd3679"
+      "sha256": "1408569309540114023fb5a7d9a5d42fef90c551665e845ab77825dbb91538f5"
     },
     {
       "path": "plugins/docs/scripts/validate_whitepaper_artifact.py",
@@ -36,7 +36,7 @@
     },
     {
       "path": "flake.nix",
-      "sha256": "e1fc5075939c58def48f4c778a8b224e2a1d6df13794b1039c29daf3b3c46186"
+      "sha256": "6d08b36ce635442a34a8b5640574b3b4c38f83fc71d6b2f1af90720db9b3ccc1"
     },
     {
       "path": "flake.lock",
@@ -44,15 +44,15 @@
     },
     {
       "path": "uv.lock",
-      "sha256": "ef015a8644f36294e59c680549d42b186fb0b5e152b80ca6b896301841145fcc"
+      "sha256": "f6c8b08663c6a2e50ca60dbc5c045f3a2677d01af1941ab7e459e408b368cfdd"
     }
   ],
   "config": "plugins/docs/config/defaults.yaml",
-  "config_sha256": "66e9f412daa21015630c6517d0aa11b8f609a9ed739b5f0b0879ad5d4bd40be9",
+  "config_sha256": "2150dd98b1c4305371de27ad6a79c90171b8fb196256aa6debbb7342ce0dc761",
   "document": {
     "author": "Ryan Jennings",
-    "date": "2026-07-27",
-    "footer": "Anthesis Whitepaper 0.3.1 | Micrantha 2026",
+    "date": "2026-09-21",
+    "footer": "Anthesis Whitepaper 0.3.2 | Micrantha 2026",
     "keywords": "AI governance, agentic systems, governed execution, Anthesis",
     "max_pages": 18,
     "min_pages": 8,
@@ -60,17 +60,17 @@
     "status": "Published",
     "subject": "Governance, enforcement, and evidence boundaries for agentic systems",
     "title": "Anthesis: Governed Execution for Agentic Systems",
-    "version": "0.3.1"
+    "version": "0.3.2"
   },
   "manifest": "docs/anthesis/overview/whitepaper-manifest.json",
-  "manifest_sha256": "193cec2fbd4ddbd2b6cb636d86641fac13c16c432a2db618acc3269628cea293",
+  "manifest_sha256": "9b01c77ac3afa95ec12b026dd1def743b6ec7e3ae685786a6420ad4d146d2b98",
   "schema_version": 1,
-  "source_commit": "f5543d75be41d8d6e5cc2d86237a9e663e3dfc13",
+  "source_commit": "e65e7ea1c583552e7077469975cc75bedd9aa071",
   "source_ref": "refs/heads/main",
   "sources": [
     {
       "path": "docs/anthesis/overview/anthesis-whitepaper.md",
-      "sha256": "deebde829a8a2713240861689ebdbde127e94a10de536bb3dbf6036318b5a34c"
+      "sha256": "727711d6f50cd603a5cc351ddb3941d9a61d2668c137ff94e6fb10937477c94e"
     }
   ]
 }
